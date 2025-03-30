@@ -22,9 +22,9 @@ Please refer to [example](./examples) for more information.
 
 We have provided some notebooks for example usage. PLease refer to [notebooks](./notebooks).
 
-| RAG Tech | Link | Notebook |
-|:----------:|:----------:|:----------:|
-| BasicRAG | [BasicRAG](./rag_colls/rags/basic_rag) | [Collab](./notebooks/basic_rag_example.ipynb) |
+| RAG Tech | Link | Notebook | Collab |
+|:----------:|:----------:|:----------:|:----------:|
+| BasicRAG | [BasicRAG](./rag_colls/rags/basic_rag) | [Notebook](./notebooks/basic_rag_example.ipynb) | [Collab](https://colab.research.google.com/drive/19hzGSQqx-LIsSbnNkV71ipRAIiFingvP)|
 
 ## :copyright: LICENSE
 
