@@ -25,3 +25,7 @@ dependencies = [
 
 [dependency-groups]
 dev = ["pytest>=8.3.5"]
+
+[project.urls]
+Homepage = "https://github.com/hienhayho/rag-colls"
+Issues = "https://github.com/hienhayho/rag-colls/issues"
