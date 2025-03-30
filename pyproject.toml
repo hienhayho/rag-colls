@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=75", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = ["assets", "examples", "docker", "notebooks", "tests"]
+
+[project]
+name = "rag-colls"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "chromadb>=0.6.3",
+    "gdown>=5.2.0",
+    "litellm>=1.65.0",
+    "llama-index-embeddings-openai>=0.3.1",
+    "loguru>=0.7.3",
+    "platformdirs>=4.3.7",
+    "pymupdf>=1.25.4",
+    "rich>=13.9.4",
+    "tenacity>=9.0.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.3.5"]
