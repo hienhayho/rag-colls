@@ -6,6 +6,16 @@
 
 </div>
 
+## :rocket: Upcoming
+
+We are currently working on these projects and will be updated in the near future.
+
+| RAG Tech | Link  |
+|:----------:|:----------:|
+| ContextualRAG | [Blog](https://www.anthropic.com/news/contextual-retrieval) |
+| RAFT | [Blog](https://techcommunity.microsoft.com/blog/aiplatformblog/raft-a-new-way-to-teach-llms-to-be-better-at-rag/4084674), [Paper](https://arxiv.org/pdf/2403.10131)|
+| RAG-RL |[Paper](https://arxiv.org/pdf/2503.12759)|
+
 ## :wrench: Installation
 
 **1.** You can easily install it from pypi:
