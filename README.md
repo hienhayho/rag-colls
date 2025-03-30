@@ -36,6 +36,8 @@ We have provided some notebooks for example usage.
 |:----------:|:----------:|:----------:|
 | BasicRAG | [BasicRAG](./rag_colls/rags/basic_rag) | [Collab](https://colab.research.google.com/drive/19hzGSQqx-LIsSbnNkV71ipRAIiFingvP)|
 
+## Contributors
+
 ## :copyright: LICENSE
 
 `rag-colls` is under [MIT LICENSE.](./LICENSE)
