@@ -32,7 +32,7 @@ class PyMuPDFReader(BaseReader):
             documents.append(
                 Document(
                     document=doc.get_text().encode("utf-8"),
-                    extra_info=dict(
+                    metadata=dict(
                         source=f"{file_name}: Page {doc.number + 1}",
                         **extra_info,
                     ),

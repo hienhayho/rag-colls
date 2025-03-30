@@ -18,7 +18,7 @@ class Document(BaseModel):
     )
 
     def __str__(self):
-        return f"Document(id={self.id}, document={self.document}, metadata={self.metadata})"
+        return f"Document(id={self.id}, metadata={self.metadata}), document={self.document}"
 
     def __repr__(self):
         return self.__str__()
