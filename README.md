@@ -1,5 +1,7 @@
 # rag-colls
 
+Simple and easy to use, production-ready advanced RAG techniques.
+
 <div align="center">
 
 ![Downloads](https://img.shields.io/pypi/dm/rag_colls)  ![License](https://img.shields.io/badge/license-MIT-green)
