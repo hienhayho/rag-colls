@@ -30,7 +30,7 @@ Please refer to [example](./examples) for more information.
 
 ## :book: Notebooks
 
-We have provided some notebooks for example usage. PLease refer to [notebooks](./notebooks).
+We have provided some notebooks for example usage.
 
 | RAG Tech | Link  | Collab |
 |:----------:|:----------:|:----------:|
