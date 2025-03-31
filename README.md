@@ -47,11 +47,11 @@ Please refer to [example](./examples) for more information.
 
 <table>
 <tr>
-    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+    <td align="center" style="word-wrap: break-word; width: 75.0; height: 75.0">
         <a href=https://github.com/hienhayho>
-            <img src=https://avatars.githubusercontent.com/u/115549171?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Ho Trong Hien/>
+            <img src=https://avatars.githubusercontent.com/u/115549171?v=4 width="50;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Ho Trong Hien/>
             <br />
-            <sub style="font-size:14px"><b>Ho Trong Hien</b></sub>
+            <sub style="font-size:10px"><b>Ho Trong Hien</b></sub>
         </a>
     </td>
 </tr>
