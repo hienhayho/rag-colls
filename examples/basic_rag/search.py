@@ -13,8 +13,8 @@ rag = BasicRAG(
     embed_model=OpenAIEmbedding(model_name="text-embedding-ada-002"),
 )
 
-response, usage = rag.search(query="Chain Buddy là gì ?", top_k=5)
+response = rag.search(query="Chain Buddy là gì ?", top_k=5)
 
-print(response)
+print(response.content)
 print("===========")
-print(usage)
+print(response.usage)

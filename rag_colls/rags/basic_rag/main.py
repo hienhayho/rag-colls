@@ -5,7 +5,7 @@ from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.core.base.database.vector_database import BaseVectorDatabase
 
 from rag_colls.prompts.q_a import Q_A_PROMPT
-from rag_colls.types.llm import Message, LLMUsage
+from rag_colls.types.llm import Message, LLMOutput
 from rag_colls.core.settings import GlobalSettings
 from rag_colls.types.retriever import RetrieverIngestInput
 from rag_colls.processors.file_processor import FileProcessor
@@ -72,7 +72,7 @@ class BasicRAG:
             documents=embeded_chunks,
         )
 
-    def search(self, query: str, top_k: int = 5, **kwargs) -> tuple[str, LLMUsage]:
+    def search(self, query: str, top_k: int = 5, **kwargs) -> LLMOutput:
         """
         Search for the most relevant documents based on the query.
 
@@ -82,7 +82,7 @@ class BasicRAG:
             **kwargs: Additional keyword arguments for the search operation.
 
         Returns:
-            tuple[str, LLMUsage]: The response content and usage information.
+            LLMOutput: The response from the LLM.
         """
         embedding = self.embed_model.get_query_embedding(query=query)
 
@@ -104,4 +104,4 @@ class BasicRAG:
 
         response = self.llm.complete(messages=messages)
 
-        return response.content, response.usage
+        return response

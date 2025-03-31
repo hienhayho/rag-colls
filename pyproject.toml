@@ -7,7 +7,7 @@ exclude = ["assets", "examples", "docker", "notebooks", "tests"]
 
 [project]
 name = "rag-colls"
-version = "0.1.2.1"
+version = "0.1.2.2"
 description = "rag-colls - Implement recent advanced RAG techniques"
 readme = "README.md"
 requires-python = ">=3.10"
