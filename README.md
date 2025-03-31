@@ -14,7 +14,7 @@ Simple and easy to use, production-ready advanced RAG techniques.
 You can easily install it from pypi:
 
 ```bash
-pip install rag-colls
+pip install -U rag-colls
 ```
 
 ## 📚 Notebooks
