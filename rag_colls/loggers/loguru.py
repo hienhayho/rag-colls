@@ -14,6 +14,12 @@ class LoguruLogger(BaseLogger):
         """
         self.logger = logger
 
+    def __str__(self):
+        """
+        Return a string representation of the logger.
+        """
+        return "LoguruLogger"
+
     def info(self, message: str, *args, **kwargs):
         """
         Log an info message.

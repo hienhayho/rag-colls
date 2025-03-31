@@ -43,7 +43,7 @@ class RetrieverResult(BaseModel):
     )
 
     def __str__(self):
-        return f"RetrieveResult(id={self.id}, score={self.score}, document={self.document}, metadata={self.metadata})"
+        return f"RetrieveResult(id={self.id}, score={self.score}, metadata={self.metadata})"
 
     def __repr__(self):
         return self.__str__()

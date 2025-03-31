@@ -5,18 +5,15 @@ from dotenv import load_dotenv
 from rag_colls.types.embedding import Embedding
 from rag_colls.types.core.document import Document
 from rag_colls.core.base.embeddings.base import BaseEmbedding
+from rag_colls.core.constants import (
+    OPENAI_EMBEDDING_MODELS,
+    DEFAULT_OPENAI_EMBEDDING_MODEL,
+)
 
 load_dotenv()
 
 
 class OpenAIEmbedding(BaseEmbedding):
-    supported_models = [
-        "text-embedding-3-small",
-        "text-embedding-3-large",
-        "text-embedding-ada-002",
-    ]
-    defaul_model = "text-embedding-ada-002"
-
     client = OpenAI()
 
     def __init__(self, model_name: str | None = None):
@@ -28,13 +25,16 @@ class OpenAIEmbedding(BaseEmbedding):
                 `[text-embedding-3-small, text-embedding-3-large, text-embedding-ada-002]`.
         """
         if not model_name:
-            model_name = self.defaul_model
+            model_name = DEFAULT_OPENAI_EMBEDDING_MODEL
 
-        assert model_name in self.supported_models, (
+        assert model_name in OPENAI_EMBEDDING_MODELS, (
             f"Model {model_name} is not supported."
         )
 
         self.model_name = model_name
+
+    def __str__(self):
+        return f"OpenAIEmbedding(model_name={self.model_name})"
 
     def _get_query_embedding(self, query: str) -> Embedding:
         """

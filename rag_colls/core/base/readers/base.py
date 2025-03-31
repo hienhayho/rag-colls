@@ -26,6 +26,9 @@ class BaseReader(ABC):
         """
         raise NotImplementedError("This method should be overridden by subclasses.")
 
+    def __str__(self):
+        return f"{self.__class__.__name__}"
+
     async def _aload_data(
         self,
         file_path: str | Path,
@@ -63,7 +66,14 @@ class BaseReader(ABC):
         Returns:
             list[Document]: A list of Document objects.
         """
-        return self._load_data(file_path, should_split, extra_info)
+        documents = self._load_data(file_path, should_split, extra_info)
+
+        for doc in documents:
+            assert doc.metadata.get("should_split") is not None, (
+                f"Document metadata should contain 'should_split' key. Got: {doc.metadata}"
+            )
+
+        return documents
 
     async def aload_data(
         self,
@@ -82,4 +92,11 @@ class BaseReader(ABC):
         Returns:
             list[Document]: A list of Document objects.
         """
-        return await self._aload_data(file_path, should_split, extra_info)
+        documents = await self._aload_data(file_path, should_split, extra_info)
+
+        for doc in documents:
+            assert doc.metadata.get("should_split") is not None, (
+                f"Document metadata should contain 'should_split' key. Got: {doc.metadata}"
+            )
+
+        return documents

@@ -1,5 +1,6 @@
 from litellm import completion, acompletion
 
+from rag_colls.core.constants import DEFAULT_OPENAI_MODEL
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.types.llm import Message, LLMOutput, LLMUsage
 
@@ -11,8 +12,6 @@ class LiteLLM(BaseCompletionLLM):
     litellm provide many models from openai, anthropic, google, etc..
     """
 
-    default_model = "openai/gpt-4o-mini"
-
     def __init__(self, model_name: str | None = None):
         """
         Initialize the LiteLLM class.
@@ -20,7 +19,13 @@ class LiteLLM(BaseCompletionLLM):
         Args:
             model_name (str): The name of the model to use.
         """
-        self.model_name = model_name or self.default_model
+        self.model_name = model_name or DEFAULT_OPENAI_MODEL
+
+    def __str__(self):
+        return f"LiteLLM(model_name={self.model_name})"
+
+    def __repr__(self):
+        return self.__str__()
 
     def _complete(self, messages: list[Message], **kwargs) -> LLMOutput:
         formatted_messages = [

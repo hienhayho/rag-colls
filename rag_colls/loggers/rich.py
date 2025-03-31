@@ -21,6 +21,9 @@ class RichLogger(BaseLogger):
             self.logger.addHandler(handler)
             self.logger.propagate = False
 
+    def __str__(self):
+        return "RichLogger"
+
     def info(self, message, *args, **kwargs):
         self.logger.info(message, *args, **kwargs)
 

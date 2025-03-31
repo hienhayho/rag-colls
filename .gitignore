@@ -175,3 +175,4 @@ cython_debug/
 
 samples/**/*.pdf
 chroma_db/
+bm25s/

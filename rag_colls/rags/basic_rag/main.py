@@ -22,6 +22,7 @@ class BasicRAG(BaseRAG):
 
     def __init__(
         self,
+        *,
         vector_database: BaseVectorDatabase,
         chunker: BaseChunker,
         llm: BaseCompletionLLM | None = None,
@@ -99,7 +100,7 @@ class BasicRAG(BaseRAG):
         contexts = ""
 
         for result in results:
-            contexts += f"{result.document} ============ \n"
+            contexts += f"{result.document}\n ============ \n"
 
         messages = [
             Message(

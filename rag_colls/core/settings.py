@@ -5,8 +5,8 @@ from rag_colls.core.base.loggers.base import BaseLogger
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.core.base.embeddings.base import BaseEmbedding
 
-from rag_colls.embeddings.openai_embedding import OpenAIEmbedding
 from rag_colls.llms.litellm_llm import LiteLLM
+from rag_colls.embeddings.openai_embedding import OpenAIEmbedding
 
 
 class RagCollsSettings(BaseModel):
@@ -20,7 +20,14 @@ class RagCollsSettings(BaseModel):
         ..., description="Completion LLM to use in the application"
     )
 
+    def __str__(self):
+        return f"RagCollsSettings(logger={self.logger}, embed_model={self.embed_model}, completion_llm={self.completion_llm})"
+
 
 GlobalSettings = RagCollsSettings(
     logger=LoguruLogger(), embed_model=OpenAIEmbedding(), completion_llm=LiteLLM()
 )
+
+GlobalSettings.logger.info("GlobalSettings initialized ...")
+print(GlobalSettings)
+print("===========")

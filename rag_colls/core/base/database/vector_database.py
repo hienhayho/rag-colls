@@ -1,23 +1,16 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
 from rag_colls.core.settings import GlobalSettings
 from rag_colls.types.retriever import RetrieverResult, RetrieverIngestInput
+from rag_colls.core.base.retrievers.base_retriever_provider import BaseRetrieverProvider
 
 logger = GlobalSettings.logger
 
 
-class BaseVectorDatabase(ABC):
+class BaseVectorDatabase(BaseRetrieverProvider):
     """
     Abstract base class for vector databases.
     """
-
-    @abstractmethod
-    def _test_connection(self):
-        """
-        Test the connection to the vector database.
-        This method should be overridden by subclasses to implement the actual connection test.
-        """
-        raise NotImplementedError("This method should be overridden by subclasses.")
 
     @abstractmethod
     def _check_collection_exists(self, collection_name: str) -> bool:

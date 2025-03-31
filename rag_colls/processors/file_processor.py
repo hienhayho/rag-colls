@@ -76,6 +76,9 @@ class FileProcessor:
                 if ext not in self.processors:
                     self.processors[ext] = processor
 
+    def __str__(self):
+        return "FileProcessor"
+
     def _get_default_processors(self) -> dict[str, BaseReader]:
         logger.info("Initializing default file processors ...")
         from .readers.pdf import PyMuPDFReader

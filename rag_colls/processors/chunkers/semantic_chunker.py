@@ -4,21 +4,20 @@ from llama_index.core import Document as LlamaIndexDocument
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 
 from rag_colls.types.core.document import Document
+from rag_colls.core.settings import GlobalSettings
 from rag_colls.core.base.chunkers.base import BaseChunker
+from rag_colls.core.constants import (
+    OPENAI_EMBEDDING_MODELS,
+    DEFAULT_OPENAI_EMBEDDING_MODEL,
+)
+
+logger = GlobalSettings.logger
 
 
 class SemanticChunker(BaseChunker):
     """
     Semantic chunker that chunks documents based on semantic similarity.
     """
-
-    supported_models = [
-        "text-embedding-3-small",
-        "text-embedding-3-large",
-        "text-embedding-ada-002",
-    ]
-
-    defaul_model = "text-embedding-ada-002"
 
     def __init__(
         self,
@@ -27,9 +26,9 @@ class SemanticChunker(BaseChunker):
         breakpoint_percentile_threshold: int = 95,
     ):
         if not embed_model_name:
-            embed_model_name = self.defaul_model
+            embed_model_name = DEFAULT_OPENAI_EMBEDDING_MODEL
 
-        assert embed_model_name in self.supported_models, (
+        assert embed_model_name in OPENAI_EMBEDDING_MODELS, (
             f"Model {embed_model_name} is not supported. Please use openai embedding models."
         )
 
@@ -42,6 +41,13 @@ class SemanticChunker(BaseChunker):
             breakpoint_percentile_threshold=self.breakpoint_percentile_threshold,
             embed_model=OpenAIEmbedding(model=embed_model_name),
         )
+
+        logger.success(
+            f"SemanticChunker initialized with: {embed_model_name}",
+        )
+
+    def __str__(self):
+        return f"SemanticChunker(embed_model_name={self.embed_model_name}, buffer_size={self.buffer_size}, breakpoint_percentile_threshold={self.breakpoint_percentile_threshold})"
 
     def _chunk(self, documents: list[Document], show_progress: bool = True, **kwargs):
         """

@@ -17,15 +17,17 @@ class ChromaVectorDatabase(BaseVectorDatabase):
             persistent_directory (str): Directory to persist the database.
             collection_name (str): Name of the collection to create.
         """
+
         self.client = chromadb.PersistentClient(
             path=persistent_directory,
         )
-        self.collection_name = collection_name
         self._test_connection()
 
-        logger.success("ChromaVectorDatabase initialized successfully !!!")
+        self.collection_name = collection_name
 
         self._create_collection(collection_name)
+
+        logger.success("ChromaVectorDatabase initialized successfully !!!")
 
     def _test_connection(self):
         """
@@ -105,7 +107,9 @@ class ChromaVectorDatabase(BaseVectorDatabase):
 
         logger.success(f"Deleted: {len(document_ids)} documents.")
 
-    def _search(self, query_embedding: list[float], top_k: int = 5, **kwargs):
+    def _search(
+        self, query_embedding: list[float], top_k: int = 5, **kwargs
+    ) -> list[RetrieverResult]:
         """
         Search for documents in the Chroma vector database.
 
@@ -142,17 +146,23 @@ class ChromaVectorDatabase(BaseVectorDatabase):
 
         return documents
 
-    def _asearch(self, query: str, top_k: int = 5, **kwargs):
+    async def _asearch(
+        self, query_embedding: list[float], top_k: int = 5, **kwargs
+    ) -> list[RetrieverResult]:
         """
-        Asynchronously search for documents in the Chroma vector database.
+        Asynchronous search for documents in the Chroma vector database.
 
         Args:
-            query (str): The query to search for.
+            query_embedding (list[float]): The embedding of the query.
             top_k (int): Number of top results to return.
             **kwargs: Additional arguments for the search operation.
 
         Returns:
             list[RetrieverResult]: List of retrieved documents with their metadata.
         """
-        # Chroma does not support async operations directly
-        return asyncio.to_thread(self._search, query, top_k, **kwargs)
+        return await asyncio.to_thread(
+            self._search,
+            query_embedding=query_embedding,
+            top_k=top_k,
+            **kwargs,
+        )

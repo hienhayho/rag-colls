@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from rag_colls.types.llm import LLMOutput
 
 
 class BaseRAG(ABC):
@@ -14,7 +15,7 @@ class BaseRAG(ABC):
         raise NotImplementedError("Ingesting documents process is not implemented.")
 
     @abstractmethod
-    def _search(self, query: str, **kwargs):
+    def _search(self, query: str, **kwargs) -> LLMOutput:
         """
         Search for the most relevant documents based on the query.
 
@@ -37,7 +38,7 @@ class BaseRAG(ABC):
         """
         return self._ingest_db(file_paths, **kwargs)
 
-    def search(self, query: str, **kwargs):
+    def search(self, query: str, **kwargs) -> LLMOutput:
         """
         Search for the most relevant documents based on the query.
 
