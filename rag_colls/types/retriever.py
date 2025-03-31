@@ -1,4 +1,8 @@
+from typing import Union, Optional
 from pydantic import BaseModel, Field
+
+EmbeddingType = list[float]
+RetrieverQueryType = Union[str, EmbeddingType]
 
 
 class RetrieverIngestInput(BaseModel):
@@ -8,8 +12,8 @@ class RetrieverIngestInput(BaseModel):
     document: str = Field(
         ..., description="The content of the document to be ingested."
     )
-    embedding: list[float] = Field(
-        ..., description="The embedding vector of the document to be ingested."
+    embedding: Optional[list[float]] = Field(
+        description="The embedding vector of the document to be ingested. Could be None.",
     )
     metadata: dict = Field(
         default_factory=dict,

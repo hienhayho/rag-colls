@@ -8,6 +8,10 @@ def generate_uuid_str() -> str:
 
 
 class Document(BaseModel):
+    """
+    Document class to be used in the RAG pipeline.
+    """
+
     id: str = Field(
         default_factory=generate_uuid_str,
         description="Unique identifier for the document.",

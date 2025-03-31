@@ -2255,7 +2255,7 @@ wheels = [
 
 [[package]]
 name = "rag-colls"
-version = "0.1.2.1"
+version = "0.1.2.2"
 source = { editable = "." }
 dependencies = [
     { name = "chromadb" },

@@ -1,17 +1,19 @@
-from rag_colls.core.base.readers.base import BaseReader
+from rag_colls.rags.base import BaseRAG
 from rag_colls.core.base.chunkers.base import BaseChunker
 from rag_colls.core.base.embeddings.base import BaseEmbedding
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.core.base.database.vector_database import BaseVectorDatabase
+
 
 from rag_colls.prompts.q_a import Q_A_PROMPT
 from rag_colls.types.llm import Message, LLMOutput
 from rag_colls.core.settings import GlobalSettings
 from rag_colls.types.retriever import RetrieverIngestInput
 from rag_colls.processors.file_processor import FileProcessor
+from rag_colls.retrievers.vector_database_retriever import VectorDatabaseRetriever
 
 
-class BasicRAG:
+class BasicRAG(BaseRAG):
     """
     Wrapper class for a basic RAG (Retrieval-Augmented Generation) system. This class integrates a vector database, chunker, LLM, and embedding model to perform semantic search.
 
@@ -24,7 +26,7 @@ class BasicRAG:
         chunker: BaseChunker,
         llm: BaseCompletionLLM | None = None,
         embed_model: BaseEmbedding | None = None,
-        processors: dict[str, BaseReader] | None = None,
+        processor: FileProcessor | None = None,
     ):
         """
         Initialize the BasicRAG class.
@@ -34,15 +36,19 @@ class BasicRAG:
             chunker (BaseChunker): The chunker to use for splitting documents into smaller chunks.
             llm (BaseCompletionLLM, optional): The LLM to use for generating responses. Defaults to `None`.
             embed_model (BaseEmbedding, optional): The embedding model to use for generating embeddings. Defaults to `None`.
-            processors (dict[str, BaseReader], optional): A dictionary of processors for different file types. Defaults to `None`.
+            processor: (FileProcessor, optional): The processor to use for loading and processing documents. Defaults to `None`.
         """
         self.vector_database = vector_database
         self.chunker = chunker
-        self.processor = FileProcessor(processors=processors)
+        self.processor = processor or FileProcessor()
         self.embed_model = embed_model or GlobalSettings.embed_model
         self.llm = llm or GlobalSettings.completion_llm
 
-    def ingest_db(self, file_paths: list[str], batch_embedding: int = 100):
+        self.retriever = VectorDatabaseRetriever.from_vector_db(
+            vector_db=vector_database, embed_model=self.embed_model
+        )
+
+    def _ingest_db(self, file_paths: list[str], batch_embedding: int = 100):
         """
         Ingest documents into the vector database.
 
@@ -72,7 +78,7 @@ class BasicRAG:
             documents=embeded_chunks,
         )
 
-    def search(self, query: str, top_k: int = 5, **kwargs) -> LLMOutput:
+    def _search(self, query: str, top_k: int = 5, **kwargs) -> LLMOutput:
         """
         Search for the most relevant documents based on the query.
 
@@ -84,10 +90,9 @@ class BasicRAG:
         Returns:
             LLMOutput: The response from the LLM.
         """
-        embedding = self.embed_model.get_query_embedding(query=query)
 
-        results = self.vector_database.search(
-            query_embedding=embedding.embedding,
+        results = self.retriever.retrieve(
+            query=query,
             k=top_k,
         )
 
