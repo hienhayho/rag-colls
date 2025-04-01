@@ -36,6 +36,6 @@ def gen_contextual_chunk(
 
     return Document(
         id=chunk.id,
-        document=response.content,
+        document=response.content + "\n\n" + chunk.document,
         metadata=chunk.metadata,
     )
