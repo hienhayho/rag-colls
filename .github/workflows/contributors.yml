@@ -21,8 +21,8 @@ jobs:
                   CONTRIBUTOR: "## ✨ Contributors"
                   COLUMN_PER_ROW: "6"
                   ACCESS_TOKEN: ${{secrets.GITHUB_TOKEN}}
-                  IMG_WIDTH: "50"
-                  FONT_SIZE: "10"
+                  IMG_WIDTH: "80"
+                  FONT_SIZE: "12"
                   PATH: "/README.md"
                   COMMIT_MESSAGE: "docs(README): update contributors"
                   AVATAR_SHAPE: "round"

@@ -1,6 +1,16 @@
 {
     "MD033": {
-        "allowed_elements": ["div", "td", "tr", "table", "br", "sub", "b"]
+        "allowed_elements": [
+            "div",
+            "td",
+            "tr",
+            "table",
+            "br",
+            "sub",
+            "b",
+            "p",
+            "img"
+        ]
     },
     "MD013": {
         "line_length": 500

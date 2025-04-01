@@ -1,12 +1,16 @@
 # rag-colls
 
+<p align="center">
+  <img src="assets/Final_logo.png" alt="Logo" width="350"/>
+</p>
+
 **rag-colls** a.k.a **RAG Coll**ection**s**.
 
 Simple and easy to use, production-ready advanced RAG techniques.
 
 <div align="center">
 
-![Downloads](https://img.shields.io/pypi/dm/rag_colls)  ![License](https://img.shields.io/badge/license-MIT-green)
+![Downloads](https://img.shields.io/pypi/dm/rag_colls) ![License](https://img.shields.io/badge/license-MIT-green)
 
 ![GitHub CI](https://github.com/hienhayho/rag-colls/actions/workflows/docker-build.yml/badge.svg) ![GitHub CI](https://github.com/hienhayho/rag-colls/actions/workflows/installation-testing.yml/badge.svg)
 
@@ -18,13 +22,13 @@ Please visit [documentation](https://rag-colls.readthedocs.io/en/latest/) to get
 
 ## 🔧 Installation
 
-- You can easily install it from **pypi**:
+-   You can easily install it from **pypi**:
 
 ```bash
 pip install -U rag-colls
 ```
 
-- **Docker** - 🐳:
+-   **Docker** - 🐳:
 
 ```bash
 # Clone the repository
@@ -42,19 +46,19 @@ DOCKER_BUILDKIT=1 docker build -f docker/Dockerfile \
 
 We have provided some notebooks for example usage.
 
-| RAG Tech | Code | Guide | Tech Description |
-|:----------:|:----------:|:----------:|:----------:|
-| BasicRAG | [BasicRAG](./rag_colls/rags/basic_rag) | [Colab](https://colab.research.google.com/drive/19hzGSQqx-LIsSbnNkV71ipRAIiFingvP)| Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py) |
-| ContextualRAG |[ContextualRAG](rag_colls/rags/contextual_rag)| [Colab](https://colab.research.google.com/drive/1vT2Wl8FzYt25_4CMMg-2vcF4y17iTSjO) | Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py) and [`BM25s`](rag_colls/databases/bm25/bm25s.py) version |
+|   RAG Tech    |                      Code                      |                                       Guide                                        |                                                            Tech Description                                                            |
+| :-----------: | :--------------------------------------------: | :--------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------: |
+|   BasicRAG    |     [BasicRAG](./rag_colls/rags/basic_rag)     | [Colab](https://colab.research.google.com/drive/19hzGSQqx-LIsSbnNkV71ipRAIiFingvP) |                             Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py)                              |
+| ContextualRAG | [ContextualRAG](rag_colls/rags/contextual_rag) | [Colab](https://colab.research.google.com/drive/1vT2Wl8FzYt25_4CMMg-2vcF4y17iTSjO) | Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py) and [`BM25s`](rag_colls/databases/bm25/bm25s.py) version |
 
 ## 🚀 Upcoming
 
 We are currently working on these projects and will be updated soon.
 
-| RAG Tech | Link |
-|:----------:|:----------:|
-| RAFT | [Blog](https://techcommunity.microsoft.com/blog/aiplatformblog/raft-a-new-way-to-teach-llms-to-be-better-at-rag/4084674), [Paper](https://arxiv.org/pdf/2403.10131)|
-| RAG-RL |[Paper](https://arxiv.org/pdf/2503.12759)|
+| RAG Tech |                                                                                Link                                                                                 |
+| :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|   RAFT   | [Blog](https://techcommunity.microsoft.com/blog/aiplatformblog/raft-a-new-way-to-teach-llms-to-be-better-at-rag/4084674), [Paper](https://arxiv.org/pdf/2403.10131) |
+|  RAG-RL  |                                                              [Paper](https://arxiv.org/pdf/2503.12759)                                                              |
 
 ## 🎉 Quickstart
 
