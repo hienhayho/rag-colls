@@ -22,13 +22,13 @@ Please visit [documentation](https://rag-colls.readthedocs.io/en/latest/) to get
 
 ## 🔧 Installation
 
--   You can easily install it from **pypi**:
+- You can easily install it from **pypi**:
 
 ```bash
 pip install -U rag-colls
 ```
 
--   **Docker** - 🐳:
+- **Docker** - 🐳:
 
 ```bash
 # Clone the repository
