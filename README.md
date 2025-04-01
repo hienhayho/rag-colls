@@ -12,6 +12,10 @@ Simple and easy to use, production-ready advanced RAG techniques.
 
 </div>
 
+## 📖 Documentation
+
+Please visit [documentation](https://rag-colls.readthedocs.io/en/latest/) to get latest update.
+
 ## 🔧 Installation
 
 - You can easily install it from **pypi**:
@@ -51,10 +55,6 @@ We are currently working on these projects and will be updated soon.
 |:----------:|:----------:|
 | RAFT | [Blog](https://techcommunity.microsoft.com/blog/aiplatformblog/raft-a-new-way-to-teach-llms-to-be-better-at-rag/4084674), [Paper](https://arxiv.org/pdf/2403.10131)|
 | RAG-RL |[Paper](https://arxiv.org/pdf/2503.12759)|
-
-## 📖 Documentation
-
-Will be updated soon ~
 
 ## 🎉 Quickstart
 
