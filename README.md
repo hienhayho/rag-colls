@@ -16,6 +16,17 @@ Simple and easy to use, production-ready advanced RAG techniques.
 
 </div>
 
+## 📑 Table of Contents
+
+- [📖 Documentation](#-documentation)
+- [🔧 Installation](#-installation)
+- [📚 Notebooks](#-notebooks)
+- [🚀 Upcoming](#-upcoming)
+- [🎉 Quickstart](#-quickstart)
+- [💻 Develop Guidance](#-develop-guidance)
+- [✨ Contributors](#-contributors)
+- [©️ License](#️-license)
+
 ## 📖 Documentation
 
 Please visit [documentation](https://rag-colls.readthedocs.io/en/latest/) to get latest update.
