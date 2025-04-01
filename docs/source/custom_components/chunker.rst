@@ -79,7 +79,7 @@ You must implement **_chunk** and **_achunk**. With **_achunk** method, you can 
             return chunked_documents
 
         async def _achunk(
-            self, documents: list[Document], show_progress: bool = False, **kwargs
+            self, documents: list[Document], **kwargs
         ):
             return await asyncio.to_thread(self._chunk, documents, **kwargs)
 
