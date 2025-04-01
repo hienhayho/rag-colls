@@ -3,12 +3,12 @@
 # -- Project information
 import os
 
-project = "Lumache"
-copyright = "2021, Graziella"
-author = "Graziella"
+project = "rag-colls"
+copyright = "2025, hienhayho"
+author = "hienhayho"
 
-release = "0.1"
-version = "0.1.0"
+release = "0.2.0.1"
+version = "0.2.0.1"
 
 # -- General configuration
 
