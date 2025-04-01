@@ -1,0 +1,25 @@
+name: Docker Build & Test
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    docker-test:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: [3.10, 3.11, 3.12]
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Build Docker image with Python ${{ matrix.python-version }}
+              run: |
+                  docker build -f docker/Dockerfile \
+                    --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
+                    --build-arg PYTHON_VERSION=${{ matrix.python-version }} \
+                    -t rag-colls:${{ matrix.python-version }} .
