@@ -60,6 +60,10 @@ Will be updated soon ~
 
 Please refer to [example](./examples) for more information.
 
+## 💻 Develope Guidance
+
+Please refer to [DEVELOPE.md](./DEVELOPE.md) for more information.
+
 ## ✨ Contributors
 
 <table>
