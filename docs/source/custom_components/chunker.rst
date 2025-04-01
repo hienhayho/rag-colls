@@ -5,7 +5,7 @@ Please follow these instructions to create a custom chunker.
 
 **1.** Place your custom chunker **.py** file in the **rag_colls/processors/chunkers** directory.
 
-Let's say you want to create a custom chunker called **`MyChunker`**, you would create a file named **my_chunker.py** in the **rag_colls/processors/chunkers** directory.
+Let's say you want to create a custom chunker called **MyChunker**, you would create a file named **my_chunker.py** in the **rag_colls/processors/chunkers** directory.
 
 The file structure should look like this:
 
@@ -57,7 +57,7 @@ Your custom chunker must inherit from the **BaseChunker** class. Here's the code
             """
             raise NotImplementedError("This method should be overridden by subclasses.")
 
-You must implement **_chunk**. **_achunk** is optional; it will default to the synchronous **_chunk** method if not provided.
+You must implement **_chunk** while **_achunk** is optional, it will default to the synchronous **_chunk** method if not provided.
 
 **Example: MyChunker**
 
