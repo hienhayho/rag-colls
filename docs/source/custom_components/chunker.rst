@@ -57,12 +57,12 @@ Your custom chunker must inherit from the **BaseChunker** class. Here's the code
             """
             raise NotImplementedError("This method should be overridden by subclasses.")
 
-You must implement **_chunk** while **_achunk** is optional, it will default to the synchronous **_chunk** method if not provided.
+You must implement **_chunk** and **_achunk**. With **_achunk** method, you can call **_chunk** asynchronously using **asyncio.to_thread**.
 
 **Example: MyChunker**
 
 .. code-block:: python
-
+    import asyncio
     from rag_colls.core.base.chunkers.base import BaseChunker
     from rag_colls.types.core.document import Document
 
@@ -76,6 +76,11 @@ You must implement **_chunk** while **_achunk** is optional, it will default to 
                 for chunk in chunks:
                     chunked_documents.append(Document(document=chunk, metadata=doc.metadata))
             return chunked_documents
+
+        async def _achunk(
+            self, documents: list[Document], show_progress: bool = False, **kwargs
+        ):
+            return await asyncio.to_thread(self._chunk, documents, **kwargs)
 
 **3.** Usage
 

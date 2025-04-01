@@ -89,4 +89,4 @@ class SemanticChunker(BaseChunker):
             list[Document]: List of chunked documents.
         """
         # For now, we will just call the synchronous method
-        return await asyncio.to_thread(self._chunk, documents, **kwargs)
+        return await asyncio.to_thread(self._chunk, documents, show_progress, **kwargs)
