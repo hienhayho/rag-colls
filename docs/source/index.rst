@@ -16,6 +16,8 @@ Contents
 --------
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Getting Started
 
-   usage
-   api
+   getting_started/installation
+   getting_started/quick_start
