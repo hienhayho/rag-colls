@@ -19,7 +19,7 @@ jobs:
 
             - name: Build Docker image with Python ${{ matrix.python-version }}
               run: |
-                  docker build -f docker/Dockerfile \
+                  DOCKER_BUILDKIT=1 docker build -f docker/Dockerfile \
                     --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} \
                     --build-arg PYTHON_VERSION=${{ matrix.python-version }} \
                     -t rag-colls:${{ matrix.python-version }} .
