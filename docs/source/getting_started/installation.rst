@@ -3,7 +3,7 @@ Installation
 
 You can follow one of these methods:
 
-1. **Install from PyPI**: The easiest way to install the latest stable version of `rag-colls` is via `pip`:
+1. **Install from PyPI**: The easiest way to install the latest stable version of **rag-colls** is via **pip**:
 
 .. code-block:: shell
 
