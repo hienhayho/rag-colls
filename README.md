@@ -23,6 +23,11 @@ pip install -U rag-colls
 - **Docker** - 🐳:
 
 ```bash
+# Clone the repository
+git clone https://github.com/hienhayho/rag-colls.git
+cd rag-colls/
+
+# Docker build
 DOCKER_BUILDKIT=1 docker build -f docker/Dockerfile \
                     --build-arg OPENAI_API_KEY=<YOUR_OPENAI_KEY> \
                     --build-arg PYTHON_VERSION="3.10" \
