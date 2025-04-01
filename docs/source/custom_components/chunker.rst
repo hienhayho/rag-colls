@@ -63,7 +63,7 @@ You must implement **_chunk** while **_achunk** is optional, it will default to 
 
 .. code-block:: python
 
-    from rag_colls.processors.chunkers import BaseChunker
+    from rag_colls.core.base.chunkers.base import BaseChunker
     from rag_colls.types.core.document import Document
 
     class MyChunker(BaseChunker):
