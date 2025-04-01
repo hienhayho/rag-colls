@@ -8,14 +8,25 @@ Simple and easy to use, production-ready advanced RAG techniques.
 
 ![Downloads](https://img.shields.io/pypi/dm/rag_colls)  ![License](https://img.shields.io/badge/license-MIT-green)
 
+![GitHub CI](https://github.com/hienhayho/rag-colls/actions/workflows/docker-build.yml/badge.svg) ![GitHub CI](https://github.com/hienhayho/rag-colls/actions/workflows/installation-testing.yml/badge.svg)
+
 </div>
 
 ## 🔧 Installation
 
-You can easily install it from pypi:
+- You can easily install it from **pypi**:
 
 ```bash
 pip install -U rag-colls
+```
+
+- **Docker** - 🐳:
+
+```bash
+DOCKER_BUILDKIT=1 docker build -f docker/Dockerfile \
+                    --build-arg OPENAI_API_KEY=<YOUR_OPENAI_KEY> \
+                    --build-arg PYTHON_VERSION="3.10" \
+                    -t rag-colls:3.10 .
 ```
 
 ## 📚 Notebooks
