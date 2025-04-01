@@ -22,3 +22,8 @@ Contents
    getting_started/installation
    getting_started/quick_start
    getting_started/resources
+
+   :maxdepth: 2
+   :caption: Custom Components
+
+   custom_components/chunker
