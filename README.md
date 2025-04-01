@@ -64,7 +64,7 @@ We are currently working on these projects and will be updated soon.
 
 Please refer to [example](./examples) for more information.
 
-## 💻 Develope Guidance
+## 💻 Develop Guidance
 
 Please refer to [DEVELOP.md](./DEVELOP.md) for more information.
 
