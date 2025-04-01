@@ -173,6 +173,6 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-samples/**/*.pdf
+samples/papers
 chroma_db/
 bm25s/
