@@ -62,6 +62,7 @@ You must implement **_chunk** and **_achunk**. With **_achunk** method, you can 
 **Example: MyChunker**
 
 .. code-block:: python
+
     import asyncio
     from rag_colls.core.base.chunkers.base import BaseChunker
     from rag_colls.types.core.document import Document
