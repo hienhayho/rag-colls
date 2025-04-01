@@ -1,7 +1,8 @@
+ARG PYTHON_VERSION
+ARG OPENAI_API_KEY
+
 FROM python:${PYTHON_VERSION}
 
-ARG PYTHON_VERSION=3.11
-ARG OPENAI_API_KEY
 
 RUN apt-get update && apt-get install -y curl gcc build-essential && rm -rf /var/lib/apt/lists/*
 
