@@ -1,0 +1,22 @@
+{
+    "name": "Python + uv + pre-commit + ruff",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "charliermarsh.ruff"
+            ]
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/python:1": {
+            "version": "3.10"
+        }
+    },
+    "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && uv venv && uv pip install -v . && uv pip install pre-commit ruff && pre-commit install",
+    "remoteUser": "vscode"
+}

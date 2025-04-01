@@ -1,6 +1,7 @@
 # rag-colls
 
 **rag-colls** a.k.a **RAG Coll**ection**s**.
+
 Simple and easy to use, production-ready advanced RAG techniques.
 
 <div align="center">
@@ -21,10 +22,10 @@ pip install -U rag-colls
 
 We have provided some notebooks for example usage.
 
-| RAG Tech | Link  | Guide | Tech Description |
+| RAG Tech | Code | Guide | Tech Description |
 |:----------:|:----------:|:----------:|:----------:|
 | BasicRAG | [BasicRAG](./rag_colls/rags/basic_rag) | [Colab](https://colab.research.google.com/drive/19hzGSQqx-LIsSbnNkV71ipRAIiFingvP)| Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py) |
-| ContextualRAG |[ContextualRAG](rag_colls/rags/contextual_rag)| [Colab](https://colab.research.google.com/drive/1vT2Wl8FzYt25_4CMMg-2vcF4y17iTSjO) | Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py) and [`BM25s`](rag_colls/databases/bm25/bm25s.py) |
+| ContextualRAG |[ContextualRAG](rag_colls/rags/contextual_rag)| [Colab](https://colab.research.google.com/drive/1vT2Wl8FzYt25_4CMMg-2vcF4y17iTSjO) | Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py) and [`BM25s`](rag_colls/databases/bm25/bm25s.py) version |
 
 ## 🚀 Upcoming
 
