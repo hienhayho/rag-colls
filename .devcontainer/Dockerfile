@@ -5,3 +5,5 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+RUN curl -sSL https://raw.githubusercontent.com/hienhayho/scripts/refs/heads/main/scripts/intall_fzf.sh | bash

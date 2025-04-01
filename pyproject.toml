@@ -31,4 +31,7 @@ Homepage = "https://github.com/hienhayho/rag-colls"
 Issues = "https://github.com/hienhayho/rag-colls/issues"
 
 [project.optional-dependencies]
-dev = ["pytest>=8.3.5"]
+dev = [
+    "pre-commit>=4.2.0",
+    "pytest>=8.3.5",
+]
