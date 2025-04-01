@@ -32,7 +32,7 @@ jobs:
                   echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
             - name: Install dependencies using uv
-              run: uv pip install -r <(uv pip compile pyproject.toml --all-extras) && uv pip install ".[dev]"
+              run: uv pip install -v . && uv pip install ".[dev]"
 
             - name: Run tests with pytest
               run: uv run pytest

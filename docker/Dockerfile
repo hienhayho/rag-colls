@@ -15,6 +15,6 @@ COPY . .
 
 ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 
-RUN uv pip install -r <(uv pip compile pyproject.toml --all-extras) && uv pip install ".[dev]"
+RUN uv pip install -v . && uv pip install ".[dev]"
 
 CMD ["uv", "run", "pytest"]
