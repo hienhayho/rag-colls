@@ -21,3 +21,4 @@ Contents
 
    getting_started/installation
    getting_started/quick_start
+   getting_started/resources

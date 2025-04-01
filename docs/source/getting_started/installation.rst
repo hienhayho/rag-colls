@@ -5,9 +5,9 @@ You can follow one of these methods:
 
 1. **Install from PyPI**: The easiest way to install the latest stable version of `rag-colls` is via `pip`:
 
-   .. code-block:: shell
+    .. code-block:: shell
 
-        pip install rag-colls
+        pip install -U rag-colls
 
 2. **Install from source**: If you want to install the latest development version, you can clone the repository and install it manually:
 
