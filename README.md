@@ -62,7 +62,7 @@ Please refer to [example](./examples) for more information.
 
 ## 💻 Develope Guidance
 
-Please refer to [DEVELOPE.md](./DEVELOPE.md) for more information.
+Please refer to [DEVELOP.md](./DEVELOP.md) for more information.
 
 ## ✨ Contributors
 
