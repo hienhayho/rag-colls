@@ -3,7 +3,10 @@ Custom Chunker
 
 Please follow these instructions to create a custom chunker.
 
-**1.** Place your custom chunker **.py** file in the **rag_colls/processors/chunkers** directory.
+Create folder structure for your custom chunker
+-----------------------
+
+Place your custom chunker **.py** file in the **rag_colls/processors/chunkers** directory.
 
 Let's say you want to create a custom chunker called **MyChunker**, you would create a file named **my_chunker.py** in the **rag_colls/processors/chunkers** directory.
 
@@ -19,7 +22,8 @@ The file structure should look like this:
     │   └── ...
     └── ...
 
-**2.** Implement your custom chunker.
+Implement your custom chunker.
+-----------------------
 
 Your custom chunker must inherit from the **BaseChunker** class. Here's the code for **BaseChunker**:
 
@@ -83,7 +87,8 @@ You must implement **_chunk** and **_achunk**. With **_achunk** method, you can 
         ):
             return await asyncio.to_thread(self._chunk, documents, **kwargs)
 
-**3.** Usage
+Usage
+-----------------------
 
 You can use your custom chunker like any built-in chunker:
 
@@ -110,3 +115,38 @@ Or use it while initializing a RAG instance:
         chunker=MyChunker(),
         ...
     )
+
+Create a test for your custom chunker
+-----------------------
+
+Remember to create test case for your custom chunker. You can refer to **tests/chunkers/test_semantic_chunker.py** for more information.
+
+In **tests/chunkers** directory, create a file named **test_my_chunker.py** and implement your test case.
+
+.. code-block:: python
+
+    from rag_colls.types.core.document import Document
+
+    def test_my_chunker():
+        """
+        Test the custom chunker.
+        """
+        from rag_colls.processors.chunkers.my_chunker import MyChunker
+
+        chunker = MyChunker()
+
+        documents = [Document(document="This is a long document that needs to be chunked.")]
+
+        chunked_documents = chunker.chunk(documents)
+
+        assert len(chunked_documents) > 0, "No chunked documents found"
+
+        first_chunk = chunked_documents[0]
+
+        assert hasattr(first_chunk, "document"), "Chunk does not have document attribute."
+        assert hasattr(first_chunk, "metadata"), "Chunk does not have metadata attribute."
+
+Add to the documentation (Optional)
+-----------------------
+
+Update later

@@ -14,6 +14,17 @@ def test_semantic_chunker():
 
     chunker = SemanticChunker()
 
-    assert len(chunker.chunk(documents)) >= len(documents)
+    chunked_documents = chunker.chunk(documents)
 
-    assert len(chunker.chunk(not_be_chunked_documents)) == len(not_be_chunked_documents)
+    assert len(chunked_documents) > len(documents), (
+        "Chunked documents should be more than original documents."
+    )
+
+    assert len(chunked_documents) == len(not_be_chunked_documents), (
+        "Chunked documents should be same as original documents."
+    )
+
+    first_chunk = chunked_documents[0]
+
+    assert hasattr(first_chunk, "document"), "Chunk does not have document attribute."
+    assert hasattr(first_chunk, "metadata"), "Chunk does not have metadata attribute."
