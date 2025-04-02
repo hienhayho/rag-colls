@@ -2,6 +2,7 @@
 
 # -- Project information
 import os
+import sys
 
 project = "rag-colls"
 copyright = "2025, hienhayho"
@@ -9,6 +10,8 @@ author = "hienhayho"
 
 release = "0.2.0.1"
 version = "0.2.0.1"
+
+sys.path.append(os.path.abspath("../.."))
 
 # -- General configuration
 
@@ -37,6 +40,12 @@ html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
 html_theme = "sphinx_book_theme"
 
 html_logo = "_static/Final_logo.png"
+html_theme_options = {
+    "path_to_docs": "docs/source",
+    "repository_url": "https://github.com/hienhayho/rag-colls",
+    "use_repository_button": True,
+    "use_edit_page_button": True,
+}
 
 html_static_path = ["_static"]
 
