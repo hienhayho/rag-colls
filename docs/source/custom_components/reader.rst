@@ -48,6 +48,7 @@ For example: **PyMuPDFReader** reader is used to read **.pdf** files, so the fil
 In your custom reader file, you need to create a class that inherits from the **BaseReader** class.
 
 Here's the code for **BaseReader**:
+
 .. code-block:: python
 
     from abc import ABC, abstractmethod
@@ -145,6 +146,7 @@ In this file, you can implement your custom reader class like this:
             return documents
 
 Then, add it in **rag_colls/processors/readers/txt/__init__.py** file:
+
 .. code-block:: python
 
     ...
