@@ -33,7 +33,12 @@ templates_path = ["_templates"]
 # -- Options for HTML output
 
 html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
-html_theme = "furo"
+# html_theme = "furo"
+html_theme = "sphinx_book_theme"
+
+html_logo = "_static/Final_logo.png"
+
+html_static_path = ["_static"]
 
 # -- Options for EPUB output
 epub_show_urls = "footnote"
