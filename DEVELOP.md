@@ -24,6 +24,14 @@ uv pip install -v -e .
 uv pip install pytest
 ```
 
+- **Install pre-commit:**
+
+```bash
+uv pip install pre-commit
+
+pre-commit install
+```
+
 ## Building
 
 Please refer to latest document for developing new features.
