@@ -1,6 +1,11 @@
 Welcome to rag-colls's documentation!
 ===================================
 
+.. image:: https://raw.githubusercontent.com/hienhayho/rag-colls/main/assets/Final_logo.png
+   :alt: RAG Collections Logo
+   :align: center
+   :width: 300px
+
 **rag-colls** a.k.a "RAG Collections".
 
 Simple and easy to use, production-ready advanced RAG techniques.
