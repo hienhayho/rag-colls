@@ -3,7 +3,7 @@ Custom Reader
 
 Please follow these instructions to create a custom reader.
 
-**1.** Create folder structure for your custom reader
+Create folder structure for your custom reader
 -----------------------
 
 Place your custom reader **.py** file in the **rag_colls/processors/readers** directory.
@@ -42,7 +42,7 @@ For example: **PyMuPDFReader** reader is used to read **.pdf** files, so the fil
     │   └── ...
     └── ...
 
-**2.** Implement your custom reader.
+Implement your custom reader.
 -----------------------
 
 In your custom reader file, you need to create a class that inherits from the **BaseReader** class.
@@ -154,7 +154,7 @@ Then, add it in **rag_colls/processors/readers/txt/__init__.py** file:
 
     __all__ = [..., "MyCustomTxtReader"]
 
-**3.** Usage
+Usage
 -----------------------
 
 You can use your custom reader in the same way as the built-in readers.
@@ -174,12 +174,12 @@ You can use your custom reader in the same way as the built-in readers.
         print(doc.document)
         print(doc.metadata)
 
-**4.** Create a test for your custom reader
+Create a test for your custom reader
 -----------------------
 
 Remember to create test case for your custom reader. You can refer to **tests/readers/test_pdf_reader.py** for more information.
 
-In **tests/readers** directory, create a file named **test_my_custom_txt_reader.py** and implement your test case.
+In **tests/readers** directory, create a file named **test_txt_reader.py** and implement your test case.
 
 .. code-block:: python
 
@@ -206,7 +206,7 @@ In **tests/readers** directory, create a file named **test_my_custom_txt_reader.
         )
 
 
-**5.** (Optional) Register as default reader
+Register as default reader (Optional)
 -----------------------
 
 In case you want to add your custom reader to the default readers list, you can do so by modifying the **rag_colls/processors/file_processor.py** file.
@@ -236,7 +236,7 @@ Find the **_get_default_processors** method in the **FileProcessor** class and a
                 ...
             }
 
-**6.** (Optional) Add to the documentation
+Add to the documentation (Optional)
 -----------------------
 
 Update later
