@@ -108,7 +108,7 @@ In this file, you can implement your custom reader class like this:
 .. code-block:: python
 
     from pathlib import Path
-    from rag_colls.processors.readers.base_reader import BaseReader
+    from rag_colls.core.base.readers.base import BaseReader
     from rag_colls.types.core.document import Document
 
     class MyCustomTxtReader(BaseReader):
