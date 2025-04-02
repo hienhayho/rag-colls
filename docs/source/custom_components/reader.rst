@@ -20,7 +20,7 @@ The file structure should look like this:
     ├── processors/
     │   ├── readers/
     │   │   ├── <ext>/
-    |   |   |   ├── __init__.py
+    │   │   │   ├── __init__.py
     │   │   │   ├── my_reader.py
     │   │   │   └── ...
     │   │   └── ...
@@ -35,7 +35,7 @@ For example: **PyMuPDFReader** reader is used to read **.pdf** files, so the fil
     ├── processors/
     │   ├── readers/
     │   │   ├── pdf/
-    |   |   |   ├── __init__.py
+    │   │   │   ├── __init__.py
     │   │   │   ├── pymupdf_reader.py
     │   │   │   └── ...
     │   │   └── ...
@@ -94,7 +94,7 @@ First, create a directory for your custom reader if it doesn't exist. The direct
     ├── processors/
     │   ├── readers/
     │   │   ├── txt/
-    |   |   |   ├── __init__.py
+    │   │   │   ├── __init__.py
     │   │   │   ├── my_custom_txt_reader.py
     │   │   │   └── ...
     │   │   └── ...
