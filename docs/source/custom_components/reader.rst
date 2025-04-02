@@ -3,8 +3,10 @@ Custom Reader
 
 Please follow these instructions to create a custom reader.
 
-**1.** Place your custom reader **.py** file in the **rag_colls/processors/readers** directory.
+**1.** Create folder structure for your custom reader
 -----------------------
+
+Place your custom reader **.py** file in the **rag_colls/processors/readers** directory.
 
 Let's say you want to create a custom reader called **MyReader** which used to read **<ext>** files.
 
