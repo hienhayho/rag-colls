@@ -1,17 +1,9 @@
 Welcome to rag-colls's documentation!
 ===================================
 
-.. image:: _static/Final_logo.png
-   :alt: RAG Collections Logo
-   :align: center
-   :width: 200px
-
 **rag-colls** a.k.a "RAG Collections".
 
 Simple and easy to use, production-ready advanced RAG techniques.
-
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
 
 .. note::
 
