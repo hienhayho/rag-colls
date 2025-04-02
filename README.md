@@ -68,6 +68,7 @@ We are currently working on these projects and will be updated soon.
 
 | RAG Tech |                                                                                Link                                                                                 |
 | :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| Graph-RAG | [Blog](https://microsoft.github.io/graphrag/), [Paper](https://arxiv.org/pdf/2404.16130) |
 |   RAFT   | [Blog](https://techcommunity.microsoft.com/blog/aiplatformblog/raft-a-new-way-to-teach-llms-to-be-better-at-rag/4084674), [Paper](https://arxiv.org/pdf/2403.10131) |
 |  RAG-RL  |                                                              [Paper](https://arxiv.org/pdf/2503.12759)                                                              |
 

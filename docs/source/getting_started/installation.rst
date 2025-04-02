@@ -3,13 +3,19 @@ Installation
 
 You can follow one of these methods:
 
-1. **Install from PyPI**: The easiest way to install the latest stable version of **rag-colls** is via **pip**:
+Install from PyPI
+----------------------
+
+The easiest way to install the latest stable version of **rag-colls** is via **pip**:
 
 .. code-block:: shell
 
     pip install -U rag-colls
 
-2. **Install from source**: If you want to install the latest development version, you can clone the repository and install it manually:
+Install from source
+----------------------
+
+If you want to install the latest development version, you can clone the repository and install it manually:
 
 .. code-block:: shell
 
@@ -19,7 +25,10 @@ You can follow one of these methods:
 
     pip install -v .
 
-3. **Install with docker**: If you prefer to use Docker, you can build the image from the Dockerfile provided in the repository:
+Install with docker
+----------------------
+
+If you prefer to use Docker, you can build the image from the Dockerfile provided in the repository:
 
 .. code-block:: shell
 
