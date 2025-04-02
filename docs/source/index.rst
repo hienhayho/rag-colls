@@ -28,3 +28,4 @@ Contents
    :caption: Custom Components
 
    custom_components/chunker
+   custom_components/reader
