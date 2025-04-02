@@ -80,6 +80,12 @@ class FileProcessor:
         return "FileProcessor"
 
     def _get_default_processors(self) -> dict[str, BaseReader]:
+        """
+        Initialize default file processors.
+
+        Returns:
+            dict[str, BaseReader]: A dictionary of default file processors.
+        """
         logger.info("Initializing default file processors ...")
         from .readers.pdf import PyMuPDFReader
 
