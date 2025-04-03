@@ -92,6 +92,13 @@ Please refer to [DEVELOP.md](./DEVELOP.md) for more information.
         </a>
     </td>
     <td align="center" style="word-wrap: break-word; width: 120.0; height: 120.0">
+        <a href=https://github.com/congtuong>
+            <img src=https://avatars.githubusercontent.com/u/132115321?v=4 width="80;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=congtuong/>
+            <br />
+            <sub style="font-size:12px"><b>congtuong</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 120.0; height: 120.0">
         <a href=https://github.com/datheobc123>
             <img src=https://avatars.githubusercontent.com/u/142462660?v=4 width="80;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Phan Thanh Dat/>
             <br />
