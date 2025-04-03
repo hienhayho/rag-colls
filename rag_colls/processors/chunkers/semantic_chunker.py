@@ -1,5 +1,7 @@
 import asyncio
 from llama_index.embeddings.openai import OpenAIEmbedding
+from llama_index.core.embeddings.mock_embed_model import MockEmbedding
+
 from llama_index.core import Document as LlamaIndexDocument
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 
@@ -24,6 +26,7 @@ class SemanticChunker(BaseChunker):
         embed_model_name: str | None = None,
         buffer_size: int = 1,
         breakpoint_percentile_threshold: int = 95,
+        mocking: bool = False,
     ):
         if not embed_model_name:
             embed_model_name = DEFAULT_OPENAI_EMBEDDING_MODEL
@@ -36,10 +39,16 @@ class SemanticChunker(BaseChunker):
         self.buffer_size = buffer_size
         self.breakpoint_percentile_threshold = breakpoint_percentile_threshold
 
+        embed_model = None
+        if mocking:
+            embed_model = MockEmbedding(embed_dim=512)
+        else:
+            embed_model = OpenAIEmbedding(model_name=embed_model_name)
+
         self.node_parser = SemanticSplitterNodeParser(
             buffer_size=self.buffer_size,
             breakpoint_percentile_threshold=self.breakpoint_percentile_threshold,
-            embed_model=OpenAIEmbedding(model=embed_model_name),
+            embed_model=embed_model,
         )
 
         logger.success(
@@ -47,7 +56,7 @@ class SemanticChunker(BaseChunker):
         )
 
     def __str__(self):
-        return f"SemanticChunker(embed_model_name={self.embed_model_name}, buffer_size={self.buffer_size}, breakpoint_percentile_threshold={self.breakpoint_percentile_threshold})"
+        return f"SemanticChunker(embed_model_name={self.embed_model_name}, buffer_size={self.buffer_size}, breakpoint_percentile_threshold={self.breakpoint_percentile_threshold}), mocking={self.mocking})"
 
     def _chunk(self, documents: list[Document], show_progress: bool = True, **kwargs):
         """
