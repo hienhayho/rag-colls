@@ -17,6 +17,6 @@
             "version": "3.10"
         }
     },
-    "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && uv venv && uv pip install -v . && pip install pre-commit ruff && pre-commit install",
+    "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && uv venv && uv pip install -v . && uv tool install pre-commit && uv tool install ruff && pre-commit install",
     "remoteUser": "vscode"
 }
