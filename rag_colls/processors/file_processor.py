@@ -129,14 +129,14 @@ class FileProcessor:
 
     def load_data(
         self,
-        file_paths: list[str | Path],
+        file_or_folder_paths: list[str | Path],
         should_splits: list[bool] | None = None,
         extra_infos: list[dict] | None = None,
         num_workers: int = 1,
     ) -> list[Document]:
-        logger.info(f"Processing {len(file_paths)} paths ...")
+        logger.info(f"Processing {len(file_or_folder_paths)} paths ...")
 
-        file_paths = self._get_all_file_paths(file_paths)
+        file_paths = self._get_all_file_paths(file_or_folder_paths)
 
         should_splits = should_splits or [True] * len(file_paths)
         extra_infos = extra_infos or [None] * len(file_paths)
@@ -171,7 +171,7 @@ class FileProcessor:
 
     async def aload_data(
         self,
-        file_paths: list[str | Path],
+        file_or_folder_paths: list[str | Path],
         should_splits: list[bool] | None = None,
         extra_infos: list[dict] | None = None,
         max_workers: int = 1,
@@ -179,9 +179,9 @@ class FileProcessor:
         """
         Asynchronous version of load_data.
         """
-        logger.info(f"Processing {len(file_paths)} files asynchronously ...")
+        logger.info(f"Processing {len(file_or_folder_paths)} files asynchronously ...")
 
-        file_paths = self._get_all_file_paths(file_paths)
+        file_paths = self._get_all_file_paths(file_or_folder_paths)
 
         should_splits = should_splits or [True] * len(file_paths)
         extra_infos = extra_infos or [None] * len(file_paths)
