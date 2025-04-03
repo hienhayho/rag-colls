@@ -6,7 +6,7 @@ def test_file_processor():
     file_processor = FileProcessor()
     file_paths = [str(file) for file in Path("samples/data").glob("*")]
     documents = file_processor.load_data(
-        file_paths=file_paths,
+        file_or_folder_paths=file_paths,
         should_splits=[True] * len(file_paths),
         extra_infos=[None] * len(file_paths),
     )
@@ -21,7 +21,7 @@ def test_file_processor_dir():
     file_processor = FileProcessor()
     file_paths = ["samples"]
     documents = file_processor.load_data(
-        file_paths=file_paths,
+        file_or_folder_paths=file_paths,
     )
     assert len(documents) > 0, "No documents found in the data directory."
     print("len(documents):", len(documents))
