@@ -2,12 +2,10 @@ import warnings
 
 from typing import Any
 from pathlib import Path
+from loguru import logger
 from multiprocessing import Pool
 from rag_colls.types.core.document import Document
-from rag_colls.core.settings import GlobalSettings
 from rag_colls.core.base.readers.base import BaseReader
-
-logger = GlobalSettings.logger
 
 
 def process_file_worker(

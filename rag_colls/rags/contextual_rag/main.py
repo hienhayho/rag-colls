@@ -104,7 +104,7 @@ class ContextualRAG(BaseRAG):
             batch_embedding (int): Batch size for embedding documents.
             num_workers (int): Number of workers for parallel processing.
         """
-        documents = self.processor.load_data(file_paths=file_paths)
+        documents = self.processor.load_data(file_or_folder_paths=file_paths)
 
         chunks = []
         for doc in tqdm(

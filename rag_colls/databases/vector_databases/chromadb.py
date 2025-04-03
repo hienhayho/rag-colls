@@ -1,11 +1,9 @@
 import asyncio
 import chromadb
+from loguru import logger
 
-from rag_colls.core.settings import GlobalSettings
 from rag_colls.types.retriever import RetrieverIngestInput, RetrieverResult
 from rag_colls.core.base.database.vector_database import BaseVectorDatabase
-
-logger = GlobalSettings.logger
 
 
 class ChromaVectorDatabase(BaseVectorDatabase):

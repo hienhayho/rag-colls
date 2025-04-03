@@ -1,10 +1,8 @@
+from loguru import logger
 from abc import abstractmethod
 
-from rag_colls.core.settings import GlobalSettings
 from rag_colls.types.retriever import RetrieverResult, RetrieverIngestInput
 from rag_colls.core.base.retrievers.base_retriever_provider import BaseRetrieverProvider
-
-logger = GlobalSettings.logger
 
 
 class BaseVectorDatabase(BaseRetrieverProvider):

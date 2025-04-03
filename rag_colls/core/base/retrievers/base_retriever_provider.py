@@ -1,14 +1,11 @@
 import asyncio
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
-from rag_colls.core.settings import GlobalSettings
 from rag_colls.types.retriever import (
     RetrieverResult,
     RetrieverQueryType,
     RetrieverIngestInput,
 )
-
-logger = GlobalSettings.logger
 
 
 @dataclass
