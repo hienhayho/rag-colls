@@ -2,9 +2,9 @@ from rag_colls.processors.file_processor import FileProcessor
 
 processor = FileProcessor()
 
-documents = processor.load_data(file_paths=["samples/data/2503.20376v1.pdf"])
+documents = processor.load_data(file_or_folder_paths=["samples/data/2503.20376v1.pdf"])
 not_be_chunked_documents = processor.load_data(
-    file_paths=["samples/data/2503.20376v1.pdf"],
+    file_or_folder_paths=["samples/data/2503.20376v1.pdf"],
     should_splits=[False],
 )
 
