@@ -10,6 +10,7 @@ class PyMuPDFReader(BaseReader):
         file_path: str | Path,
         should_split: bool = True,
         extra_info: dict | None = None,
+        encoding: str = "utf-8",
     ) -> list[Document]:
         try:
             import fitz
@@ -31,7 +32,7 @@ class PyMuPDFReader(BaseReader):
         for doc in docs:
             documents.append(
                 Document(
-                    document=doc.get_text().encode("utf-8"),
+                    document=doc.get_text().encode(encoding),
                     metadata=dict(
                         source=f"{file_name}: Page {doc.number + 1}",
                         **extra_info,

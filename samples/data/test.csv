@@ -1,0 +1,175 @@
+task_id,question,choices,answer
+k10168,"Question: What will be output of the following code?
+#include<stdio.h>
+int main()
+{
+    printf(""%d\t"",sizeof(6.5));
+    printf(""%d\t"",sizeof(90000));
+    printf(""%d"",sizeof('A'));
+    return 0;
+}","['8 4 2', '8 4 2', '8 4 4', '8 4 3']",C
+k10173,"Question: What will be output of the following c code?
+#include<stdio.h>
+const enum Alpha
+{
+      X,
+      Y=5,
+      Z
+}p=10;
+int main()
+{
+    enum Alpha a,b;
+    a= X;
+    b= Z;
+    printf(""%d"",a+b-p);
+    return 0;
+}","['-4', '-5', '10', '11']",A
+k10174,"Question: Match the following.
+      Group 1                       Group 2
+P. Regular expression        1. Syntax analysis
+Q. Pushdown automata         2. Code generation
+R. Dataflow analysis         3. Lexical analysis
+S. Register allocation       4. Code optimization","['P-4. Q-1, R-2, S-3', 'P-3, Q-1, R-4, S-2', 'P-3, Q-4, R-1, S-2', 'P-2, Q-1, R-4, S-3']",B
+k10175,"Question: Match the following.
+P. Regular expression        1. Syntax analysis
+Q. Pushdown automata         2. Code generation
+R. Dataflow analysis         3. Lexical analysis
+S. Register allocation       4. Code optimization","['P-4. Q-1, R-2, S-3', 'P-3, Q-1, R-4, S-2', 'P-3, Q-4, R-1, S-2', 'P-2, Q-1, R-4, S-3']",B
+k10176,"Question: Which grammar rules violate the requirements of an operator grammar?
+1.  P → Q R
+2.  P → Q s R
+3.  P → ε
+4.  P → Q t R r","['1 only', '1 and 3 only', '2 and 3 only', '3 and 4 only']",B
+k10177,"Question: Match the following.
+      List-I                  List-II
+A. Lexical analysis       1. Graph coloring
+B. Parsing                2. DFA minimization
+C. Register allocation    3. Post-order traversal
+D. Expression evaluation  4. Production tree","['A – 2, B – 3, C – 1, D – 4', 'A – 2, B – 1, C – 4, D – 3', 'A – 2, B – 4, C – 1, D – 3', 'A – 2, B – 3, C – 4, D – 1']",C
+k10186,"Question: How many derivation trees are there?
+S->bA       S->aB
+A->a          B->b
+A->aS           B->bS
+A->bAA          B->aBB","['1', '2', '3', '4']",C
+k10187,"Question: Given the language L-{ab, aa, baa}, which of the following strings are in LG?
+1) abaabaaabaa
+2) aaaabaaaa
+3) baaaaabaaaab
+4) baaaaabaa","['1,2 and 3', '2,3 and 4', '1,2 and 4', '1,3 and 4']",C
+k10188,"Question: This set of Compilers Multiple Choice Questions & Answers (MCQs) focuses on “Implementation of Increment and Decrement – 1”.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     1. What value does the variable b have after ALL of the code executes?
+int a;
+int b;
+a=1;
+b=a++;","['1', '2', '3', 'unknown/undefined']",A
+k10190,"Question: What value does the variable z have after ALL of the code above executes?
+int x;
+int y;
+int z;
+x=3;
+y=4;
+z = ++x * y++;","['9', '12', '16', '20']",C
+k10191,"Question: What value does the variable x have after ALL of the code above executes?
+int x;
+int y;
+int z;
+x=3;
+y=4;
+z = ++x * y++;","['2', '3', '4', 'unknown/undefined']",C
+k10194,"Question: What will be output of the following C code?
+#include <stdio.h>
+int main()
+{
+    int x=4, y, z;
+    y = --x;
+    z = x--;
+    printf(""%d, %d, %d\n"", x, y, z);
+    return 0;
+}","['4,3,3', '3,3,3', '2,3,3', '4,4,3']",C
+k10195,"Question: What will be output of the following C code?
+#include <stdio.h>
+main()
+{
+    int a=1, b=3;
+    b= a++ + a++ + a++ + a++ + a++;
+    printf(""a=%d \n b=%d"",a,b);
+}","['a = 6, b = 15', 'a = 1, b = 3', 'a = 1, b = 15', 'a = 2, b = 4']",A
+k10196,"Question: What will be output of the following C code?
+#include <stdio.h>
+main()
+{
+    int a=9, b=9;
+    a=b++;
+    b=a++;
+    b=++b;
+    printf(""%d %d"",a,b);
+}","['9,9', '10,10', '9,10', '10,9']",B
+k10197,"Question: What will be output of the following C code?
+#include <stdio.h>
+main()
+{
+     int a,b;
+     b = 10;
+     a = ++b + ++b;
+     printf(""%d%d"",a,b);
+}","['24,12', '23,12', '23,10', '24,10']",B
+k10199,"Question: What does the following declaration mean?
+ int (*a)[10] a","['Pointer to an array', 'None of the mentioned', 'Array of 10 integers', 'Pointer to an array & Array of 10 integers']",A
+k10200,"Question: What is the meaning of the following declaration?
+Int arr[20]","['Integer Array of size 20', 'None of the mentioned', 'Array of size 20', 'Array of size 20 that can have higher integer address']",A
+k10210,"Question: Select the output for following set of code.
+static void Main(string[] args)
+{
+    int i = 2, j = 4;
+    switch (i + j * 2)
+    {
+        case 1 :
+        case 2 :
+            Console.WriteLine(""1 and 2"");
+            break;
+        case 3 to 10:
+            Console.WriteLine(""3 to 10"");
+            break;
+    }
+    Console.ReadLine();
+}","['3 to 10 will be printed', '1 and 2 will be printed', 'error', 'The code gives output as 3 to 10']",C
+k10212,"Question: Select output for following set of code.
+static void Main(string[] args)
+{
+     int const p = 0;
+     switch (3 * 5 / 6)
+     {
+         case p:
+             Console.WriteLine(""A"");
+             break;
+         case p * 1:
+             Console.WriteLine(""B"");
+             break;
+         case p - 2:
+             Console.WriteLine(""C"");
+             break;
+         default:
+             Console.WriteLine(""D"");
+       }
+}","['A', 'B', 'C', 'Compile time error']",D
+k10213,"Question: Select output for following set of code.
+static void Main(string[] args)
+{
+    int i = 2, j = 3, k = 4;
+    switch (i + j - k)
+    {
+        case 0: case 2: case 4:
+            ++i;
+            k += j;
+            break;
+        case 1: case 3: case 5 :
+            --i;
+            k -= j;
+            break;
+        default:
+            i += j;
+            break;
+     }
+     Console.WriteLine(i + ""\n"" + j + ""\n"" + k);
+     Console.ReadLine();
+}","['1 3 1', '2 3 4', '5 3 4', 'Compile time error']",A

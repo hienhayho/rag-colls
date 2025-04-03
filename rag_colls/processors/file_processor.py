@@ -89,7 +89,9 @@ class FileProcessor:
         logger.info("Initializing default file processors ...")
         from .readers.pdf import PyMuPDFReader
 
-        return {".pdf": PyMuPDFReader()}
+        return {
+            ".pdf": PyMuPDFReader(),
+        }
 
     def load_data(
         self,
