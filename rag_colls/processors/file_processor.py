@@ -1,7 +1,8 @@
+import warnings
+
 from typing import Any
 from pathlib import Path
 from multiprocessing import Pool
-
 from rag_colls.types.core.document import Document
 from rag_colls.core.settings import GlobalSettings
 from rag_colls.core.base.readers.base import BaseReader
@@ -106,15 +107,7 @@ class FileProcessor:
             ".xls": ExcelReader(),
         }
 
-    def load_data(
-        self,
-        file_paths: list[str | Path],
-        should_splits: list[bool] | None = None,
-        extra_infos: list[dict] | None = None,
-        num_workers: int = 1,
-    ) -> list[Document]:
-        logger.info(f"Processing {len(file_paths)} paths ...")
-
+    def _get_all_file_paths(self, file_paths: list[str | Path]) -> list[Path]:
         all_file_paths = []
         for path in file_paths:
             if isinstance(path, str):
@@ -131,11 +124,19 @@ class FileProcessor:
                 elif path.is_file() and path.suffix in self.processors:
                     all_file_paths.append(path)
                 else:
-                    raise ValueError(f"Invalid file_paths: {file_paths}")
-            else:
-                raise ValueError(f"Invalid file_paths: {file_paths}")
+                    warnings.warn(f"Invalid file_paths: {path}")
+        return [str(file) for file in all_file_paths]
 
-        file_paths = all_file_paths
+    def load_data(
+        self,
+        file_paths: list[str | Path],
+        should_splits: list[bool] | None = None,
+        extra_infos: list[dict] | None = None,
+        num_workers: int = 1,
+    ) -> list[Document]:
+        logger.info(f"Processing {len(file_paths)} paths ...")
+
+        file_paths = self._get_all_file_paths(file_paths)
 
         should_splits = should_splits or [True] * len(file_paths)
         extra_infos = extra_infos or [None] * len(file_paths)
@@ -180,25 +181,7 @@ class FileProcessor:
         """
         logger.info(f"Processing {len(file_paths)} files asynchronously ...")
 
-        all_file_paths = []
-        for path in file_paths:
-            if isinstance(path, str):
-                path = Path(path)
-            if isinstance(path, Path):
-                if path.is_dir():
-                    all_file_paths.extend(
-                        [
-                            file
-                            for file in path.glob("**/*")
-                            if file.is_file() and file.suffix in self.processors
-                        ]
-                    )
-                elif path.is_file() and path.suffix in self.processors:
-                    all_file_paths.append(path)
-                else:
-                    raise ValueError(f"Invalid file_paths: {file_paths}")
-
-        file_paths = all_file_paths
+        file_paths = self._get_all_file_paths(file_paths)
 
         should_splits = should_splits or [True] * len(file_paths)
         extra_infos = extra_infos or [None] * len(file_paths)

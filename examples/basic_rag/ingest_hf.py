@@ -13,4 +13,4 @@ rag = BasicRAG(
     embed_model=HuggingFaceEmbedding(model_name="BAAI/bge-base-en-v1.5"),
 )
 
-rag.ingest_db(file_paths=["samples/papers/2409.13588v1.pdf"], batch_embedding=100)
+rag.ingest_db(file_paths=["samples/papers/"], batch_embedding=100)
