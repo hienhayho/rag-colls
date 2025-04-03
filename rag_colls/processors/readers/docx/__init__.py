@@ -1,3 +1,3 @@
-from .docx_reader import DOCXReader
+from .docx_reader import DocxReader
 
-__all__ = ["DOCXReader"]
+__all__ = ["DocxReader"]

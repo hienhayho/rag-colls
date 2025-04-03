@@ -4,7 +4,7 @@ from rag_colls.types.core.document import Document
 from rag_colls.core.base.readers.base import BaseReader
 
 
-class TXTReader(BaseReader):
+class TxtReader(BaseReader):
     def _load_data(
         self,
         file_path: str | Path,

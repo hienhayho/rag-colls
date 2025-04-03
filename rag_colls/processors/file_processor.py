@@ -88,9 +88,22 @@ class FileProcessor:
         """
         logger.info("Initializing default file processors ...")
         from .readers.pdf import PyMuPDFReader
+        from .readers.csv import CSVReader
+        from .readers.docx import DocxReader
+        from .readers.txt import TxtReader
+        from .readers.json import JSONReader
+        from .readers.html import HTMLReader
+        from .readers.excel import ExcelReader
 
         return {
             ".pdf": PyMuPDFReader(),
+            ".csv": CSVReader(),
+            ".docx": DocxReader(),
+            ".txt": TxtReader(),
+            ".json": JSONReader(),
+            ".html": HTMLReader(),
+            ".xlsx": ExcelReader(),
+            ".xls": ExcelReader(),
         }
 
     def load_data(
@@ -100,7 +113,29 @@ class FileProcessor:
         extra_infos: list[dict] | None = None,
         num_workers: int = 1,
     ) -> list[Document]:
-        logger.info(f"Processing {len(file_paths)} files ...")
+        logger.info(f"Processing {len(file_paths)} paths ...")
+
+        all_file_paths = []
+        for path in file_paths:
+            if isinstance(path, str):
+                path = Path(path)
+            if isinstance(path, Path):
+                if path.is_dir():
+                    all_file_paths.extend(
+                        [
+                            file
+                            for file in path.glob("**/*")
+                            if file.is_file() and file.suffix in self.processors
+                        ]
+                    )
+                elif path.is_file() and path.suffix in self.processors:
+                    all_file_paths.append(path)
+                else:
+                    raise ValueError(f"Invalid file_paths: {file_paths}")
+            else:
+                raise ValueError(f"Invalid file_paths: {file_paths}")
+
+        file_paths = all_file_paths
 
         should_splits = should_splits or [True] * len(file_paths)
         extra_infos = extra_infos or [None] * len(file_paths)
@@ -144,6 +179,26 @@ class FileProcessor:
         Asynchronous version of load_data.
         """
         logger.info(f"Processing {len(file_paths)} files asynchronously ...")
+
+        all_file_paths = []
+        for path in file_paths:
+            if isinstance(path, str):
+                path = Path(path)
+            if isinstance(path, Path):
+                if path.is_dir():
+                    all_file_paths.extend(
+                        [
+                            file
+                            for file in path.glob("**/*")
+                            if file.is_file() and file.suffix in self.processors
+                        ]
+                    )
+                elif path.is_file() and path.suffix in self.processors:
+                    all_file_paths.append(path)
+                else:
+                    raise ValueError(f"Invalid file_paths: {file_paths}")
+
+        file_paths = all_file_paths
 
         should_splits = should_splits or [True] * len(file_paths)
         extra_infos = extra_infos or [None] * len(file_paths)

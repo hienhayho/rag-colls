@@ -1,11 +1,11 @@
-from rag_colls.processors.readers.txt import TXTReader
+from rag_colls.processors.readers.txt import TxtReader
 
 
 def test_txt_reader():
     """
     Test the TXTReader class.
     """
-    reader = TXTReader()
+    reader = TxtReader()
 
     documents = reader.load_data(file_path="samples/data/test.csv")
 
