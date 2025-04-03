@@ -1,11 +1,11 @@
-from rag_colls.processors.readers.docx import DOCXReader
+from rag_colls.processors.readers.docx import DocxReader
 
 
 def test_docx_reader():
     """
     Test the DOCXReader class.
     """
-    reader = DOCXReader()
+    reader = DocxReader()
 
     documents = reader.load_data(file_path="samples/data/test.docx")
 

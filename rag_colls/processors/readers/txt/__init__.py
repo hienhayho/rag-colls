@@ -1,3 +1,3 @@
-from .txt_reader import TXTReader
+from .txt_reader import TxtReader
 
-__all__ = ["TXTReader"]
+__all__ = ["TxtReader"]

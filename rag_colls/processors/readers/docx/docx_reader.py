@@ -4,7 +4,7 @@ from rag_colls.types.core.document import Document
 from rag_colls.core.base.readers.base import BaseReader
 
 
-class DOCXReader(BaseReader):
+class DocxReader(BaseReader):
     def _load_data(
         self,
         file_path: str | Path,
@@ -37,19 +37,16 @@ class DOCXReader(BaseReader):
         extra_info["should_split"] = should_split
         extra_info["file_size"] = file_path.stat().st_size
         extra_info["file_type"] = "docx"
+        extra_info["source"] = f"{file_name}"
 
         # TODO: This currently only supports to split each paragraph into a document
-        documents = []
+        text = []
         for i, paragraph in enumerate(doc.paragraphs):
             if paragraph.text.strip():  # Only add non-empty paragraphs
-                documents.append(
-                    Document(
-                        document=paragraph.text.encode(encoding),
-                        metadata=dict(
-                            source=f"{file_name}: Paragraph {i + 1}",
-                            **extra_info,
-                        ),
-                    )
-                )
+                text.append(paragraph.text)
+
+        documents = [
+            Document(document="\n".join(text).encode(encoding), metadata=extra_info)
+        ]
 
         return documents

@@ -40,7 +40,6 @@ class SemanticChunker(BaseChunker):
         self.buffer_size = buffer_size
         self.breakpoint_percentile_threshold = breakpoint_percentile_threshold
 
-
         if mocking:
             self.embed_model = MockEmbedding(embed_dim=512)
         else:
@@ -49,7 +48,7 @@ class SemanticChunker(BaseChunker):
             else:
                 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
-              self.embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
+                self.embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
 
         self.node_parser = SemanticSplitterNodeParser(
             buffer_size=self.buffer_size,
