@@ -57,7 +57,7 @@ class BasicRAG(BaseRAG):
             file_paths (list[str]): List of file paths to be ingested.
             batch_embedding (int): Batch size for embedding documents.
         """
-        documents = self.processor.load_data(file_paths=file_paths)
+        documents = self.processor.load_data(file_or_folder_paths=file_paths)
 
         chunks = self.chunker.chunk(documents=documents)
 

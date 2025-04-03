@@ -1,16 +1,14 @@
 import bm25s
 import shutil
 from pathlib import Path
+from loguru import logger
 
-from rag_colls.core.settings import GlobalSettings
 from rag_colls.core.base.database.bm25 import BaseBM25Retriever
 from rag_colls.types.retriever import (
     RetrieverResult,
     RetrieverQueryType,
     RetrieverIngestInput,
 )
-
-logger = GlobalSettings.logger
 
 
 class BM25s(BaseBM25Retriever):

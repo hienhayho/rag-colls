@@ -1,11 +1,9 @@
 import inspect
+from loguru import logger
 from pydantic import BaseModel
 from typing import get_type_hints, Type, get_args, get_origin, Callable, Any
 
 from rag_colls.core.constants import DEBUG_MODE
-from rag_colls.core.settings import GlobalSettings
-
-logger = GlobalSettings.logger
 
 
 def log_debug(message: str):

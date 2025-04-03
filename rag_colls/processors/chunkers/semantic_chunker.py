@@ -1,4 +1,5 @@
 import asyncio
+from loguru import logger
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core.embeddings.mock_embed_model import MockEmbedding
 
@@ -6,15 +7,12 @@ from llama_index.core import Document as LlamaIndexDocument
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 
 from rag_colls.types.core.document import Document
-from rag_colls.core.settings import GlobalSettings
 from rag_colls.core.base.chunkers.base import BaseChunker
 from rag_colls.core.constants import (
     HF_EMBEDDING_MODELS,
     OPENAI_EMBEDDING_MODELS,
     DEFAULT_OPENAI_EMBEDDING_MODEL,
 )
-
-logger = GlobalSettings.logger
 
 
 class SemanticChunker(BaseChunker):
@@ -41,7 +39,9 @@ class SemanticChunker(BaseChunker):
         self.breakpoint_percentile_threshold = breakpoint_percentile_threshold
 
         if mocking:
+            # NOTE: Use in ci/cd testing
             self.embed_model = MockEmbedding(embed_dim=512)
+
         else:
             if embed_model_name in OPENAI_EMBEDDING_MODELS:
                 self.embed_model = OpenAIEmbedding(model=embed_model_name)

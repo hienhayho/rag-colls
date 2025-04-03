@@ -1,3 +1,4 @@
+from loguru import logger
 from litellm import completion, acompletion
 
 from rag_colls.core.constants import DEFAULT_OPENAI_MODEL
@@ -20,6 +21,7 @@ class LiteLLM(BaseCompletionLLM):
             model_name (str): The name of the model to use.
         """
         self.model_name = model_name or DEFAULT_OPENAI_MODEL
+        logger.info(f"Using LiteLLM with model: {self.model_name}")
 
     def __str__(self):
         return f"LiteLLM(model_name={self.model_name})"

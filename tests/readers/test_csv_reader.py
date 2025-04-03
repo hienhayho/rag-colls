@@ -5,7 +5,6 @@ def test_csv_reader():
     """
     Test the CSVReader class.
     """
-    print("TEST 123")
     reader = CSVReader()
 
     documents = reader.load_data(file_path="samples/data/test.csv")
