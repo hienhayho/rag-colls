@@ -1,5 +1,5 @@
 Welcome to rag-colls's documentation!
-===================================
+=====================================
 
 **rag-colls** a.k.a "RAG Collections".
 

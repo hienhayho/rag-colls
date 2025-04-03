@@ -32,6 +32,8 @@ source ../docs_env/bin/activate
 uv pip install -r requirements.txt
 ```
 
+## Build the docs
+
 - Clean the previous build (optional but recommended):
 
 ```bash
@@ -52,7 +54,7 @@ Serve the documentation locally:
 uv run --active python -m http.server -d build/html
 ```
 
-It will run on port `8000` by default. You can run with another port:
+It will run on port `8000` by default. You can run with another port, for example:
 
 ```bash
 uv run --active python -m http.server 3000 -d build/html

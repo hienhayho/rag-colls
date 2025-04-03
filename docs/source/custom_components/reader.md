@@ -72,7 +72,7 @@ class BaseReader(ABC):
         raise NotImplementedError("This method should be overridden by subclasses.")
 ```
 
-> **Note**
+> **Note:**
 > You must add `should_split` and `extra_info` into `metadata` of each `Document` object.
 
 ### Example: `MyCustomTxtReader`
@@ -123,18 +123,14 @@ class MyCustomTxtReader(BaseReader):
         documents = []
         with open(file_path, "r") as file:
             content = file.read()
-            if should_split:
-                chunks = content.split("\n\n")  # Example: split by double newlines
-                for chunk in chunks:
-                    documents.append(Document(
-                        document=chunk,
-                        metadata={"should_split": should_split, **(extra_info or {})}
-                    ))
-            else:
+
+            chunks = content.split("\n\n")  # Example: split by double newlines
+            for chunk in chunks:
                 documents.append(Document(
-                    document=content,
+                    document=chunk,
                     metadata={"should_split": should_split, **(extra_info or {})}
                 ))
+
         return documents
 ```
 
