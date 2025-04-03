@@ -176,3 +176,4 @@ cython_debug/
 samples/papers
 chroma_db/
 bm25s/
+docs_env/
