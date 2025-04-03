@@ -1,15 +1,15 @@
-from rag_colls.processors.readers.pdf import PyMuPDFReader
+from rag_colls.processors.readers.txt import TXTReader
 
 
-def test_pymupdf_reader():
+def test_txt_reader():
     """
-    Test the PyMuPDFReader class.
+    Test the TXTReader class.
     """
-    reader = PyMuPDFReader()
+    reader = TXTReader()
 
-    documents = reader.load_data(file_path="samples/data/2503.20376v1.pdf")
+    documents = reader.load_data(file_path="samples/data/test.csv")
 
-    assert len(documents) > 0, "No documents found in the PDF file."
+    assert len(documents) > 0, "No documents found in the TXT file."
 
     first_document = documents[0]
     assert hasattr(first_document, "document"), (

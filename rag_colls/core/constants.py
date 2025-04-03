@@ -10,4 +10,12 @@ OPENAI_EMBEDDING_MODELS = [
 
 DEFAULT_OPENAI_EMBEDDING_MODEL = "text-embedding-ada-002"
 
+HF_EMBEDDING_MODELS = [
+    "BAAI/bge-small-en-v1.5",
+    "BAAI/bge-base-en-v1.5",
+    "BAAI/bge-large-en-v1.5",
+]
+
+DEFAULT_HF_EMBEDDING_MODEL = "BAAI/bge-base-en-v1.5"
+
 DEFAULT_OPENAI_MODEL = "openai/gpt-4o-mini"

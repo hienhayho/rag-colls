@@ -7,6 +7,7 @@ from rag_colls.types.core.document import Document
 from rag_colls.core.settings import GlobalSettings
 from rag_colls.core.base.chunkers.base import BaseChunker
 from rag_colls.core.constants import (
+    HF_EMBEDDING_MODELS,
     OPENAI_EMBEDDING_MODELS,
     DEFAULT_OPENAI_EMBEDDING_MODEL,
 )
@@ -28,18 +29,25 @@ class SemanticChunker(BaseChunker):
         if not embed_model_name:
             embed_model_name = DEFAULT_OPENAI_EMBEDDING_MODEL
 
-        assert embed_model_name in OPENAI_EMBEDDING_MODELS, (
-            f"Model {embed_model_name} is not supported. Please use openai embedding models."
+        assert embed_model_name in OPENAI_EMBEDDING_MODELS + HF_EMBEDDING_MODELS, (
+            f"Model {embed_model_name} is not supported. Please use openai or flag embedding models."
         )
 
         self.embed_model_name = embed_model_name
         self.buffer_size = buffer_size
         self.breakpoint_percentile_threshold = breakpoint_percentile_threshold
 
+        if embed_model_name in OPENAI_EMBEDDING_MODELS:
+            self.embed_model = OpenAIEmbedding(model=embed_model_name)
+        else:
+            from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+
+            self.embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
+
         self.node_parser = SemanticSplitterNodeParser(
             buffer_size=self.buffer_size,
             breakpoint_percentile_threshold=self.breakpoint_percentile_threshold,
-            embed_model=OpenAIEmbedding(model=embed_model_name),
+            embed_model=self.embed_model,
         )
 
         logger.success(
