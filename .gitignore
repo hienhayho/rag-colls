@@ -177,3 +177,5 @@ samples/papers
 chroma_db/
 bm25s/
 docs_env/
+
+model_cache/

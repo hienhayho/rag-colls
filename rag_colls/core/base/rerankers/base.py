@@ -18,7 +18,7 @@ class BaseReranker(ABC):
         Args:
             query (RetrieverQueryType): The query to rerank the results for.
             results (list[list[RetrieverResult]]): The results to rerank.
-            top_k (int): The number of top results to return.
+            top_k (int): The `MAXIMUM` number of top results to return.
             **kwargs: Additional arguments for the reranker.
 
         Returns:
@@ -39,7 +39,8 @@ class BaseReranker(ABC):
         Args:
             query (RetrieverQueryType): The query to rerank the results for.
             results (list[list[RetrieverResult]]): The results to rerank.
-            top_k (int): The number of top results to return.
+            top_k (int): The `MAXIMUM` number of top results to return.
+            **kwargs: Additional arguments for the reranker.
 
         Returns:
             list[RetrieverResult]: The reranked results.
