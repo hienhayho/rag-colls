@@ -105,25 +105,42 @@ class FileProcessor:
             ".xls": ExcelReader(),
         }
 
-    def _get_all_file_paths(self, file_paths: list[str | Path]) -> list[Path]:
+    def _get_all_file_paths(
+        self,
+        file_or_folder_paths: list[str | Path],
+        should_splits: list[bool],
+        extra_infos: list[dict],
+    ) -> list[Path]:
         all_file_paths = []
-        for path in file_paths:
+        new_should_splits = []
+        new_extra_infos = []
+
+        for path, should_split, extra_info in zip(
+            file_or_folder_paths, should_splits, extra_infos
+        ):
             if isinstance(path, str):
                 path = Path(path)
             if isinstance(path, Path):
                 if path.is_dir():
-                    all_file_paths.extend(
-                        [
-                            file
-                            for file in path.glob("**/*")
-                            if file.is_file() and file.suffix in self.processors
-                        ]
-                    )
+                    files = [
+                        file
+                        for file in path.glob("**/*")
+                        if file.is_file() and file.suffix in self.processors
+                    ]
+                    all_file_paths.extend(files)
+                    new_should_splits.extend([should_split] * len(files))
+                    new_extra_infos.extend([extra_info] * len(files))
                 elif path.is_file() and path.suffix in self.processors:
                     all_file_paths.append(path)
+                    new_should_splits.append(should_split)
+                    new_extra_infos.append(extra_info)
                 else:
                     warnings.warn(f"Invalid file_paths: {path}")
-        return [str(file) for file in all_file_paths]
+        return (
+            [str(file) for file in all_file_paths],
+            new_should_splits,
+            new_extra_infos,
+        )
 
     def load_data(
         self,
@@ -134,19 +151,20 @@ class FileProcessor:
     ) -> list[Document]:
         logger.info(f"Processing {len(file_or_folder_paths)} paths ...")
 
-        file_paths = self._get_all_file_paths(file_or_folder_paths)
+        should_splits = should_splits or [True] * len(file_or_folder_paths)
+        extra_infos = extra_infos or [None] * len(file_or_folder_paths)
 
-        should_splits = should_splits or [True] * len(file_paths)
-        extra_infos = extra_infos or [None] * len(file_paths)
+        assert len(file_or_folder_paths) == len(should_splits), (
+            "file_or_folder_paths and should_splits must have the same length."
+        )
 
-        assert len(file_paths) == len(should_splits), (
-            "file_paths and should_splits must have the same length."
+        assert len(file_or_folder_paths) == len(extra_infos), (
+            "file_or_folder_paths and extra_infos must have the same length."
         )
-        assert len(file_paths) == len(extra_infos), (
-            "file_paths and extra_infos must have the same length."
+
+        file_paths, should_splits, extra_infos = self._get_all_file_paths(
+            file_or_folder_paths, should_splits, extra_infos
         )
-        assert num_workers > 0, "num_workers must be greater than 0."
-        assert isinstance(num_workers, int), "num_workers must be an integer."
 
         args_list = [
             (file_paths[i], should_splits[i], extra_infos[i], self.processors)
@@ -179,16 +197,19 @@ class FileProcessor:
         """
         logger.info(f"Processing {len(file_or_folder_paths)} files asynchronously ...")
 
-        file_paths = self._get_all_file_paths(file_or_folder_paths)
+        should_splits = should_splits or [True] * len(file_or_folder_paths)
+        extra_infos = extra_infos or [None] * len(file_or_folder_paths)
 
-        should_splits = should_splits or [True] * len(file_paths)
-        extra_infos = extra_infos or [None] * len(file_paths)
-
-        assert len(file_paths) == len(should_splits), (
-            "file_paths and should_splits must have the same length."
+        assert len(file_or_folder_paths) == len(should_splits), (
+            "file_or_folder_paths and should_splits must have the same length."
         )
-        assert len(file_paths) == len(extra_infos), (
-            "file_paths and extra_infos must have the same length."
+
+        assert len(file_or_folder_paths) == len(extra_infos), (
+            "file_or_folder_paths and extra_infos must have the same length."
+        )
+
+        file_paths, should_splits, extra_infos = self._get_all_file_paths(
+            file_or_folder_paths, should_splits, extra_infos
         )
 
         args_list = [

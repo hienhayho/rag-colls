@@ -21,4 +21,6 @@ rag = ContextualRAG(
     gen_contextual_prompt_template=CONTEXTUAL_PROMPT,
 )
 
-rag.ingest_db(file_paths=["samples/papers/2409.13588v1.pdf"], batch_embedding=100)
+rag.ingest_db(
+    file_or_folder_paths=["samples/papers/2409.13588v1.pdf"], batch_embedding=100
+)
