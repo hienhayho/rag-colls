@@ -42,7 +42,7 @@ class ChromaVectorDatabase(BaseVectorDatabase):
         """
         try:
             self.client.get_collection(name=collection_name)
-        except chromadb.errors.InvalidCollectionException:
+        except Exception:
             return False
         return True
 

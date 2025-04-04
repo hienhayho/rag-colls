@@ -3,17 +3,17 @@ requires = ["setuptools>=75", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-exclude = ["assets", "examples", "docker", "notebooks", "tests"]
+exclude = ["assets", "examples", "docker", "notebooks", "tests", "docs_env"]
 
 [project]
 name = "rag-colls"
-version = "0.2.0.2"
+version = "0.2.0.6"
 description = "rag-colls - Implement recent advanced RAG techniques"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "bm25s>=0.2.10",
-    "chromadb>=0.6.3",
+    "chromadb>=0.6.3,<1.0.0",
     "elasticsearch[async]>=8.17.2",
     "gdown>=5.2.0",
     "html2text>=2024.2.26",
@@ -22,7 +22,7 @@ dependencies = [
     "llama-index-embeddings-openai>=0.3.1",
     "loguru>=0.7.3",
     "openpyxl>=3.1.5",
-    "pandas>=2.2.3",
+    "pandas>=2.2.0,<2.2.3",
     "platformdirs>=4.3.7",
     "pymupdf>=1.25.4",
     "python-docx>=1.1.2",
@@ -36,10 +36,5 @@ Issues = "https://github.com/hienhayho/rag-colls/issues"
 
 [project.optional-dependencies]
 dev = ["pre-commit>=4.2.0", "pytest>=8.3.5"]
-docs = [
-    "esbonio>=0.12.0",
-    "myst-parser>=4.0.1",
-]
-huggingface-embedding = [
-    "llama-index-embeddings-huggingface>=0.5.2",
-]
+docs = ["esbonio>=0.12.0", "myst-parser>=4.0.1"]
+huggingface-embedding = ["llama-index-embeddings-huggingface>=0.5.2"]
