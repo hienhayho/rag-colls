@@ -94,7 +94,10 @@ class ContextualRAG(BaseRAG):
         return [(chunk, whole_document) for chunk in chunks]
 
     def _ingest_db(
-        self, file_paths: list[str], batch_embedding: int = 100, num_workers: int = 4
+        self,
+        file_or_folder_paths: list[str],
+        batch_embedding: int = 100,
+        num_workers: int = 4,
     ) -> None:
         """
         Ingest documents into the Contextual RAG database.
@@ -104,7 +107,7 @@ class ContextualRAG(BaseRAG):
             batch_embedding (int): Batch size for embedding documents.
             num_workers (int): Number of workers for parallel processing.
         """
-        documents = self.processor.load_data(file_or_folder_paths=file_paths)
+        documents = self.processor.load_data(file_or_folder_paths=file_or_folder_paths)
 
         chunks = []
         for doc in tqdm(

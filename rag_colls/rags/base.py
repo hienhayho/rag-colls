@@ -4,12 +4,12 @@ from rag_colls.types.llm import LLMOutput
 
 class BaseRAG(ABC):
     @abstractmethod
-    def _ingest_db(self, file_paths: list[str], **kwargs):
+    def _ingest_db(self, file_or_folder_paths: list[str], **kwargs):
         """
         Ingest documents process
 
         Args:
-            file_paths (list[str]): List of file paths to be ingested.
+            file_or_folder_paths (list[str]): List of file paths or folders to be ingested.
             **kwargs: Additional keyword arguments for the ingestion process.
         """
         raise NotImplementedError("Ingesting documents process is not implemented.")
@@ -28,15 +28,15 @@ class BaseRAG(ABC):
         """
         raise NotImplementedError("Searching documents process is not implemented.")
 
-    def ingest_db(self, file_paths: list[str], **kwargs):
+    def ingest_db(self, file_or_folder_paths: list[str], **kwargs):
         """
         Ingest documents into the vector database.
 
         Args:
-            file_paths (list[str]): List of file paths to be ingested.
+            file_or_folder_paths (list[str]): List of file paths or folders to be ingested.
             **kwargs: Additional keyword arguments for the ingestion process.
         """
-        return self._ingest_db(file_paths, **kwargs)
+        return self._ingest_db(file_or_folder_paths=file_or_folder_paths, **kwargs)
 
     def search(self, query: str, **kwargs) -> LLMOutput:
         """

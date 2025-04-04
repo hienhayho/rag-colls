@@ -13,4 +13,6 @@ rag = BasicRAG(
     embed_model=OpenAIEmbedding(model_name="text-embedding-ada-002"),
 )
 
-rag.ingest_db(file_paths=["samples/papers/2409.13588v1.pdf"], batch_embedding=100)
+rag.ingest_db(
+    file_or_folder_paths=["samples/papers/2409.13588v1.pdf"], batch_embedding=100
+)

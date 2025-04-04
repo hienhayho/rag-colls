@@ -49,7 +49,7 @@ class BasicRAG(BaseRAG):
             vector_db=vector_database, embed_model=self.embed_model
         )
 
-    def _ingest_db(self, file_paths: list[str], batch_embedding: int = 100):
+    def _ingest_db(self, file_or_folder_paths: list[str], batch_embedding: int = 100):
         """
         Ingest documents into the vector database.
 
@@ -57,7 +57,7 @@ class BasicRAG(BaseRAG):
             file_paths (list[str]): List of file paths to be ingested.
             batch_embedding (int): Batch size for embedding documents.
         """
-        documents = self.processor.load_data(file_or_folder_paths=file_paths)
+        documents = self.processor.load_data(file_or_folder_paths=file_or_folder_paths)
 
         chunks = self.chunker.chunk(documents=documents)
 
