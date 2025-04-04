@@ -34,6 +34,8 @@ class LiteLLM(BaseCompletionLLM):
             {"role": msg.role, "content": msg.content} for msg in messages
         ]
 
+        # only get params from kwargs which are in completion.__annotations__
+        kwargs = {k: v for k, v in kwargs.items() if k in completion.__annotations__}
         response = completion(
             model=self.model_name, messages=formatted_messages, **kwargs
         )
