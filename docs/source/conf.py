@@ -6,7 +6,7 @@ import sys
 
 project = "rag-colls"
 copyright = "2025, hienhayho"
-author = "hienhayho"
+author = "rag-colls team."
 
 release = "0.2.0.6"
 version = "0.2.0.6"
@@ -39,7 +39,7 @@ html_baseurl = os.environ.get("READTHEDOCS_CANONICAL_URL", "/")
 # html_theme = "furo"
 html_theme = "sphinx_book_theme"
 
-html_logo = "_static/rag_colls_v2_final.png"
+html_logo = "_static/rag_colls_v3.png"
 html_theme_options = {
     "path_to_docs": "docs/source",
     "repository_url": "https://github.com/hienhayho/rag-colls",

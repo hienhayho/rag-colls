@@ -3,7 +3,7 @@ import shutil
 from pathlib import Path
 from loguru import logger
 
-from rag_colls.core.base.database.bm25 import BaseBM25Retriever
+from rag_colls.core.base.database.bm25 import BaseBM25RetrieverProvider
 from rag_colls.types.retriever import (
     RetrieverResult,
     RetrieverQueryType,
@@ -11,7 +11,7 @@ from rag_colls.types.retriever import (
 )
 
 
-class BM25s(BaseBM25Retriever):
+class BM25s(BaseBM25RetrieverProvider):
     """
     Wrapper for the BM25s library: `https://github.com/xhluca/bm25s`
     """

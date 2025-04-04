@@ -1,5 +1,5 @@
 from rag_colls.core.base.retrievers.base import BaseRetriever
-from rag_colls.core.base.database.bm25 import BaseBM25Retriever
+from rag_colls.core.base.database.bm25 import BaseBM25RetrieverProvider
 
 from rag_colls.types.retriever import RetrieverQueryType, RetrieverResult
 
@@ -9,18 +9,17 @@ class BM25Retriever(BaseRetriever):
     A retriever that uses BM25 to retrieve documents based on a query.
     """
 
-    def __init__(self, bm25: BaseBM25Retriever):
+    def __init__(self, bm25: BaseBM25RetrieverProvider):
         """
         Initialize the BM25Retriever class.
 
         Args:
             bm25: The BM25 retriever to use for retrieval.
-            embed_model: The embedding model to use for generating embeddings.
         """
         self.bm25 = bm25
 
     @classmethod
-    def from_bm25(cls, bm25: BaseBM25Retriever) -> "BM25Retriever":
+    def from_bm25(cls, bm25: BaseBM25RetrieverProvider) -> "BM25Retriever":
         """
         Create an instance of BM25Retriever from a BM25 retriever.
 
