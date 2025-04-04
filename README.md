@@ -1,7 +1,7 @@
 # rag-colls
 
 <p align="center">
-  <img src="assets/rag_colls_v2_final.png" alt="Logo" width="350"/>
+  <img src="assets/rag_colls_v2_final_bg.png" alt="Logo" width="350"/>
 </p>
 
 **rag-colls** a.k.a **RAG Coll**ection**s**.
