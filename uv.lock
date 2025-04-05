@@ -2894,6 +2894,11 @@ huggingface-embedding = [
     { name = "llama-index-embeddings-huggingface" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "bm25s", specifier = ">=0.2.10" },
@@ -2909,7 +2914,7 @@ requires-dist = [
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "myst-parser", marker = "extra == 'docs'", specifier = ">=4.0.1" },
     { name = "openpyxl", specifier = ">=3.1.5" },
-    { name = "pandas", specifier = ">=2.2.0,<2.2.3" },
+    { name = "pandas", specifier = ">=2.2.0,<2.2.4" },
     { name = "platformdirs", specifier = ">=4.3.7" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.2.0" },
     { name = "pymupdf", specifier = ">=1.25.4" },
@@ -2919,6 +2924,9 @@ requires-dist = [
     { name = "tenacity", specifier = ">=9.0.0" },
 ]
 provides-extras = ["dev", "docs", "huggingface-embedding"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.3.5" }]
 
 [[package]]
 name = "referencing"
