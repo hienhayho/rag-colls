@@ -1,4 +1,7 @@
 from tqdm import tqdm
+from typing import Optional
+
+
 from transformers import AutoTokenizer, AutoModel
 import torch
 from dotenv import load_dotenv
@@ -18,7 +21,19 @@ class HuggingFaceEmbedding(BaseEmbedding):
     model = None
     tokenizer = None
 
-    def __init__(self, model_name: str | None = None):
+    def __init__(
+        self,
+        model_name: str | None = None,
+        pooling: str = "cls",
+        max_length: Optional[int] = None,
+        query_instruction: Optional[str] = None,
+        text_instruction: Optional[str] = None,
+        normalize: bool = True,
+        cache_folder: Optional[str] = None,
+        trust_remote_code: bool = False,
+        device: Optional[str] = None,
+        **model_kwargs,
+    ):
         """
         Initialize the HuggingFace embedding model.
 
@@ -33,9 +48,25 @@ class HuggingFaceEmbedding(BaseEmbedding):
             f"Model {model_name} is not supported."
         )
 
+        self.pooling = pooling
+        self.max_length = max_length
+        self.normalize = normalize
+        self.cache_folder = cache_folder
+        self.trust_remote_code = trust_remote_code
+        self.device = device
         self.model_name = model_name
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model = AutoModel.from_pretrained(model_name)
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_name,
+            trust_remote_code=trust_remote_code,
+            cache_dir=cache_folder,
+            **model_kwargs,
+        )
+        self.model = AutoModel.from_pretrained(
+            model_name,
+            trust_remote_code=trust_remote_code,
+            cache_dir=cache_folder,
+            **model_kwargs,
+        )
         self.model.eval()  # Set model to evaluation mode
 
     def __str__(self):
@@ -55,6 +86,12 @@ class HuggingFaceEmbedding(BaseEmbedding):
             input_mask_expanded.sum(1), min=1e-9
         )
 
+    def _cls_pooling(self, model_output, attention_mask):
+        """
+        CLS pooling of token embeddings to get sentence embeddings.
+        """
+        return model_output.pooler_output
+
     def _get_query_embedding(self, query: str, **kwargs) -> Embedding:
         """
         Returns the embedding of the query.
@@ -72,10 +109,15 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
         # Generate embeddings
         with torch.no_grad():
-            model_output = self.model(**encoded_input)
+            model_output = self.model(**encoded_input, **kwargs)
 
         # Perform pooling
-        embedding = self._mean_pooling(model_output, encoded_input["attention_mask"])
+        if self.pooling == "cls":
+            embedding = self._cls_pooling(model_output, encoded_input["attention_mask"])
+        else:
+            embedding = self._mean_pooling(
+                model_output, encoded_input["attention_mask"]
+            )
 
         # Get token counts
         tokens = self.tokenizer.encode(query, add_special_tokens=False)
@@ -89,9 +131,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
             },
         )
 
-    def _get_document_embedding(
-        self, document: Document, **kwargs
-    ) -> Embedding:
+    def _get_document_embedding(self, document: Document, **kwargs) -> Embedding:
         """
         Returns the embedding of the document.
         Args:
@@ -107,10 +147,15 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
         # Generate embeddings
         with torch.no_grad():
-            model_output = self.model(**encoded_input)
+            model_output = self.model(**encoded_input, **kwargs)
 
         # Perform pooling
-        embedding = self._mean_pooling(model_output, encoded_input["attention_mask"])
+        if self.pooling == "cls":
+            embedding = self._cls_pooling(model_output, encoded_input["attention_mask"])
+        else:
+            embedding = self._mean_pooling(
+                model_output, encoded_input["attention_mask"]
+            )
 
         # Get token counts
         tokens = self.tokenizer.encode(document.document, add_special_tokens=False)
@@ -149,12 +194,17 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
             # Generate embeddings
             with torch.no_grad():
-                model_output = self.model(**encoded_input)
+                model_output = self.model(**encoded_input, **kwargs)
 
             # Perform pooling
-            batch_embeddings = self._mean_pooling(
-                model_output, encoded_input["attention_mask"]
-            )
+            if self.pooling == "cls":
+                batch_embeddings = self._cls_pooling(
+                    model_output, encoded_input["attention_mask"]
+                )
+            else:
+                batch_embeddings = self._mean_pooling(
+                    model_output, encoded_input["attention_mask"]
+                )
 
             # Process each query in the batch
             for query, emb in zip(batch, batch_embeddings):
@@ -200,12 +250,17 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
             # Generate embeddings
             with torch.no_grad():
-                model_output = self.model(**encoded_input)
+                model_output = self.model(**encoded_input, **kwargs)
 
             # Perform pooling
-            batch_embeddings = self._mean_pooling(
-                model_output, encoded_input["attention_mask"]
-            )
+            if self.pooling == "cls":
+                batch_embeddings = self._cls_pooling(
+                    model_output, encoded_input["attention_mask"]
+                )
+            else:
+                batch_embeddings = self._mean_pooling(
+                    model_output, encoded_input["attention_mask"]
+                )
 
             # Process each document in the batch
             for doc, emb in zip(batch, batch_embeddings):

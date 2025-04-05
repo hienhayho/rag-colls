@@ -3725,6 +3725,11 @@ vllm-llm = [
     { name = "vllm" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "bm25s", specifier = ">=0.2.10" },
@@ -3791,6 +3796,9 @@ wheels = [
 cgraph = [
     { name = "cupy-cuda12x", marker = "sys_platform != 'darwin'" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.3.5" }]
 
 [[package]]
 name = "referencing"
