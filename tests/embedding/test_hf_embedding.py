@@ -1,6 +1,6 @@
-import torch
 from rag_colls.embeddings.hf_embedding import HuggingFaceEmbedding
 from rag_colls.types.core.document import Document
+
 
 def test_hf_embedding():
     """
@@ -19,7 +19,8 @@ def test_hf_embedding():
     assert len(samples) == 2
     assert len(samples[0].embedding) == 768, "Embedding dimensions should be 768"
 
-    samples = embedding._get_batch_document_embedding([Document(document="Hello, world!"), Document(document="Hello, world!")])
+    samples = embedding._get_batch_document_embedding(
+        [Document(document="Hello, world!"), Document(document="Hello, world!")]
+    )
     assert len(samples) == 2
     assert len(samples[0].embedding) == 768, "Embedding dimensions should be 768"
-
