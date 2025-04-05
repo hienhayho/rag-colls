@@ -7,7 +7,6 @@ from rag_colls.processors.chunkers.semantic_chunker import SemanticChunker
 from rag_colls.databases.vector_databases.chromadb import ChromaVectorDatabase
 
 from rag_colls.rags.contextual_rag import ContextualRAG, CONTEXTUAL_PROMPT
-from rag_colls.llms.vllm_llm import VLLM
 
 # llm = VLLM(
 #     model_name="Qwen/Qwen2.5-3B-Instruct",
@@ -15,6 +14,7 @@ from rag_colls.llms.vllm_llm import VLLM
 #     dtype="half",
 #     download_dir="./model_cache",
 # )
+
 
 def ingest_es():
     es = Elasticsearch(
@@ -24,6 +24,8 @@ def ingest_es():
         es.indices.create(index="documents_bm25")
 
     print(es.indices.get_mapping(index="documents_bm25"))
+
+
 # ingest_es()
 rag = ContextualRAG(
     vector_database=ChromaVectorDatabase(

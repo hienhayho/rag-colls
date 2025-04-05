@@ -1,7 +1,5 @@
 import elasticsearch
 from elasticsearch.helpers import bulk
-import shutil
-from pathlib import Path
 from loguru import logger
 
 from rag_colls.core.base.database.bm25 import BaseBM25RetrieverProvider
@@ -20,12 +18,12 @@ class ElasticSearch(BaseBM25RetrieverProvider):
     def __init__(self, host: str | None = None, **kwargs):
         self.index_name = kwargs.get("index_name", "documents_bm25")
         self.es = elasticsearch.Elasticsearch(host)
-        
+
         if not self._test_connection():
             raise ValueError("Failed to connect to Elasticsearch")
-    
+
         logger.info(f"Connected to Elasticsearch at {host}")
-    
+
         # Create index if it doesn't exist
         if not self.es.indices.exists(index=self.index_name):
             self.es.indices.create(
@@ -34,10 +32,10 @@ class ElasticSearch(BaseBM25RetrieverProvider):
                     "mappings": {
                         "properties": {
                             "text": {"type": "text"},
-                            "metadata": {"type": "object"}
+                            "metadata": {"type": "object"},
                         }
                     }
-                }
+                },
             )
 
     def _test_connection(self):
@@ -59,8 +57,8 @@ class ElasticSearch(BaseBM25RetrieverProvider):
                 "_index": self.index_name,
                 "_source": {
                     "text": doc.document,
-                    "metadata": {"id": doc.id, **doc.metadata}
-                }
+                    "metadata": {"id": doc.id, **doc.metadata},
+                },
             }
             for doc in documents
         ]
@@ -73,9 +71,9 @@ class ElasticSearch(BaseBM25RetrieverProvider):
             documents (list[Document]): List of documents to ingest.
         """
         corpus = self._build_corpus(documents)
-        
+
         bulk_size = kwargs.get("bulk_size", 5)
-        
+
         # Index the documents
         success, failed = bulk(
             self.es,
@@ -84,13 +82,13 @@ class ElasticSearch(BaseBM25RetrieverProvider):
             request_timeout=len(corpus),
             raise_on_error=False,
         )
-        
+
         logger.info(f"Indexed {success} documents")
         logger.info(f"Failed to index {failed} documents")
-        
+
         if failed:
             logger.warning(f"Failed to index {len(failed)} documents")
-        
+
         # Refresh the index to make the documents searchable
         self.es.indices.refresh(index=self.index_name)
 
@@ -131,18 +129,11 @@ class ElasticSearch(BaseBM25RetrieverProvider):
         # Perform the search
         response = self.es.search(
             index=self.index_name,
-            body={
-                "query": {
-                    "match": {
-                        "text": query
-                    }
-                },
-                "size": top_k
-            }
+            body={"query": {"match": {"text": query}}, "size": top_k},
         )
 
         search_results: list[RetrieverResult] = []
-        
+
         # Process the results
         for hit in response["hits"]["hits"]:
             doc = hit["_source"]
@@ -159,7 +150,7 @@ class ElasticSearch(BaseBM25RetrieverProvider):
         if search_results:
             max_score = max(result.score for result in search_results)
             min_score = min(result.score for result in search_results)
-            
+
             for result in search_results:
                 result.score = (
                     (result.score - min_score) / (max_score - min_score)
@@ -168,4 +159,3 @@ class ElasticSearch(BaseBM25RetrieverProvider):
                 )
 
         return search_results
-   
