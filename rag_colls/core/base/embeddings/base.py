@@ -6,7 +6,9 @@ from tenacity import retry, wait_random_exponential, stop_after_attempt
 
 class BaseEmbedding(ABC):
     @abstractmethod
-    def _get_query_embedding(self, query: str) -> Embedding:
+    def _get_query_embedding(
+        self, query: str, **kwargs
+    ) -> Embedding:
         """
         Returns the embedding of the query.
 
@@ -19,7 +21,9 @@ class BaseEmbedding(ABC):
         raise NotImplementedError("This method should be overridden by subclasses.")
 
     @abstractmethod
-    def _get_document_embedding(self, document: Document) -> Embedding:
+    def _get_document_embedding(
+        self, document: Document, **kwargs
+    ) -> Embedding:
         """
         Returns the embedding of the document.
 
@@ -63,7 +67,9 @@ class BaseEmbedding(ABC):
         raise NotImplementedError("This method should be overridden by subclasses.")
 
     @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
-    def get_query_embedding(self, query: str) -> Embedding:
+    def get_query_embedding(
+        self, query: str, **kwargs
+    ) -> Embedding:
         """
         Returns the embedding of the query.
 
@@ -73,10 +79,12 @@ class BaseEmbedding(ABC):
         Returns:
             Embedding: The embedding object of the query.
         """
-        return self._get_query_embedding(query)
+        return self._get_query_embedding(query, **kwargs)
 
     @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
-    def get_document_embedding(self, document: Document) -> Embedding:
+    def get_document_embedding(
+        self, document: Document, **kwargs
+    ) -> Embedding:
         """
         Returns the embedding of the document.
 
@@ -86,7 +94,7 @@ class BaseEmbedding(ABC):
         Returns:
             Embedding: The embedding object of the document.
         """
-        return self._get_document_embedding(document)
+        return self._get_document_embedding(document, **kwargs)
 
     @retry(wait=wait_random_exponential(min=1, max=20), stop=stop_after_attempt(6))
     def get_batch_query_embedding(
