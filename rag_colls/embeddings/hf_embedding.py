@@ -109,7 +109,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
         # Generate embeddings
         with torch.no_grad():
-            model_output = self.model(**encoded_input, **kwargs)
+            model_output = self.model(**encoded_input)
 
         # Perform pooling
         if self.pooling == "cls":
@@ -147,7 +147,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
         # Generate embeddings
         with torch.no_grad():
-            model_output = self.model(**encoded_input, **kwargs)
+            model_output = self.model(**encoded_input)
 
         # Perform pooling
         if self.pooling == "cls":
@@ -194,7 +194,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
             # Generate embeddings
             with torch.no_grad():
-                model_output = self.model(**encoded_input, **kwargs)
+                model_output = self.model(**encoded_input)
 
             # Perform pooling
             if self.pooling == "cls":
@@ -250,7 +250,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
 
             # Generate embeddings
             with torch.no_grad():
-                model_output = self.model(**encoded_input, **kwargs)
+                model_output = self.model(**encoded_input)
 
             # Perform pooling
             if self.pooling == "cls":
