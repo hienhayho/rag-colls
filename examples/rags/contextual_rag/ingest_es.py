@@ -1,4 +1,3 @@
-from elasticsearch import Elasticsearch
 from rag_colls.llms.litellm_llm import LiteLLM
 from rag_colls.databases.bm25.elastic_search import ElasticSearch
 from rag_colls.embeddings.hf_embedding import HuggingFaceEmbedding
@@ -8,25 +7,6 @@ from rag_colls.databases.vector_databases.chromadb import ChromaVectorDatabase
 
 from rag_colls.rags.contextual_rag import ContextualRAG, CONTEXTUAL_PROMPT
 
-# llm = VLLM(
-#     model_name="Qwen/Qwen2.5-3B-Instruct",
-#     gpu_memory_utilization=0.5,
-#     dtype="half",
-#     download_dir="./model_cache",
-# )
-
-
-def ingest_es():
-    es = Elasticsearch(
-        "http://es_os:9200",
-    )
-    if not es.indices.exists(index="documents_bm25"):
-        es.indices.create(index="documents_bm25")
-
-    print(es.indices.get_mapping(index="documents_bm25"))
-
-
-# ingest_es()
 rag = ContextualRAG(
     vector_database=ChromaVectorDatabase(
         persistent_directory="./chroma_db", collection_name="test"
