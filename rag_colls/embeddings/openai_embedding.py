@@ -36,7 +36,9 @@ class OpenAIEmbedding(BaseEmbedding):
     def __str__(self):
         return f"OpenAIEmbedding(model_name={self.model_name})"
 
-    def _get_query_embedding(self, query: str) -> Embedding:
+    def _get_query_embedding(
+        self, query: str, **kwargs
+    ) -> Embedding:
         """
         Returns the embedding of the query.
 
@@ -55,7 +57,9 @@ class OpenAIEmbedding(BaseEmbedding):
             },
         )
 
-    def _get_document_embedding(self, document: Document) -> Embedding:
+    def _get_document_embedding(
+        self, document: Document, **kwargs
+    ) -> Embedding:
         """
         Returns the embedding of the document.
         Args:

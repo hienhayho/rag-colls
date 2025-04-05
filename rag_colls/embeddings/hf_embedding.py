@@ -55,7 +55,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
             input_mask_expanded.sum(1), min=1e-9
         )
 
-    def _get_query_embedding(self, query: str) -> Embedding:
+    def _get_query_embedding(self, query: str, **kwargs) -> Embedding:
         """
         Returns the embedding of the query.
 
@@ -89,7 +89,9 @@ class HuggingFaceEmbedding(BaseEmbedding):
             },
         )
 
-    def _get_document_embedding(self, document: Document) -> Embedding:
+    def _get_document_embedding(
+        self, document: Document, **kwargs
+    ) -> Embedding:
         """
         Returns the embedding of the document.
         Args:
