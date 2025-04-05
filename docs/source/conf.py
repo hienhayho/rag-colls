@@ -2,7 +2,16 @@
 
 # -- Project information
 import os
-import sys
+import subprocess
+
+
+def run_generate_examples():
+    docs_dir = os.path.dirname(os.path.abspath(__file__))
+    script_path = os.path.join(docs_dir, "generate_examples.py")
+    subprocess.run(["python", script_path], check=True)
+
+
+run_generate_examples()
 
 project = "rag-colls"
 copyright = "2025, hienhayho"
@@ -10,8 +19,6 @@ author = "rag-colls team."
 
 release = "0.2.0.6"
 version = "0.2.0.6"
-
-sys.path.append(os.path.abspath("../.."))
 
 # -- General configuration
 
