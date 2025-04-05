@@ -6,7 +6,7 @@ from rag_colls.core.base.chunkers.base import BaseChunker
 from rag_colls.core.base.rerankers.base import BaseReranker
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.core.base.embeddings.base import BaseEmbedding
-from rag_colls.core.base.database.bm25 import BaseBM25Retriever
+from rag_colls.core.base.database.bm25 import BaseBM25RetrieverProvider
 from rag_colls.core.base.database.vector_database import BaseVectorDatabase
 
 from rag_colls.prompts.q_a import Q_A_PROMPT
@@ -30,7 +30,7 @@ class ContextualRAG(BaseRAG):
         self,
         *,
         vector_database: BaseVectorDatabase,
-        bm25: BaseBM25Retriever,
+        bm25: BaseBM25RetrieverProvider,
         reranker: BaseReranker,
         chunker: BaseChunker,
         llm: BaseCompletionLLM | None = None,
