@@ -92,16 +92,6 @@ class ElasticSearch(BaseBM25RetrieverProvider):
         # Refresh the index to make the documents searchable
         self.es.indices.refresh(index=self.index_name)
 
-    def _add_documents_to_index(self, documents: list[RetrieverIngestInput], **kwargs):
-        """
-        Add documents to the existing Elasticsearch index.
-
-        Args:
-            documents (list[Document]): List of documents to ingest.
-        """
-        logger.debug("Adding documents to existing index...")
-        self._index_documents(documents, **kwargs)
-
     def _add_documents(self, documents: list[RetrieverIngestInput], **kwargs):
         """
         Ingest documents into the Elasticsearch database.
