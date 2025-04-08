@@ -46,11 +46,18 @@ pip install -U rag-colls
 git clone https://github.com/hienhayho/rag-colls.git
 cd rag-colls/
 
+# Choose python version and setup OPENAI_API_KEY
+export PYTHON_VERSION="3.10"
+export OPENAI_API_KEY="your-openai-api-key-here"
+
 # Docker build
-DOCKER_BUILDKIT=1 docker build -f docker/Dockerfile \
-                    --build-arg OPENAI_API_KEY=<YOUR_OPENAI_KEY> \
-                    --build-arg PYTHON_VERSION="3.10" \
-                    -t rag-colls:3.10 .
+DOCKER_BUILDKIT=1 docker build \
+                -f docker/Dockerfile \
+                --build-arg OPENAI_API_KEY="$OPENAI_API_KEY" \
+                --build-arg PYTHON_VERSION="$PYTHON_VERSION" \
+                -t rag-colls:$PYTHON_VERSION .
+
+docker run -it --name rag_colls --shm-size=2G rag-colls:$PYTHON_VERSION
 ```
 
 ## 📚 Notebooks
@@ -107,6 +114,10 @@ Please refer to [DEVELOP.md](./DEVELOP.md) for more information.
     </td>
 </tr>
 </table>
+
+## 💎 Acknowledgement
+
+This project is suported by [`UIT AIClub`](https://aiclub.uit.edu.vn/).
 
 ## ©️ LICENSE
 
