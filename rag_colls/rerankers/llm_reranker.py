@@ -3,7 +3,7 @@ from llama_index.core.schema import NodeWithScore, TextNode
 
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.core.base.rerankers.base import BaseReranker
-from rag_colls.llms.litellm_llama_index import LlamaIndexLLM
+from rag_colls.llms.integrations.llama_index import LlamaIndexLLM
 from rag_colls.types.reranker import RerankerResult
 from rag_colls.types.retriever import RetrieverQueryType, RetrieverResult
 
