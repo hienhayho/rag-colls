@@ -19,6 +19,12 @@ class LLMReranker(BaseReranker):
         """
         self.llm = LlamaIndexLLM(llm=llm)
 
+    def __str__(self):
+        return f"LLMReranker(llm={self.llm})"
+
+    def __repr__(self):
+        return self.__str__()
+
     @classmethod
     def from_llm(
         cls,
@@ -34,6 +40,15 @@ class LLMReranker(BaseReranker):
             BaseReranker: An instance of LLMReranker.
         """
         return cls(llm=llm)
+
+    def is_support_aggregate_results(self):
+        """
+        Check if the reranker supports aggregating results.
+
+        Returns:
+            bool: True if the reranker supports aggregating results, False otherwise.
+        """
+        return True
 
     def _rerank(
         self,
