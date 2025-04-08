@@ -117,7 +117,7 @@ Please refer to [DEVELOP.md](./DEVELOP.md) for more information.
 
 ## 💎 Acknowledgement
 
-This project is suported by [`UIT AIClub`](https://aiclub.uit.edu.vn/).
+This project is supported by [`UIT AIClub`](https://aiclub.uit.edu.vn/).
 
 ## ©️ LICENSE
 
