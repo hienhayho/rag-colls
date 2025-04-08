@@ -18,6 +18,21 @@ class WeightedReranker(BaseReranker):
         """
         self.weights = weights
 
+    def __str__(self):
+        return f"WeightedReranker(weights={self.weights})"
+
+    def __repr__(self):
+        return self.__str__()
+
+    def is_support_aggregate_results(self) -> bool:
+        """
+        Check if the reranker supports aggregating results.
+
+        Returns:
+            bool: True if the reranker supports aggregating results, False otherwise.
+        """
+        return True
+
     def _rerank(
         self,
         query: RetrieverQueryType,

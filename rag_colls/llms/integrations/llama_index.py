@@ -23,6 +23,12 @@ class LlamaIndexLLM(CustomLLM):
         """
         return LLMMetadata()
 
+    def __str__(self):
+        return f"LlamaIndexLLM(llm={self.llm})"
+
+    def __repr__(self):
+        return self.__str__()
+
     @llm_completion_callback()
     def complete(self, prompt: str, **kwargs) -> CompletionResponse:
         """
