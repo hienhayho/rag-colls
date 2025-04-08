@@ -1,5 +1,12 @@
+from typing import Type
 from loguru import logger
-from litellm import completion, acompletion
+from pydantic import BaseModel
+from litellm import (
+    completion,
+    acompletion,
+    get_supported_openai_params,
+    supports_response_schema,
+)
 
 from rag_colls.core.constants import DEFAULT_OPENAI_MODEL
 from rag_colls.core.base.llms.base import BaseCompletionLLM
@@ -29,7 +36,31 @@ class LiteLLM(BaseCompletionLLM):
     def __repr__(self):
         return self.__str__()
 
-    def _complete(self, messages: list[Message], **kwargs) -> LLMOutput:
+    def _is_support_json_output(self):
+        """
+        Check if the model supports JSON output.
+
+        Returns:
+            bool: True if the model supports JSON output, False otherwise.
+        """
+        try:
+            assert "response_format" in get_supported_openai_params(self.model_name)
+            assert supports_response_schema(self.model_name)
+            return True
+
+        except AssertionError:
+            logger.warning(
+                f"Model {self.model_name} does not support JSON output. "
+                "Supported models here: https://docs.litellm.ai/docs/completion/json_mode#pass-in-json_schema"
+            )
+            return False
+
+    def _complete(
+        self,
+        messages: list[Message],
+        response_format: Type[BaseModel] | None = None,
+        **kwargs,
+    ) -> LLMOutput:
         formatted_messages = [
             {"role": msg.role, "content": msg.content} for msg in messages
         ]
@@ -37,7 +68,10 @@ class LiteLLM(BaseCompletionLLM):
         # only get params from kwargs which are in completion.__annotations__
         kwargs = {k: v for k, v in kwargs.items() if k in completion.__annotations__}
         response = completion(
-            model=self.model_name, messages=formatted_messages, **kwargs
+            model=self.model_name,
+            messages=formatted_messages,
+            response_format=response_format,
+            **kwargs,
         )
         return LLMOutput(
             content=response.choices[0].message.content,
@@ -48,12 +82,20 @@ class LiteLLM(BaseCompletionLLM):
             ),
         )
 
-    async def _acomplete(self, messages: list[Message], **kwargs) -> LLMOutput:
+    async def _acomplete(
+        self,
+        messages: list[Message],
+        response_format: Type[BaseModel] | None = None,
+        **kwargs,
+    ) -> LLMOutput:
         formatted_messages = [
             {"role": msg.role, "content": msg.content} for msg in messages
         ]
         response = await acompletion(
-            model=self.model_name, messages=formatted_messages, **kwargs
+            model=self.model_name,
+            messages=formatted_messages,
+            response_format=response_format,
+            **kwargs,
         )
 
         return LLMOutput(
