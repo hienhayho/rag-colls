@@ -1,4 +1,5 @@
 import re
+from loguru import logger
 
 
 def check_placeholders(template: str, placeholders: list[str]) -> bool:
@@ -30,3 +31,26 @@ def extract_placeholders(template: str) -> list[str]:
         list[str]: A list of extracted placeholders.
     """
     return re.findall(r"\{(.*?)\}", template)
+
+
+def check_torch_device(device: str) -> str:
+    """
+    Check if the specified device is available in PyTorch.
+
+    Args:
+        device (str): The device to check (e.g., "cuda", "cpu").
+
+    Returns:
+        str: The available device ("cuda" or "cpu").
+    """
+    import torch
+
+    try:
+        return (
+            torch.device(device)
+            if device != "auto"
+            else torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        )
+    except Exception as e:
+        logger.warning(f"Error checking device '{device}': {e}, defaulting to 'cpu'")
+        return torch.device("cpu")

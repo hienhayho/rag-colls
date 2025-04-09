@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from rag_colls.types.embedding import Embedding
 from rag_colls.types.core.document import Document
 from rag_colls.core.base.embeddings.base import BaseEmbedding
+from rag_colls.core.utils import check_torch_device
 from rag_colls.core.constants import (
     HF_EMBEDDING_MODELS,
     DEFAULT_HF_EMBEDDING_MODEL,
@@ -31,7 +32,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
         normalize: bool = True,
         cache_folder: Optional[str] = None,
         trust_remote_code: bool = False,
-        device: Optional[str] = None,
+        device: Optional[str] = "auto",
         **model_kwargs,
     ):
         """
@@ -53,18 +54,20 @@ class HuggingFaceEmbedding(BaseEmbedding):
         self.normalize = normalize
         self.cache_folder = cache_folder
         self.trust_remote_code = trust_remote_code
-        self.device = device
+        self.device = check_torch_device(device)
         self.model_name = model_name
         self.tokenizer = AutoTokenizer.from_pretrained(
             model_name,
             trust_remote_code=trust_remote_code,
             cache_dir=cache_folder,
+            device_map=self.device,
             **model_kwargs,
         )
         self.model = AutoModel.from_pretrained(
             model_name,
             trust_remote_code=trust_remote_code,
             cache_dir=cache_folder,
+            device_map=self.device,
             **model_kwargs,
         )
         self.model.eval()  # Set model to evaluation mode
@@ -105,7 +108,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
         # Tokenize the query
         encoded_input = self.tokenizer(
             query, padding=True, truncation=True, return_tensors="pt"
-        )
+        ).to(self.device)
 
         # Generate embeddings
         with torch.no_grad():
@@ -143,7 +146,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
         # Tokenize the document
         encoded_input = self.tokenizer(
             document.document, padding=True, truncation=True, return_tensors="pt"
-        )
+        ).to(self.device)
 
         # Generate embeddings
         with torch.no_grad():
@@ -190,7 +193,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
             # Tokenize the batch
             encoded_input = self.tokenizer(
                 batch, padding=True, truncation=True, return_tensors="pt"
-            )
+            ).to(self.device)
 
             # Generate embeddings
             with torch.no_grad():
@@ -246,7 +249,7 @@ class HuggingFaceEmbedding(BaseEmbedding):
             # Tokenize the batch
             encoded_input = self.tokenizer(
                 batch, padding=True, truncation=True, return_tensors="pt"
-            )
+            ).to(self.device)
 
             # Generate embeddings
             with torch.no_grad():
