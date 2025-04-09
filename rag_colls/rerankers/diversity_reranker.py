@@ -5,7 +5,12 @@ from typing import Any, Dict, List, Literal, Optional, Union, Tuple
 
 from rag_colls.types.reranker import RerankerResult
 from rag_colls.core.base.rerankers.base import BaseReranker
-from rag_colls.core.serialization import default_to_dict, default_from_dict, serialize_hf_model_kwargs, deserialize_hf_model_kwargs
+from rag_colls.core.serialization import (
+    default_to_dict,
+    default_from_dict,
+    serialize_hf_model_kwargs,
+    deserialize_hf_model_kwargs,
+)
 from rag_colls.types.retriever import RetrieverQueryType, RetrieverResult
 
 try:
@@ -69,6 +74,7 @@ class DiversityRankingSimilarity(Enum):
             msg = f"Unknown similarity metric '{string}'. Supported metrics are: {list(enum_map.keys())}"
             raise ValueError(msg)
         return similarity
+
 
 class SentenceTransformersDiversityRanker(BaseReranker):
     """
@@ -175,17 +181,29 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         if top_k is None or top_k <= 0:
             raise ValueError(f"top_k must be > 0, but got {top_k}")
         self.top_k = top_k
-        self.device = torch.device(device) if device != "auto" else torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = (
+            torch.device(device)
+            if device != "auto"
+            else torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        )
         self.token = token
         self.model = None
-        self.similarity = DiversityRankingSimilarity.from_str(similarity) if isinstance(similarity, str) else similarity
+        self.similarity = (
+            DiversityRankingSimilarity.from_str(similarity)
+            if isinstance(similarity, str)
+            else similarity
+        )
         self.query_prefix = query_prefix
         self.document_prefix = document_prefix
         self.query_suffix = query_suffix
         self.document_suffix = document_suffix
         self.meta_fields_to_embed = meta_fields_to_embed or []
         self.embedding_separator = embedding_separator
-        self.strategy = DiversityRankingStrategy.from_str(strategy) if isinstance(strategy, str) else strategy
+        self.strategy = (
+            DiversityRankingStrategy.from_str(strategy)
+            if isinstance(strategy, str)
+            else strategy
+        )
         self.lambda_threshold = lambda_threshold or 0.5
         self._check_lambda_threshold(self.lambda_threshold, self.strategy)
         self.model_kwargs = model_kwargs
@@ -196,7 +214,9 @@ class SentenceTransformersDiversityRanker(BaseReranker):
             logger.info(
                 f"Initializing SentenceTransformersDiversityRanker with model '{self.model_name_or_path}' on device '{self.device}'"
             )
-            logger.info(f"Using strategy '{self.strategy}' with lambda threshold '{self.lambda_threshold}'")
+            logger.info(
+                f"Using strategy '{self.strategy}' with lambda threshold '{self.lambda_threshold}'"
+            )
             self.model = SentenceTransformer(
                 model_name_or_path=self.model_name_or_path,
                 device=self.device,
@@ -235,7 +255,9 @@ class SentenceTransformersDiversityRanker(BaseReranker):
             backend=self.backend,
         )
         if serialization_dict["init_parameters"].get("model_kwargs") is not None:
-            serialize_hf_model_kwargs(serialization_dict["init_parameters"]["model_kwargs"])
+            serialize_hf_model_kwargs(
+                serialization_dict["init_parameters"]["model_kwargs"]
+            )
         return serialization_dict
 
     @classmethod
@@ -249,9 +271,6 @@ class SentenceTransformersDiversityRanker(BaseReranker):
             The deserialized component.
         """
         init_params = data["init_parameters"]
-        if init_params.get("device") is not None:
-            init_params["device"] = ComponentDevice.from_dict(init_params["device"])
-        deserialize_secrets_inplace(init_params, keys=["token"])
         if init_params.get("model_kwargs") is not None:
             deserialize_hf_model_kwargs(init_params["model_kwargs"])
         return default_from_dict(cls, data)
@@ -273,18 +292,24 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         texts_to_embed = []
         for doc in documents:
             meta_values_to_embed = [
-                str(doc.metadata[key]) for key in self.meta_fields_to_embed if key in doc.metadata and doc.metadata[key]
+                str(doc.metadata[key])
+                for key in self.meta_fields_to_embed
+                if key in doc.metadata and doc.metadata[key]
             ]
             text_to_embed = (
                 self.document_prefix
-                + self.embedding_separator.join(meta_values_to_embed + [doc.document or ""])
+                + self.embedding_separator.join(
+                    meta_values_to_embed + [doc.document or ""]
+                )
                 + self.document_suffix
             )
             texts_to_embed.append(text_to_embed)
 
         return texts_to_embed
 
-    def _greedy_diversity_order(self, query: str, documents: List[RetrieverResult]) -> List[RetrieverResult]:
+    def _greedy_diversity_order(
+        self, query: str, documents: List[RetrieverResult]
+    ) -> List[RetrieverResult]:
         """
         Rerank documents using the Greedy Diversity Order strategy.
 
@@ -302,7 +327,9 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         """
         texts_to_embed = self._prepare_texts_to_embed(documents)
 
-        doc_embeddings, query_embedding = self._embed_and_normalize(query, texts_to_embed)
+        doc_embeddings, query_embedding = self._embed_and_normalize(
+            query, texts_to_embed
+        )
 
         n = len(documents)
         selected: List[int] = []
@@ -331,7 +358,9 @@ class SentenceTransformersDiversityRanker(BaseReranker):
 
         return ranked_docs
 
-    def _embed_and_normalize(self, query: str, texts_to_embed: List[str]) -> Tuple[torch.Tensor, torch.Tensor]:
+    def _embed_and_normalize(
+        self, query: str, texts_to_embed: List[str]
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Compute embeddings for query and documents, with optional normalization.
 
@@ -349,7 +378,9 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         """
         # Calculate embeddings
         doc_embeddings = self.model.encode(texts_to_embed, convert_to_tensor=True)  # type: ignore[attr-defined]
-        query_embedding = self.model.encode([self.query_prefix + query + self.query_suffix], convert_to_tensor=True)  # type: ignore[attr-defined]
+        query_embedding = self.model.encode(
+            [self.query_prefix + query + self.query_suffix], convert_to_tensor=True
+        )  # type: ignore[attr-defined]
 
         # Normalize embeddings to unit length for computing cosine similarity
         if self.similarity == DiversityRankingSimilarity.COSINE:
@@ -358,7 +389,11 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         return doc_embeddings, query_embedding
 
     def _maximum_margin_relevance(
-        self, query: str, documents: List[RetrieverResult], lambda_threshold: float, top_k: int
+        self,
+        query: str,
+        documents: List[RetrieverResult],
+        lambda_threshold: float,
+        top_k: int,
     ) -> List[RetrieverResult]:
         """
         Rerank documents using the Maximum Margin Relevance (MMR) strategy.
@@ -385,7 +420,9 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         """
 
         texts_to_embed = self._prepare_texts_to_embed(documents)
-        doc_embeddings, query_embedding = self._embed_and_normalize(query, texts_to_embed)
+        doc_embeddings, query_embedding = self._embed_and_normalize(
+            query, texts_to_embed
+        )
         top_k = top_k if top_k else len(documents)
 
         selected: List[int] = []
@@ -400,19 +437,28 @@ class SentenceTransformersDiversityRanker(BaseReranker):
                 if idx in selected:
                     continue
                 relevance_score = query_similarities[idx]
-                diversity_score = max(doc_embeddings[idx] @ doc_embeddings[j].T for j in selected)
-                mmr_score = lambda_threshold * relevance_score - (1 - lambda_threshold) * diversity_score
+                diversity_score = max(
+                    doc_embeddings[idx] @ doc_embeddings[j].T for j in selected
+                )
+                mmr_score = (
+                    lambda_threshold * relevance_score
+                    - (1 - lambda_threshold) * diversity_score
+                )
                 if mmr_score > best_score:
                     best_score = mmr_score
                     best_idx = idx
             if best_idx is None:
-                raise ValueError("No best document found, check if the documents list contains any documents.")
+                raise ValueError(
+                    "No best document found, check if the documents list contains any documents."
+                )
             selected.append(best_idx)
 
         return [documents[i] for i in selected]
 
     @staticmethod
-    def _check_lambda_threshold(lambda_threshold: float, strategy: DiversityRankingStrategy) -> None:
+    def _check_lambda_threshold(
+        lambda_threshold: float, strategy: DiversityRankingStrategy
+    ) -> None:
         """
         Validate the lambda threshold parameter for MMR strategy.
 
@@ -423,8 +469,12 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         Raises:
             ValueError: If strategy is MMR and lambda_threshold is not between 0 and 1.
         """
-        if (strategy == DiversityRankingStrategy.MAXIMUM_MARGIN_RELEVANCE) and not 0 <= lambda_threshold <= 1:
-            raise ValueError(f"lambda_threshold must be between 0 and 1, but got {lambda_threshold}.")
+        if (
+            strategy == DiversityRankingStrategy.MAXIMUM_MARGIN_RELEVANCE
+        ) and not 0 <= lambda_threshold <= 1:
+            raise ValueError(
+                f"lambda_threshold must be between 0 and 1, but got {lambda_threshold}."
+            )
 
     def _rerank(
         self,
@@ -470,22 +520,28 @@ class SentenceTransformersDiversityRanker(BaseReranker):
 
         if not results:
             return []
-        
 
         if top_k is None:
             top_k = self.top_k
         elif not 0 < top_k <= len(results):
-            raise ValueError(f"top_k must be between 1 and {len(results)}, but got {top_k}")
+            raise ValueError(
+                f"top_k must be between 1 and {len(results)}, but got {top_k}"
+            )
 
         if self.strategy == DiversityRankingStrategy.MAXIMUM_MARGIN_RELEVANCE:
             if lambda_threshold is None:
                 lambda_threshold = self.lambda_threshold
             self._check_lambda_threshold(lambda_threshold, self.strategy)
             re_ranked_docs = self._maximum_margin_relevance(
-                query=query, documents=results, lambda_threshold=lambda_threshold, top_k=top_k
+                query=query,
+                documents=results,
+                lambda_threshold=lambda_threshold,
+                top_k=top_k,
             )
         else:
-            re_ranked_docs = self._greedy_diversity_order(query=query, documents=results)
+            re_ranked_docs = self._greedy_diversity_order(
+                query=query, documents=results
+            )
 
         return [
             RerankerResult(

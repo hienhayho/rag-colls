@@ -4,16 +4,19 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-
-import inspect
 import importlib
-from collections.abc import Callable
-from dataclasses import dataclass
-from typing import Any, Dict, Iterable, Optional, Type
+import torch
+from typing import Any, Dict, Type
 from types import ModuleType
+from loguru import logger
+from threading import Lock
+
+_import_lock = Lock()
+
 
 class DeserializationError(Exception):
     pass
+
 
 def thread_safe_import(module_name: str) -> ModuleType:
     """
@@ -28,6 +31,7 @@ def thread_safe_import(module_name: str) -> ModuleType:
     with _import_lock:
         return importlib.import_module(module_name)
 
+
 def generate_qualified_class_name(cls: Type[object]) -> str:
     """
     Generates a qualified class name for a class.
@@ -38,6 +42,7 @@ def generate_qualified_class_name(cls: Type[object]) -> str:
         The qualified name of the class.
     """
     return f"{cls.__module__}.{cls.__name__}"
+
 
 def default_to_dict(obj: Any, **init_parameters) -> Dict[str, Any]:
     """
@@ -77,7 +82,10 @@ def default_to_dict(obj: Any, **init_parameters) -> Dict[str, Any]:
     :returns:
         A dictionary representation of the instance.
     """
-    return {"type": generate_qualified_class_name(type(obj)), "init_parameters": init_parameters}
+    return {
+        "type": generate_qualified_class_name(type(obj)),
+        "init_parameters": init_parameters,
+    }
 
 
 def default_from_dict(cls: Type[object], data: Dict[str, Any]) -> Any:
@@ -106,7 +114,9 @@ def default_from_dict(cls: Type[object], data: Dict[str, Any]) -> Any:
     if "type" not in data:
         raise DeserializationError("Missing 'type' in serialization data")
     if data["type"] != generate_qualified_class_name(cls):
-        raise DeserializationError(f"Class '{data['type']}' can't be deserialized as '{cls.__name__}'")
+        raise DeserializationError(
+            f"Class '{data['type']}' can't be deserialized as '{cls.__name__}'"
+        )
     return cls(**init_params)
 
 
@@ -125,14 +135,19 @@ def import_class_by_name(fully_qualified_name: str) -> Type[object]:
     try:
         module_path, class_name = fully_qualified_name.rsplit(".", 1)
         logger.debug(
-            "Attempting to import class '{cls_name}' from module '{md_path}'", cls_name=class_name, md_path=module_path
+            "Attempting to import class '{cls_name}' from module '{md_path}'",
+            cls_name=class_name,
+            md_path=module_path,
         )
         module = thread_safe_import(module_path)
         return getattr(module, class_name)
     except (ImportError, AttributeError) as error:
-        logger.error("Failed to import class '{full_name}'", full_name=fully_qualified_name)
+        logger.error(
+            "Failed to import class '{full_name}'", full_name=fully_qualified_name
+        )
         raise ImportError(f"Could not import class '{fully_qualified_name}'") from error
-    
+
+
 def serialize_hf_model_kwargs(kwargs: Dict[str, Any]):
     """
     Recursively serialize HuggingFace specific model keyword arguments in-place to make them JSON serializable.
@@ -146,6 +161,7 @@ def serialize_hf_model_kwargs(kwargs: Dict[str, Any]):
 
         if isinstance(v, dict):
             serialize_hf_model_kwargs(v)
+
 
 def deserialize_hf_model_kwargs(kwargs: Dict[str, Any]):
     """
