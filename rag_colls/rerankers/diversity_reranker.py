@@ -123,7 +123,7 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         )
     ]
 
-    reranked_results = ranker._rerank(
+    reranked_results = ranker.rerank(
         query="search query",
         results=results,
         top_k=5
