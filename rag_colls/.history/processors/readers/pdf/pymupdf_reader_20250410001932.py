@@ -19,12 +19,14 @@ class PyMuPDFReader(BaseReader):
                 "PyMuPDF is not installed. Please install it with 'pip install PyMuPDF'."
             )
 
-        file_path = Path(file_path)
-        if not file_path.exists():
-            raise FileNotFoundError(f"File not found: {file_path}")
+        if isinstance(file_path, str):
+            file = Path(file_path)
+
+        if not file.exists():
+            raise FileNotFoundError(f"File not found: {file}")
 
         docs = fitz.open(file_path)
-        file_name = file_path.name
+        file_name = file.name
 
         if not extra_info:
             extra_info = {}

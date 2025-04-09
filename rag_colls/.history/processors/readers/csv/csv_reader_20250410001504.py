@@ -44,9 +44,6 @@ class CSVReader(BaseReader):
         if isinstance(file, str):
             file = Path(file)
 
-        if not file.exists():
-            raise FileNotFoundError(f"File not found: {file}")
-
         text_list = []
         with open(file, encoding=encoding) as fp:
             csv_reader = csv.reader(fp)
@@ -66,10 +63,8 @@ class CSVReader(BaseReader):
             "num_cols": len(text_list[0].split(",")),
             "columns": text_list[0].split(","),
         }
-
         if extra_info:
             metadata = {**metadata, **extra_info}
-
         if self._concat_rows:
             return [
                 Document(

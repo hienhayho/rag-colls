@@ -23,7 +23,7 @@ class DocxReader(BaseReader):
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {file_path}")
 
-        if file_path.suffix.lower() != ".docx":
+        if not file_path.suffix.lower() == ".docx":
             raise ValueError(f"File must be a DOCX file: {file_path}")
 
         # Read the DOCX file
@@ -40,7 +40,7 @@ class DocxReader(BaseReader):
 
         # TODO: This currently only supports to split each paragraph into a document
         text = []
-        for _, paragraph in enumerate(doc.paragraphs):
+        for i, paragraph in enumerate(doc.paragraphs):
             if paragraph.text.strip():  # Only add non-empty paragraphs
                 text.append(paragraph.text)
 

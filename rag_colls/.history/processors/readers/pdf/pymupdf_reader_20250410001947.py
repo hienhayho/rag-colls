@@ -20,11 +20,12 @@ class PyMuPDFReader(BaseReader):
             )
 
         file_path = Path(file_path)
+
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {file_path}")
 
         docs = fitz.open(file_path)
-        file_name = file_path.name
+        file_name = file.name
 
         if not extra_info:
             extra_info = {}

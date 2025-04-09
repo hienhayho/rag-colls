@@ -16,9 +16,6 @@ class ElasticSearch(BaseBM25RetrieverProvider):
     """
 
     def __init__(self, host: str | None = None, **kwargs):
-        if host is None:
-            raise ValueError("Host must be provided")
-
         self.index_name = kwargs.get("index_name", "documents_bm25")
         self.es = elasticsearch.Elasticsearch(host)
 

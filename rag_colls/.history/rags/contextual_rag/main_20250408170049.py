@@ -52,7 +52,7 @@ class ContextualRAG(BaseRAG):
         )
         self.bm25_retriever = BM25Retriever.from_bm25(bm25=self.bm25)
 
-        if gen_contextual_prompt_template:
+        if gen_contextual_chunk:
             assert check_placeholders(
                 template=gen_contextual_prompt_template,
                 placeholders=["CHUNK_CONTENT", "WHOLE_DOCUMENT"],

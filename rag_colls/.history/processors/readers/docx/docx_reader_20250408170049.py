@@ -23,11 +23,12 @@ class DocxReader(BaseReader):
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {file_path}")
 
-        if file_path.suffix.lower() != ".docx":
+        if not file_path.suffix.lower() == ".docx":
             raise ValueError(f"File must be a DOCX file: {file_path}")
 
         # Read the DOCX file
         doc = docx.Document(file_path)
+        file_name = file_path.name
 
         if not extra_info:
             extra_info = {}
@@ -36,11 +37,11 @@ class DocxReader(BaseReader):
         extra_info["should_split"] = should_split
         extra_info["file_size"] = file_path.stat().st_size
         extra_info["file_type"] = "docx"
-        extra_info["source"] = file_path.name
+        extra_info["source"] = f"{file_name}"
 
         # TODO: This currently only supports to split each paragraph into a document
         text = []
-        for _, paragraph in enumerate(doc.paragraphs):
+        for i, paragraph in enumerate(doc.paragraphs):
             if paragraph.text.strip():  # Only add non-empty paragraphs
                 text.append(paragraph.text)
 

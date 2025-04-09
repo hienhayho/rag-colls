@@ -99,9 +99,6 @@ class JSONReader(BaseReader):
         extra_info: Optional[Dict] = {},
         encoding: str = "utf-8",
     ) -> List[Document]:
-        if not Path(input_file).exists():
-            raise FileNotFoundError(f"File not found: {input_file}")
-
         """Load data from the input file."""
         with open(input_file, encoding=encoding) as f:
             load_data = []

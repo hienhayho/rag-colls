@@ -47,11 +47,11 @@ class HTMLReader(BaseReader):
                 "Please install it using `pip install html2text`"
             )
 
-        file_path = Path(file_path).resolve()
+        file_path = Path(file_path).resolve().chmod()
         if not file_path.exists():
             raise FileNotFoundError(f"File not found: {file_path}")
 
-        with file_path.open("r", encoding=encoding) as f:
+        with file_path.open("r") as f:
             html_text = "".join([line[:-1] for line in f.readlines()])
 
         # read HTML

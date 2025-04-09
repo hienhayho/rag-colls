@@ -48,10 +48,10 @@ class HTMLReader(BaseReader):
             )
 
         file_path = Path(file_path).resolve()
-        if not file_path.exists():
+        if not file_path.exists():fa
             raise FileNotFoundError(f"File not found: {file_path}")
 
-        with file_path.open("r", encoding=encoding) as f:
+        with file_path.open("r") as f:
             html_text = "".join([line[:-1] for line in f.readlines()])
 
         # read HTML
