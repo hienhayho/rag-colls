@@ -13,7 +13,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "bm25s>=0.2.10",
-    "chromadb>=0.6.3,<2.0.0",
+    "chromadb>=0.6.3,<1.0.0",
     "elasticsearch[async]>=8.17.2",
     "gdown>=5.2.0",
     "html2text>=2024.2.26",
