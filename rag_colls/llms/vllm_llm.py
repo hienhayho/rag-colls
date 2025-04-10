@@ -1,5 +1,9 @@
 import asyncio
+from typing import Type
+from pydantic import BaseModel
+from loguru import logger
 from vllm import LLM, SamplingParams
+from vllm.sampling_params import GuidedDecodingParams
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.types.llm import Message, LLMOutput, LLMUsage
 
@@ -39,6 +43,8 @@ class VLLM(BaseCompletionLLM):
             download_dir (str): The directory to download the model. Defaults to "model_cache".
         """
         kwargs["download_dir"] = download_dir
+        logger.info(f"Using VLLM with model: {model_name}")
+        logger.info(f"VLLM model download dir: {download_dir}")
         self.llm = LLM(
             model=model_name,
             trust_remote_code=trust_remote_code,
@@ -52,11 +58,21 @@ class VLLM(BaseCompletionLLM):
         )
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
+    def _is_support_json_output(self) -> bool:
+        """
+        Checks if the model supports JSON output.
+
+        Returns:
+            bool: True if the model supports JSON output, False otherwise.
+        """
+        return True
+
     def _complete(
         self,
         messages: list[Message],
         max_tokens: int = 512,
         temperature: float = 1,
+        response_format: Type[BaseModel] | None = None,
         top_p: int = 1,
         top_k: int = -1,
         **kwargs,
@@ -68,6 +84,7 @@ class VLLM(BaseCompletionLLM):
             messages (list[Message]): List of messages to be sent to the model.
             max_token (int): Maximum number of tokens to generate. Defaults to `512`.
             temperature (float): Sampling temperature. Defaults to `1`.
+            response_format (Type[BaseModel] | None): The JSON format of the response.
             top_p (int): Top-p sampling parameter. Defaults to `1`.
             top_k (int): Top-k sampling parameter. Defaults to `-1`.
             **kwargs: Additional keyword arguments for the completion function. See (https://docs.vllm.ai/en/latest/serving/engine_args.html#engine-args) for more details.
@@ -87,6 +104,12 @@ class VLLM(BaseCompletionLLM):
         kwargs = {
             k: v for k, v in kwargs.items() if k in SamplingParams.__struct_fields__
         }
+
+        if response_format:
+            kwargs["guided_decoding"] = GuidedDecodingParams(
+                json=response_format.model_json_schema(),
+            )
+
         sampling_params = SamplingParams(
             temperature=temperature,
             top_p=top_p,
@@ -116,6 +139,7 @@ class VLLM(BaseCompletionLLM):
         messages: list[Message],
         max_tokens: int = 512,
         temperature: float = 1,
+        response_format: Type[BaseModel] | None = None,
         top_p: int = 1,
         top_k: int = -1,
         **kwargs,
@@ -126,6 +150,8 @@ class VLLM(BaseCompletionLLM):
         Args:
             messages (list[Message]): List of messages to be sent to the model.
             temperature (float): Sampling temperature. Defaults to `1`.
+            response_format (Type[BaseModel] | None): The JSON format of the response.
+            max_token (int): Maximum number of tokens to generate. Defaults to `512`.
             top_p (int): Top-p sampling parameter. Defaults to `1`.
             top_k (int): Top-k sampling parameter. Defaults to `-1`.
             **kwargs: Additional keyword arguments for the completion function. See (https://docs.vllm.ai/en/latest/serving/engine_args.html#engine-args) for more details.
@@ -138,6 +164,7 @@ class VLLM(BaseCompletionLLM):
             messages,
             temperature=temperature,
             max_tokens=max_tokens,
+            response_format=response_format,
             top_p=top_p,
             top_k=top_k,
             **kwargs,
@@ -148,6 +175,7 @@ class VLLM(BaseCompletionLLM):
         messages: list[Message],
         max_tokens: int = 512,
         temperature: float = 1,
+        response_format: Type[BaseModel] | None = None,
         top_p: int = 1,
         top_k: int = -1,
         **kwargs,
@@ -159,6 +187,7 @@ class VLLM(BaseCompletionLLM):
             messages (list[Message]): List of messages to be sent to the model.
             max_token (int): Maximum number of tokens to generate. Defaults to `512`.
             temperature (float): Sampling temperature. Defaults to `1`.
+            response_format (Type[BaseModel] | None): The JSON format of the response.
             top_p (int): Top-p sampling parameter. Defaults to `1`.
             top_k (int): Top-k sampling parameter. Defaults to `-1`.
             **kwargs: Additional keyword arguments for the completion function. See (https://docs.vllm.ai/en/latest/serving/engine_args.html#engine-args) for more details.
@@ -170,6 +199,7 @@ class VLLM(BaseCompletionLLM):
             messages,
             temperature=temperature,
             max_tokens=max_tokens,
+            response_format=response_format,
             top_p=top_p,
             top_k=top_k,
             **kwargs,
@@ -180,6 +210,7 @@ class VLLM(BaseCompletionLLM):
         messages: list[Message],
         max_tokens: int = 512,
         temperature: float = 1,
+        response_format: Type[BaseModel] | None = None,
         top_p: int = 1,
         top_k: int = -1,
         **kwargs,
@@ -191,6 +222,7 @@ class VLLM(BaseCompletionLLM):
             messages (list[Message]): List of messages to be sent to the model.
             max_token (int): Maximum number of tokens to generate. Defaults to `512`.
             temperature (float): Sampling temperature. Defaults to `1`.
+            response_format (Type[BaseModel] | None): The JSON format of the response.
             top_p (int): Top-p sampling parameter. Defaults to `1`.
             top_k (int): Top-k sampling parameter. Defaults to `-1`.
             **kwargs: Additional keyword arguments for the completion function. See (https://docs.vllm.ai/en/latest/serving/engine_args.html#engine-args) for more details.
@@ -202,6 +234,7 @@ class VLLM(BaseCompletionLLM):
             messages,
             temperature=temperature,
             max_tokens=max_tokens,
+            response_format=response_format,
             top_p=top_p,
             top_k=top_k,
             **kwargs,
