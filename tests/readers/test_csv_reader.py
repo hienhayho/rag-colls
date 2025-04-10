@@ -29,3 +29,9 @@ def test_csv_reader():
     assert "num_cols" in metadata, "Metadata missing num_cols"
     assert "columns" in metadata, "Metadata missing columns"
     assert "source" in metadata, "Metadata missing source"
+
+    primitives = (bool, str, int, float, type(None), list)
+    for _, value in metadata.items():
+        assert isinstance(value, primitives), (
+            "Metadata values should be bool, str, int, float, or None"
+        )

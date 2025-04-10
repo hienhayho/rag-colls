@@ -28,3 +28,9 @@ def test_excel_reader():
     assert "num_rows" in metadata, "Metadata missing num_rows"
     assert "num_cols" in metadata, "Metadata missing num_cols"
     assert "columns" in metadata, "Metadata missing columns"
+
+    primitives = (bool, str, int, float, type(None), list)
+    for _, value in metadata.items():
+        assert isinstance(value, primitives), (
+            "Metadata values should be bool, str, int, float, or None"
+        )
