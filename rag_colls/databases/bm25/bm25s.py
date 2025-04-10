@@ -73,6 +73,8 @@ class BM25s(BaseBM25RetrieverProvider):
 
         merged_corpus = old_corpus + new_corpus
 
+        # NOTE: If the re-indexing fails or an exception occurs during indexing,
+        # the previous data will be lost. We should have a backup of the old data.
         shutil.rmtree(self.save_dir, ignore_errors=True)
 
         self._index_documents(merged_corpus, **kwargs)

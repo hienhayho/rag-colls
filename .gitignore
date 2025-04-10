@@ -180,3 +180,4 @@ docs_env/
 esdata/
 
 model_cache/
+.history/

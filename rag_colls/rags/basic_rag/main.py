@@ -97,10 +97,7 @@ class BasicRAG(BaseRAG):
             k=top_k,
         )
 
-        contexts = ""
-
-        for result in results:
-            contexts += f"{result.document}\n ============ \n"
+        contexts = "\n ============ \n".join(result.document for result in results)
 
         messages = [
             Message(
