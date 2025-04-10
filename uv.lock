@@ -17,6 +17,24 @@ resolution-markers = [
 ]
 
 [[package]]
+name = "accelerate"
+version = "1.6.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "huggingface-hub" },
+    { name = "numpy" },
+    { name = "packaging" },
+    { name = "psutil" },
+    { name = "pyyaml" },
+    { name = "safetensors" },
+    { name = "torch" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/8a/6e/c29a1dcde7db07f47870ed63e5124086b11874ad52ccd533dc1ca2c799da/accelerate-1.6.0.tar.gz", hash = "sha256:28c1ef1846e690944f98b68dc7b8bb6c51d032d45e85dcbb3adb0c8b99dffb32", size = 363804 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/63/b1/8198e3cdd11a426b1df2912e3381018c4a4a55368f6d0857ba3ca418ef93/accelerate-1.6.0-py3-none-any.whl", hash = "sha256:1aee717d3d3735ad6d09710a7c26990ee4652b79b4e93df46551551b5227c2aa", size = 354748 },
+]
+
+[[package]]
 name = "aiohappyeyeballs"
 version = "2.6.1"
 source = { registry = "https://pypi.org/simple" }
@@ -3719,6 +3737,7 @@ docs = [
     { name = "myst-parser" },
 ]
 huggingface-embedding = [
+    { name = "accelerate" },
     { name = "llama-index-embeddings-huggingface" },
 ]
 vllm-llm = [
@@ -3727,6 +3746,7 @@ vllm-llm = [
 
 [package.metadata]
 requires-dist = [
+    { name = "accelerate", marker = "extra == 'huggingface-embedding'", specifier = ">=1.6.0" },
     { name = "bm25s", specifier = ">=0.2.10" },
     { name = "chromadb", specifier = ">=0.6.3,<2.0.0" },
     { name = "elasticsearch", extras = ["async"], specifier = ">=8.17.2" },

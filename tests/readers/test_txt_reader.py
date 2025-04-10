@@ -20,3 +20,10 @@ def test_txt_reader():
     )
 
     assert "source" in first_document.metadata, "Metadata missing source"
+
+    metadata = first_document.metadata
+    primitives = (bool, str, int, float, type(None))
+    for _, value in metadata.items():
+        assert isinstance(value, primitives), (
+            "Metadata values should be bool, str, int, float, or None"
+        )

@@ -29,7 +29,7 @@ class PyMuPDFReader(BaseReader):
         if not extra_info:
             extra_info = {}
 
-        extra_info["file_path"] = file_path
+        extra_info["file_path"] = str(file_path)
         extra_info["should_split"] = should_split
 
         documents = []
