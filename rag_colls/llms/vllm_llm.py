@@ -84,6 +84,7 @@ class VLLM(BaseCompletionLLM):
             messages (list[Message]): List of messages to be sent to the model.
             max_token (int): Maximum number of tokens to generate. Defaults to `512`.
             temperature (float): Sampling temperature. Defaults to `1`.
+            response_format (Type[BaseModel] | None): The JSON format of the response.
             top_p (int): Top-p sampling parameter. Defaults to `1`.
             top_k (int): Top-k sampling parameter. Defaults to `-1`.
             **kwargs: Additional keyword arguments for the completion function. See (https://docs.vllm.ai/en/latest/serving/engine_args.html#engine-args) for more details.
@@ -149,6 +150,8 @@ class VLLM(BaseCompletionLLM):
         Args:
             messages (list[Message]): List of messages to be sent to the model.
             temperature (float): Sampling temperature. Defaults to `1`.
+            response_format (Type[BaseModel] | None): The JSON format of the response.
+            max_token (int): Maximum number of tokens to generate. Defaults to `512`.
             top_p (int): Top-p sampling parameter. Defaults to `1`.
             top_k (int): Top-k sampling parameter. Defaults to `-1`.
             **kwargs: Additional keyword arguments for the completion function. See (https://docs.vllm.ai/en/latest/serving/engine_args.html#engine-args) for more details.
@@ -184,6 +187,7 @@ class VLLM(BaseCompletionLLM):
             messages (list[Message]): List of messages to be sent to the model.
             max_token (int): Maximum number of tokens to generate. Defaults to `512`.
             temperature (float): Sampling temperature. Defaults to `1`.
+            response_format (Type[BaseModel] | None): The JSON format of the response.
             top_p (int): Top-p sampling parameter. Defaults to `1`.
             top_k (int): Top-k sampling parameter. Defaults to `-1`.
             **kwargs: Additional keyword arguments for the completion function. See (https://docs.vllm.ai/en/latest/serving/engine_args.html#engine-args) for more details.
@@ -218,6 +222,7 @@ class VLLM(BaseCompletionLLM):
             messages (list[Message]): List of messages to be sent to the model.
             max_token (int): Maximum number of tokens to generate. Defaults to `512`.
             temperature (float): Sampling temperature. Defaults to `1`.
+            response_format (Type[BaseModel] | None): The JSON format of the response.
             top_p (int): Top-p sampling parameter. Defaults to `1`.
             top_k (int): Top-k sampling parameter. Defaults to `-1`.
             **kwargs: Additional keyword arguments for the completion function. See (https://docs.vllm.ai/en/latest/serving/engine_args.html#engine-args) for more details.

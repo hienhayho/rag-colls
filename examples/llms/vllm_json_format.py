@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from rag_colls.types.llm import Message
 from rag_colls.llms.vllm_llm import VLLM
 
+
 # Define the response format
 class CalendarEvent(BaseModel):
     name: str
