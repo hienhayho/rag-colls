@@ -111,6 +111,17 @@ class FileProcessor:
         should_splits: list[bool],
         extra_infos: list[dict],
     ) -> list[Path]:
+        """
+        Get all valid file paths from the given list of file or folder paths.
+
+        Args:
+            file_or_folder_paths (list[str | Path]): List of file or folder paths.
+            should_splits (list[bool]): List of boolean values indicating whether to split the files.
+            extra_infos (list[dict]): List of dictionaries containing extra information for each file.
+
+        Returns:
+            list[Path]: List of valid file paths.
+        """
         all_file_paths = []
         new_should_splits = []
         new_extra_infos = []
@@ -130,10 +141,12 @@ class FileProcessor:
                     all_file_paths.extend(files)
                     new_should_splits.extend([should_split] * len(files))
                     new_extra_infos.extend([extra_info] * len(files))
+
                 elif path.is_file() and path.suffix in self.processors:
                     all_file_paths.append(path)
                     new_should_splits.append(should_split)
                     new_extra_infos.append(extra_info)
+
                 else:
                     warnings.warn(f"Invalid file_paths: {path}")
         return (
@@ -149,6 +162,18 @@ class FileProcessor:
         extra_infos: list[dict] | None = None,
         num_workers: int = 1,
     ) -> list[Document]:
+        """
+        Load data from the given list of file or folder paths.
+
+        Args:
+            file_or_folder_paths (list[str | Path]): List of file or folder paths.
+            should_splits (list[bool] | None): List of boolean values indicating whether to split the files.
+            extra_infos (list[dict] | None): List of dictionaries containing extra information for each file.
+            num_workers (int): Number of worker processes to use for multiprocessing.
+
+        Returns:
+            list[Document]: List of processed documents.
+        """
         logger.info(f"Processing {len(file_or_folder_paths)} paths ...")
 
         should_splits = should_splits or [True] * len(file_or_folder_paths)
@@ -194,6 +219,15 @@ class FileProcessor:
     ) -> list[Document]:
         """
         Asynchronous version of load_data.
+
+        Args:
+            file_or_folder_paths (list[str | Path]): List of file or folder paths.
+            should_splits (list[bool] | None): List of boolean values indicating whether to split the files.
+            extra_infos (list[dict] | None): List of dictionaries containing extra information for each file.
+            max_workers (int): Number of worker processes to use for multiprocessing.
+
+        Returns:
+            list[Document]: List of processed documents.
         """
         logger.info(f"Processing {len(file_or_folder_paths)} files asynchronously ...")
 
