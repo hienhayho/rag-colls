@@ -27,3 +27,9 @@ def test_html_reader():
     assert "file_size" in metadata, "Metadata missing file_size"
     assert "encoding" in metadata, "Metadata missing encoding"
     assert "source" in metadata, "Metadata missing source"
+
+    primitives = (bool, str, int, float, type(None))
+    for _, value in metadata.items():
+        assert isinstance(value, primitives), (
+            "Metadata values should be bool, str, int, float, or None"
+        )
