@@ -12,6 +12,7 @@ from rag_colls.core.serialization import (
     deserialize_hf_model_kwargs,
 )
 from rag_colls.types.retriever import RetrieverQueryType, RetrieverResult
+from rag_colls.core.utils import check_torch_device
 
 try:
     import torch
@@ -44,7 +45,7 @@ class DiversityRankingStrategy(Enum):
         enum_map = {e.value: e for e in DiversityRankingStrategy}
         strategy = enum_map.get(string)
         if strategy is None:
-            msg = f"Unknown strategy '{string}'. Supported strategies are: {list(enum_map.keys())}"
+            msg = f"Unknown strategy '{string}'. Supported strategies are: {List(enum_map.keys())}"
             raise ValueError(msg)
         return strategy
 
@@ -71,7 +72,7 @@ class DiversityRankingSimilarity(Enum):
         enum_map = {e.value: e for e in DiversityRankingSimilarity}
         similarity = enum_map.get(string)
         if similarity is None:
-            msg = f"Unknown similarity metric '{string}'. Supported metrics are: {list(enum_map.keys())}"
+            msg = f"Unknown similarity metric '{string}'. Supported metrics are: {List(enum_map.keys())}"
             raise ValueError(msg)
         return similarity
 
@@ -181,13 +182,8 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         if top_k is None or top_k <= 0:
             raise ValueError(f"top_k must be > 0, but got {top_k}")
         self.top_k = top_k
-        self.device = (
-            torch.device(device)
-            if device != "auto"
-            else torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        )
+        self.device = check_torch_device(device)
         self.token = token
-        self.model = None
         self.similarity = (
             DiversityRankingSimilarity.from_str(similarity)
             if isinstance(similarity, str)
@@ -210,22 +206,22 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         self.tokenizer_kwargs = tokenizer_kwargs
         self.config_kwargs = config_kwargs
         self.backend = backend
-        if self.model is None:
-            logger.info(
-                f"Initializing SentenceTransformersDiversityRanker with model '{self.model_name_or_path}' on device '{self.device}'"
-            )
-            logger.info(
-                f"Using strategy '{self.strategy}' with lambda threshold '{self.lambda_threshold}'"
-            )
-            self.model = SentenceTransformer(
-                model_name_or_path=self.model_name_or_path,
-                device=self.device,
-                token=self.token.resolve_value() if self.token else None,
-                model_kwargs=self.model_kwargs,
-                tokenizer_kwargs=self.tokenizer_kwargs,
-                config_kwargs=self.config_kwargs,
-                backend=self.backend,
-            )
+        logger.info(
+            f"Initializing SentenceTransformersDiversityRanker with model '{self.model_name_or_path}' on device '{self.device}'"
+        )
+        logger.info(
+            f"Using strategy '{self.strategy}' with lambda threshold '{self.lambda_threshold}'"
+        )
+
+        self.model = SentenceTransformer(
+            model_name_or_path=self.model_name_or_path,
+            device=self.device,
+            token=self.token.resolve_value() if self.token else None,
+            model_kwargs=self.model_kwargs,
+            tokenizer_kwargs=self.tokenizer_kwargs,
+            config_kwargs=self.config_kwargs,
+            backend=self.backend,
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         """
@@ -326,37 +322,37 @@ class SentenceTransformersDiversityRanker(BaseReranker):
             List[RetrieverResult]: Reranked documents ordered to maximize diversity while maintaining relevance.
         """
         texts_to_embed = self._prepare_texts_to_embed(documents)
-
         doc_embeddings, query_embedding = self._embed_and_normalize(
             query, texts_to_embed
         )
-
         n = len(documents)
+
+        # Precompute all pairwise similarities
+        doc_doc_similarities = doc_embeddings @ doc_embeddings.T
+        # Precompute query-document similarities
+        query_doc_similarities = (query_embedding @ doc_embeddings.T).reshape(-1)
+
         selected: List[int] = []
+        # Start with the document most similar to the query
+        selected.append(int(torch.argmax(query_doc_similarities).item()))
 
-        # Compute the similarity vector between the query and documents
-        query_doc_sim = query_embedding @ doc_embeddings.T
-
-        # Start with the document with the highest similarity to the query
-        selected.append(int(torch.argmax(query_doc_sim).item()))
-
-        selected_sum = doc_embeddings[selected[0]] / n
+        # Initialize mask for selected documents
+        mask = torch.zeros(n, dtype=torch.bool)
+        mask[selected[0]] = True
 
         while len(selected) < n:
-            # Compute mean of dot products of all selected documents and all other documents
-            similarities = selected_sum @ doc_embeddings.T
-            # Mask documents that are already selected
-            similarities[selected] = torch.inf
-            # Select the document with the lowest total similarity score
-            index_unselected = int(torch.argmin(similarities).item())
+            # Get similarities to all selected documents
+            similarities_to_selected = doc_doc_similarities[:, mask]
+            # Compute mean similarity to selected documents
+            mean_similarities = similarities_to_selected.mean(dim=1)
+            # Mask already selected documents
+            mean_similarities[mask] = torch.inf
+            # Select document with lowest mean similarity
+            index_unselected = int(torch.argmin(mean_similarities).item())
             selected.append(index_unselected)
-            # It's enough just to add to the selected vectors because dot product is distributive
-            # It's divided by n for numerical stability
-            selected_sum += doc_embeddings[index_unselected] / n
+            mask[index_unselected] = True
 
-        ranked_docs: List[RetrieverResult] = [documents[i] for i in selected]
-
-        return ranked_docs
+        return [documents[i] for i in selected]
 
     def _embed_and_normalize(
         self, query: str, texts_to_embed: List[str]
@@ -425,21 +421,25 @@ class SentenceTransformersDiversityRanker(BaseReranker):
         )
         top_k = top_k if top_k else len(documents)
 
+        # Precompute all pairwise cosine similarities
+        doc_doc_similarities = doc_embeddings @ doc_embeddings.T
+        # Precompute query-document similarities
+        query_doc_similarities = (query_embedding @ doc_embeddings.T).reshape(-1)
+
         selected: List[int] = []
-        query_similarities_as_tensor = query_embedding @ doc_embeddings.T
-        query_similarities = query_similarities_as_tensor.reshape(-1)
-        idx = int(torch.argmax(query_similarities))
+        # Start with the most relevant document
+        idx = int(torch.argmax(query_doc_similarities).item())
         selected.append(idx)
+
         while len(selected) < top_k:
             best_idx = None
             best_score = -float("inf")
             for idx, _ in enumerate(documents):
                 if idx in selected:
                     continue
-                relevance_score = query_similarities[idx]
-                diversity_score = max(
-                    doc_embeddings[idx] @ doc_embeddings[j].T for j in selected
-                )
+                relevance_score = query_doc_similarities[idx]
+                # Get maximum similarity to already selected documents
+                diversity_score = max(doc_doc_similarities[idx, j] for j in selected)
                 mmr_score = (
                     lambda_threshold * relevance_score
                     - (1 - lambda_threshold) * diversity_score
@@ -479,11 +479,11 @@ class SentenceTransformersDiversityRanker(BaseReranker):
     def _rerank(
         self,
         query: RetrieverQueryType,
-        results: list[list[RetrieverResult]] | list[RetrieverResult],
+        results: List[List[RetrieverResult]] | List[RetrieverResult],
         top_k: int = 10,
         lambda_threshold: Optional[float] = None,
         **kwargs,
-    ) -> list[RerankerResult]:
+    ) -> List[RerankerResult]:
         """
         Rerank the results using either Maximum Margin Relevance (MMR) or Greedy Diversity Order strategy.
 
@@ -493,7 +493,7 @@ class SentenceTransformersDiversityRanker(BaseReranker):
 
         Args:
             query (RetrieverQueryType): The search query.
-            results (list[list[RetrieverResult]] | list[RetrieverResult]): The results to rerank.
+            results (List[List[RetrieverResult]] | List[RetrieverResult]): The results to rerank.
             top_k (int): The maximum number of results to return.
             lambda_threshold (Optional[float]): The trade-off parameter between relevance and diversity.
                                               Only used when strategy is "maximum_margin_relevance".
@@ -501,7 +501,7 @@ class SentenceTransformersDiversityRanker(BaseReranker):
             **kwargs: Additional arguments for the reranker.
 
         Returns:
-            list[RerankerResult]: The reranked results, where each result contains:
+            List[RerankerResult]: The reranked results, where each result contains:
                 - id: The document identifier
                 - score: The relevance score
                 - document: The document content

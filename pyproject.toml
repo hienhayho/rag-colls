@@ -38,5 +38,5 @@ Issues = "https://github.com/hienhayho/rag-colls/issues"
 [project.optional-dependencies]
 dev = ["pre-commit>=4.2.0", "pytest>=8.3.5"]
 docs = ["esbonio>=0.12.0", "myst-parser>=4.0.1"]
-huggingface-embedding = ["llama-index-embeddings-huggingface>=0.5.2"]
+huggingface-embedding = ["llama-index-embeddings-huggingface>=0.5.2", "accelerate>=1.6.0"]
 vllm-llm = ["vllm>=0.8.2"]
