@@ -35,6 +35,14 @@ class BaseRetrieverProvider(ABC):
         )
 
     @abstractmethod
+    def _clean_resource(self):
+        """
+        Clean the retriever resource.
+        This method should be overridden by subclasses to implement the actual cleanup.
+        """
+        raise NotImplementedError("This method should be overridden by subclasses.")
+
+    @abstractmethod
     def _search(self, query: RetrieverQueryType, **kwargs) -> list[RetrieverResult]:
         """
         Search for documents in the retriever provider.
@@ -85,3 +93,9 @@ class BaseRetrieverProvider(ABC):
         Asynchronous search for documents in the retriever provider.
         """
         return await self._asearch(query=query, **kwargs)
+
+    def clean_resource(self):
+        """
+        Clean the retriever resource.
+        """
+        return self._clean_resource()

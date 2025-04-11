@@ -45,3 +45,10 @@ class BM25Retriever(BaseRetriever):
         assert isinstance(query, str), "Query must be a string."
 
         return self.bm25.search(query=query, **kwargs)
+
+    def _clean_resource(self):
+        """
+        Clean the retriever resource.
+        This method should be overridden by subclasses to implement the actual cleanup.
+        """
+        self.bm25.clean_resource()

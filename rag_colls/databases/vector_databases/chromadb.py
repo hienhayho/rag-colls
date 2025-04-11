@@ -15,7 +15,7 @@ class ChromaVectorDatabase(BaseVectorDatabase):
             persistent_directory (str): Directory to persist the database.
             collection_name (str): Name of the collection to create.
         """
-
+        self.persistent_directory = persistent_directory
         self.client = chromadb.PersistentClient(
             path=persistent_directory,
         )
@@ -27,11 +27,21 @@ class ChromaVectorDatabase(BaseVectorDatabase):
 
         logger.success("ChromaVectorDatabase initialized successfully !!!")
 
+    def __str__(self):
+        return f"ChromaVectorDatabase(persistent_directory={self.persistent_directory}, collection_name={self.collection_name})"
+
     def _test_connection(self):
         """
         Test the connection to the Chroma vector database.
         """
         self.client.heartbeat()
+
+    def _clean_resource(self):
+        """
+        Clean the Chroma vector database resource.
+        """
+        self.client.delete_collection(self.collection_name)
+        logger.debug(f"Cleaned up Chroma vector database at {self.collection_name}")
 
     def _check_collection_exists(self, collection_name):
         """
@@ -85,6 +95,8 @@ class ChromaVectorDatabase(BaseVectorDatabase):
             metadatas=metadatas,
             ids=[doc.id for doc in documents],
         )
+
+        logger.debug(f"Count: {collection.count()}")
 
         logger.success(f"Added: {len(documents)} documents.")
 

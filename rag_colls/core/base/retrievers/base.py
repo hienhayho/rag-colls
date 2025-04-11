@@ -21,6 +21,14 @@ class BaseRetriever(ABC):
         """
         raise NotImplementedError("Retrieving documents process is not implemented.")
 
+    @abstractmethod
+    def _clean_resource(self):
+        """
+        Clean the retriever resource.
+        This method should be overridden by subclasses to implement the actual cleanup.
+        """
+        raise NotImplementedError("This method should be overridden by subclasses.")
+
     def retrieve(self, query: RetrieverQueryType, **kwargs) -> list[RetrieverResult]:
         """
         Retrieve documents based on the query.
@@ -33,3 +41,9 @@ class BaseRetriever(ABC):
             list[RetrieverResult]: A list of retrieved documents.
         """
         return self._retrieve(query, **kwargs)
+
+    def clean_resource(self):
+        """
+        Clean the retriever resource.
+        """
+        return self._clean_resource()
