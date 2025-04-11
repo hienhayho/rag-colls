@@ -55,3 +55,9 @@ class VectorDatabaseRetriever(BaseRetriever):
             query_embedding = self.embed_model.get_query_embedding(query).embedding
 
         return self.vector_db.search(query_embedding=query_embedding, **kwargs)
+
+    def _clean_resource(self):
+        """
+        Clean the retriever resource.
+        """
+        self.vector_db.clean_resource()

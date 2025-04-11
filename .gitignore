@@ -179,5 +179,9 @@ bm25s/
 docs_env/
 esdata/
 
+data/**/*.json
+eval_results/**/*.json
+
 model_cache/
+data_cache/
 .history/

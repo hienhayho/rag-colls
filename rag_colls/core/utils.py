@@ -1,4 +1,6 @@
 import re
+import time
+from typing import Any, Callable, Tuple
 from loguru import logger
 
 
@@ -54,3 +56,23 @@ def check_torch_device(device: str) -> str:
     except Exception as e:
         logger.warning(f"Error checking device '{device}': {e}, defaulting to 'cpu'")
         return torch.device("cpu")
+
+
+def run_fuction_return_time(
+    f: Callable, *args: Any, **kwargs: Any
+) -> Tuple[float, Any]:
+    """
+    Run a function and return the execution time and result.
+
+    Args:
+        f (Callable): The function to run.
+        *args (Any): Positional arguments for the function.
+        **kwargs (Any): Keyword arguments for the function.
+
+    Returns:
+        Tuple[float, Any]: A tuple containing the execution time in seconds and the result of the function.
+    """
+    start_time = time.time()
+    result = f(*args, **kwargs)
+    end_time = time.time()
+    return end_time - start_time, result

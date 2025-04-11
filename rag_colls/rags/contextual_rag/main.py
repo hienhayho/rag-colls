@@ -8,10 +8,12 @@ from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.core.base.embeddings.base import BaseEmbedding
 from rag_colls.core.base.database.bm25 import BaseBM25RetrieverProvider
 from rag_colls.core.base.database.vector_database import BaseVectorDatabase
+from rag_colls.core.utils import run_fuction_return_time
 
+from rag_colls.types.llm import Message
 from rag_colls.prompts.q_a import Q_A_PROMPT
+from rag_colls.types.search import SearchOutput
 from rag_colls.types.core.document import Document
-from rag_colls.types.llm import Message, LLMOutput
 from rag_colls.core.settings import GlobalSettings
 from rag_colls.core.utils import check_placeholders
 from rag_colls.processors.file_processor import FileProcessor
@@ -65,6 +67,24 @@ class ContextualRAG(BaseRAG):
         else:
             self.gen_contextual_prompt_template = CONTEXTUAL_PROMPT
 
+    def _get_metadata(self):
+        """
+        Get the metadata of the Contextual RAG.
+
+        Returns:
+            dict: Metadata of the Contextual RAG.
+        """
+        return {
+            "vector_database": str(self.vector_database),
+            "bm25": str(self.bm25),
+            "chunker": str(self.chunker),
+            "llm": str(self.llm),
+            "embed_model": str(self.embed_model),
+            "processor": str(self.processor),
+            "reranker": str(self.reranker),
+            "gen_contextual_prompt_template": str(self.gen_contextual_prompt_template),
+        }
+
     def _split_document(self, document: Document, **kwargs) -> list[Document]:
         """
         Split the document into chunks using the chunker.
@@ -77,6 +97,13 @@ class ContextualRAG(BaseRAG):
             list[str]: A list of chunks.
         """
         return self.chunker.chunk(documents=[document], **kwargs)
+
+    def _clean_resource(self):
+        """
+        Clean the retriever resource.
+        """
+        self.vector_database.clean_resource()
+        self.bm25.clean_resource()
 
     def _build_gen_context_input(
         self, chunks: list[Document], whole_document: Document
@@ -161,27 +188,54 @@ class ContextualRAG(BaseRAG):
             documents=embeded_chunks,
         )
 
-    def _search(self, query: RetrieverQueryType, top_k: int = 5) -> LLMOutput:
+    def _retrieve_db(
+        self,
+        *,
+        query: RetrieverQueryType,
+        top_k: int = 5,
+        **kwargs,
+    ) -> list[Document]:
+        """
+        Retrieve documents from the database.
+
+        Args:
+            query (RetrieverQueryType): The query to search for.
+            top_k (int): The number of top results to retrieve.
+            **kwargs: Additional keyword arguments for the retrieval process.
+
+        Returns:
+            list[Document]: A list of retrieved documents.
+        """
+        semantic_result = self.semantic_retriever.retrieve(query=query, top_k=top_k)
+        bm25_result = self.bm25_retriever.retrieve(query=query, top_k=top_k)
+        return semantic_result, bm25_result
+
+    def _search(
+        self,
+        *,
+        query: RetrieverQueryType,
+        top_k: int = 5,
+        **kwargs,
+    ) -> SearchOutput:
         """
         Search with Contextual RAG.
 
         Args:
             query (RetrieverQueryType): The query to search for.
+            return_retrieved_result (bool): Whether to return the retrieved result.
             top_k (int): The number of top results to retrieve.
+            **kwargs: Additional keyword arguments for the search operation.
 
         Returns:
-            LLMOutput: The response from the LLM.
+            SearchOutput: The response from the LLM or a tuple of the response and retrieved results.
         """
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            future_semantic = executor.submit(
-                self.semantic_retriever.retrieve, query=query, top_k=top_k
-            )
-            future_bm25 = executor.submit(
-                self.bm25_retriever.retrieve, query=query, top_k=top_k
-            )
 
-            semantic_results = future_semantic.result()
-            bm25_results = future_bm25.result()
+        retrieved_time, semantic_results, bm25_results = run_fuction_return_time(
+            self._retrieve_db,
+            query=query,
+            top_k=top_k,
+            **kwargs,
+        )
 
         reranked_results = self.reranker.rerank(
             query=query,
@@ -189,9 +243,9 @@ class ContextualRAG(BaseRAG):
             top_k=top_k,
         )
 
-        contexts = ""
-        for result in reranked_results:
-            contexts += f"{result.document} \n ============ \n"
+        contexts = "\n ============ \n".join(
+            result.document for result in reranked_results
+        )
 
         messages = [
             Message(
@@ -199,6 +253,15 @@ class ContextualRAG(BaseRAG):
             )
         ]
 
-        response = self.llm.complete(messages=messages)
+        generation_time, response = run_fuction_return_time(
+            self.llm.complete,
+            messages=messages,
+        )
 
-        return response
+        return SearchOutput(
+            content=response.content,
+            usage=response.usage,
+            retrieved_results=reranked_results,
+            retrieved_time=retrieved_time,
+            generation_time=generation_time,
+        )

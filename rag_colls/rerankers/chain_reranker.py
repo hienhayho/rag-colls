@@ -36,6 +36,9 @@ class ChainReranker(BaseReranker):
 
         logger.info(f"Initialized ChainReranker with {len(rerankers)} rerankers.")
 
+    def __str__(self):
+        return f"ChainReranker(rerankers={self.rerankers})"
+
     def _check_valid_top_ks(self, top_ks: list[int]) -> bool:
         """
         Check if the provided top_ks are valid.
@@ -67,9 +70,6 @@ class ChainReranker(BaseReranker):
         """
         for reranker in rerankers:
             assert isinstance(reranker, BaseReranker), f"Invalid reranker: {reranker}"
-
-    def __str__(self):
-        return f"ChainReranker(rerankers={self.rerankers})"
 
     def __repr__(self):
         return self.__str__()

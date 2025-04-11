@@ -3,6 +3,7 @@ from loguru import logger
 from pydantic import BaseModel
 from litellm import (
     completion,
+    batch_completion,
     acompletion,
     get_supported_openai_params,
     supports_response_schema,
@@ -81,6 +82,40 @@ class LiteLLM(BaseCompletionLLM):
                 total_tokens=response.usage.total_tokens,
             ),
         )
+
+    def _batch_complete(
+        self,
+        messages: list[list[Message]],
+        response_format: Type[BaseModel] | None = None,
+        **kwargs,
+    ) -> list[LLMOutput]:
+        formatted_messages = [
+            [{"role": msg.role, "content": msg.content} for msg in message]
+            for message in messages
+        ]
+
+        # only get params from kwargs which are in completion.__annotations__
+        kwargs = {
+            k: v for k, v in kwargs.items() if k in batch_completion.__annotations__
+        }
+        responses = batch_completion(
+            model=self.model_name,
+            messages=formatted_messages,
+            response_format=response_format,
+            **kwargs,
+        )
+
+        return [
+            LLMOutput(
+                content=response.choices[0].message.content,
+                usage=LLMUsage(
+                    prompt_tokens=response.usage.prompt_tokens,
+                    completion_tokens=response.usage.completion_tokens,
+                    total_tokens=response.usage.total_tokens,
+                ),
+            )
+            for response in responses
+        ]
 
     async def _acomplete(
         self,

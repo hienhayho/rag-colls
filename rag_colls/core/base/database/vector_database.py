@@ -32,6 +32,13 @@ class BaseVectorDatabase(BaseRetrieverProvider):
         raise NotImplementedError("This method should be overridden by subclasses.")
 
     @abstractmethod
+    def __str__(self):
+        """
+        Return a string representation of the vector database.
+        """
+        raise NotImplementedError("This method should be overridden by subclasses.")
+
+    @abstractmethod
     def _add_documents(self, documents: list[RetrieverIngestInput], **kwargs):
         """
         Add documents to the vector database.
@@ -150,3 +157,9 @@ class BaseVectorDatabase(BaseRetrieverProvider):
             return
 
         self._delete_documents(document_ids, **kwargs)
+
+    def clean_resource(self):
+        """
+        Clean up the vector database resources.
+        """
+        return self._clean_resource()
