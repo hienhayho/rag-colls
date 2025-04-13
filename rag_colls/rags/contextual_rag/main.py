@@ -230,7 +230,7 @@ class ContextualRAG(BaseRAG):
             SearchOutput: The response from the LLM or a tuple of the response and retrieved results.
         """
 
-        retrieved_time, semantic_results, bm25_results = run_fuction_return_time(
+        retrieved_time, (semantic_results, bm25_results) = run_fuction_return_time(
             self._retrieve_db,
             query=query,
             top_k=top_k,
