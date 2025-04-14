@@ -1,6 +1,7 @@
 import argparse
 
 from rag_colls.llms.vllm_llm import VLLM
+from rag_colls.llms.litellm_llm import LiteLLM
 from rag_colls.rags.basic_rag import BasicRAG
 from rag_colls.embeddings.hf_embedding import HuggingFaceEmbedding
 from rag_colls.processors.chunkers.semantic_chunker import SemanticChunker
@@ -31,7 +32,7 @@ rag = BasicRAG(
     chunker=SemanticChunker(embed_model_name="text-embedding-ada-002"),
     llm=VLLM(
         model_name="Qwen/Qwen2.5-7B-Instruct",
-        gpu_memory_utilization=0.7,
+        gpu_memory_utilization=0.6,
         dtype="half",
         download_dir="./model_cache",
     ),
@@ -46,4 +47,5 @@ eval_search_and_generation(
     rag=rag,
     eval_file_path=args.f,
     output_file=args.o,
+    eval_llm=LiteLLM(model_name="openai/gpt-4o-mini"),
 )

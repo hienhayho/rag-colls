@@ -5,6 +5,7 @@ from rich.console import Console
 from rich.table import Table
 
 from rag_colls.rags.base import BaseRAG
+from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.eval.source.llm_as_a_judge import llm_as_a_judge_inference
 
 
@@ -59,6 +60,7 @@ def eval_search_and_generation(
     rag: BaseRAG,
     eval_file_path: str,
     output_file: str = None,
+    eval_llm: BaseCompletionLLM | None = None,
 ):
     """
     Evaluate the search and generation capabilities of the RAG system.
@@ -66,7 +68,8 @@ def eval_search_and_generation(
     Args:
         rag (BaseRAG): The RAG system to evaluate.
         eval_file_path (str): Path to the evaluation file.
-        output_file (str, optional): Path to save the evaluation results. Defaults to None.
+        output_file (str, optional): Path to save the evaluation results. Defaults to `None`.
+        eval_llm (BaseCompletionLLM, optional): LLM to use for evaluate llm as a judge. Defaults to `None`.
 
     """
     logger.info("RAG metadata:")
@@ -133,7 +136,7 @@ def eval_search_and_generation(
 
         logger.info("Evaluating answers...")
         judged_responses = llm_as_a_judge_inference(
-            llm=rag.get_llm(),
+            llm=eval_llm if eval_llm else rag.get_llm(),
             queries=queries,
             contexts=contexts,
             referenced_answers=referenced_answers,

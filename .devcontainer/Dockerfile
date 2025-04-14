@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:1-3.10
+FROM nvidia/cuda:12.2.2-cudnn8-devel-ubuntu22.04
 
 RUN apt-get update && apt-get install -y \
     build-essential \
