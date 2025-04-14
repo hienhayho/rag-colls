@@ -1,5 +1,6 @@
 from typing import Type
 from loguru import logger
+from dotenv import load_dotenv
 from pydantic import BaseModel
 from litellm import (
     completion,
@@ -12,6 +13,8 @@ from litellm import (
 from rag_colls.core.constants import DEFAULT_OPENAI_MODEL
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.types.llm import Message, LLMOutput, LLMUsage
+
+load_dotenv()
 
 
 class LiteLLM(BaseCompletionLLM):

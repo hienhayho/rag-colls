@@ -7,8 +7,6 @@ from vllm.sampling_params import GuidedDecodingParams
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.types.llm import Message, LLMOutput, LLMUsage
 
-from transformers import AutoTokenizer
-
 
 class VLLM(BaseCompletionLLM):
     """
@@ -20,6 +18,7 @@ class VLLM(BaseCompletionLLM):
         model_name: str,
         trust_remote_code: bool = False,
         tensor_parallel_size: int = 1,
+        max_tokens: int = 512,
         max_model_len: int | None = None,
         dtype: str = "auto",
         quantization: str | None = None,
@@ -47,6 +46,7 @@ class VLLM(BaseCompletionLLM):
         logger.info(f"VLLM model download dir: {download_dir}")
         self.model_name = model_name
         self.dtype = dtype
+        self.max_tokens = max_tokens
         self.max_model_len = max_model_len
         self.quantization = quantization
 
@@ -61,7 +61,6 @@ class VLLM(BaseCompletionLLM):
             max_model_len=max_model_len,
             **kwargs,
         )
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     def __str__(self):
         return f"VLLM(model_name={self.model_name}, dtype={self.dtype}, max_model_len={self.max_model_len}, quantization={self.quantization})"
@@ -78,7 +77,7 @@ class VLLM(BaseCompletionLLM):
     def _complete(
         self,
         messages: list[Message],
-        max_tokens: int = 512,
+        max_tokens: int | None = None,
         temperature: float = 1,
         response_format: Type[BaseModel] | None = None,
         top_p: int = 1,
@@ -90,7 +89,7 @@ class VLLM(BaseCompletionLLM):
 
         Args:
             messages (list[Message]): List of messages to be sent to the model.
-            max_token (int): Maximum number of tokens to generate. Defaults to `512`.
+            max_token (int | None): Maximum number of tokens to generate. Defaults to `None`.
             temperature (float): Sampling temperature. Defaults to `1`.
             response_format (Type[BaseModel] | None): The JSON format of the response.
             top_p (int): Top-p sampling parameter. Defaults to `1`.
@@ -122,7 +121,7 @@ class VLLM(BaseCompletionLLM):
             temperature=temperature,
             top_p=top_p,
             top_k=top_k,
-            max_tokens=max_tokens,
+            max_tokens=max_tokens if max_tokens else self.max_tokens,
             **kwargs,
         )
 
@@ -195,7 +194,7 @@ class VLLM(BaseCompletionLLM):
         )
 
         responses = self.llm.chat(
-            conversations, sampling_params=sampling_params, use_tqdm=False
+            conversations, sampling_params=sampling_params, use_tqdm=True
         )
 
         return [
