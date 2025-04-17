@@ -14,5 +14,5 @@ rag = BasicRAG(
 )
 
 rag.ingest_db(
-    file_or_folder_paths=["samples/papers/2409.13588v1.pdf"], batch_embedding=100
+    file_or_folder_paths=["samples/data/2503.20376v1.pdf"], batch_embedding=100
 )

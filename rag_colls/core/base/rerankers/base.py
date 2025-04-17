@@ -5,6 +5,16 @@ from rag_colls.types.retriever import RetrieverQueryType, RetrieverResult
 
 class BaseReranker(ABC):
     @abstractmethod
+    def __str__(self):
+        """
+        Get the string representation of the reranker.
+
+        Returns:
+            str: String representation of the reranker.
+        """
+        raise NotImplementedError("String representation not implemented.")
+
+    @abstractmethod
     def _rerank(
         self,
         query: RetrieverQueryType,

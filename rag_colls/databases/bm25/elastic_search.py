@@ -51,6 +51,16 @@ class ElasticSearch(BaseBM25RetrieverProvider):
             logger.error(f"Failed to connect to Elasticsearch: {e}")
             return False
 
+    def _clean_resource(self):
+        """
+        Clean the Elasticsearch resource.
+        """
+        if self.es.indices.exists(index=self.index_name):
+            self.es.indices.delete(index=self.index_name)
+            logger.debug(f"Cleaned up Elasticsearch index {self.index_name}")
+        else:
+            logger.debug(f"Elasticsearch index {self.index_name} does not exist.")
+
     def _build_corpus(self, documents: list[RetrieverIngestInput]):
         """
         Build the corpus for Elasticsearch indexing.

@@ -39,6 +39,16 @@ class BM25s(BaseBM25RetrieverProvider):
         ]
         return corpus_json
 
+    def _clean_resource(self):
+        """
+        Clean the BM25s resource.
+        """
+        if Path(self.save_dir).exists():
+            shutil.rmtree(self.save_dir, ignore_errors=True)
+            logger.debug(f"Cleaned up BM25s database at {self.save_dir}")
+        else:
+            logger.debug(f"BM25s database at {self.save_dir} does not exist.")
+
     def _index_documents(self, documents: list[RetrieverIngestInput], **kwargs):
         """
         Ingest documents into the BM25s database.

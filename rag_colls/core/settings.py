@@ -1,4 +1,3 @@
-from loguru import logger
 from pydantic import BaseModel, Field, ConfigDict
 
 from rag_colls.core.base.llms.base import BaseCompletionLLM
@@ -25,6 +24,3 @@ class RagCollsSettings(BaseModel):
 GlobalSettings = RagCollsSettings(
     embed_model=OpenAIEmbedding(), completion_llm=LiteLLM()
 )
-
-logger.info("GlobalSettings initialized ...")
-print(GlobalSettings)

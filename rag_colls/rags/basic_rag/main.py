@@ -3,10 +3,12 @@ from rag_colls.core.base.chunkers.base import BaseChunker
 from rag_colls.core.base.embeddings.base import BaseEmbedding
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.core.base.database.vector_database import BaseVectorDatabase
+from rag_colls.core.utils import run_fuction_return_time
 
 
+from rag_colls.types.llm import Message
 from rag_colls.prompts.q_a import Q_A_PROMPT
-from rag_colls.types.llm import Message, LLMOutput
+from rag_colls.types.search import SearchOutput
 from rag_colls.core.settings import GlobalSettings
 from rag_colls.types.retriever import RetrieverIngestInput
 from rag_colls.processors.file_processor import FileProcessor
@@ -24,7 +26,7 @@ class BasicRAG(BaseRAG):
         self,
         *,
         vector_database: BaseVectorDatabase,
-        chunker: BaseChunker,
+        chunker: BaseChunker | None = None,
         llm: BaseCompletionLLM | None = None,
         embed_model: BaseEmbedding | None = None,
         processor: FileProcessor | None = None,
@@ -49,7 +51,7 @@ class BasicRAG(BaseRAG):
             vector_db=vector_database, embed_model=self.embed_model
         )
 
-    def _ingest_db(self, file_or_folder_paths: list[str], batch_embedding: int = 100):
+    def _ingest_db(self, file_or_folder_paths: list[str], batch_embedding: int = 5):
         """
         Ingest documents into the vector database.
 
@@ -79,7 +81,34 @@ class BasicRAG(BaseRAG):
             documents=embeded_chunks,
         )
 
-    def _search(self, query: str, top_k: int = 5, **kwargs) -> LLMOutput:
+    def _clean_resource(self):
+        """
+        Clean the retriever resource.
+        """
+        self.vector_database.clean_resource()
+
+    def _get_metadata(self) -> dict:
+        """
+        Get metadata from the vector database.
+
+        Returns:
+            dict: Metadata of the RAG instance.
+        """
+        return {
+            "vector_database": str(self.vector_database),
+            "chunker": str(self.chunker),
+            "processor": str(self.processor),
+            "embed_model": str(self.embed_model),
+            "llm": str(self.llm),
+        }
+
+    def _search(
+        self,
+        *,
+        query: str,
+        top_k: int = 5,
+        **kwargs,
+    ) -> SearchOutput:
         """
         Search for the most relevant documents based on the query.
 
@@ -92,12 +121,16 @@ class BasicRAG(BaseRAG):
             LLMOutput: The response from the LLM.
         """
 
-        results = self.retriever.retrieve(
+        retrieved_time, search_results = run_fuction_return_time(
+            self.retriever.retrieve,
             query=query,
-            k=top_k,
+            top_k=top_k,
+            **kwargs,
         )
 
-        contexts = "\n ============ \n".join(result.document for result in results)
+        contexts = "\n ============ \n".join(
+            result.document for result in search_results
+        )
 
         messages = [
             Message(
@@ -105,6 +138,15 @@ class BasicRAG(BaseRAG):
             )
         ]
 
-        response = self.llm.complete(messages=messages)
+        generation_time, response = run_fuction_return_time(
+            self.llm.complete,
+            messages=messages,
+        )
 
-        return response
+        return SearchOutput(
+            content=response.content,
+            usage=response.usage,
+            retrieved_results=search_results,
+            retrieved_time=retrieved_time,
+            generation_time=generation_time,
+        )

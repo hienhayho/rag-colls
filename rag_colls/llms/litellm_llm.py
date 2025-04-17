@@ -1,6 +1,12 @@
+import asyncio
+from math import ceil
+from tqdm import tqdm
 from typing import Type
 from loguru import logger
+from dotenv import load_dotenv
 from pydantic import BaseModel
+from tqdm.asyncio import tqdm_asyncio
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from litellm import (
     completion,
     acompletion,
@@ -11,6 +17,8 @@ from litellm import (
 from rag_colls.core.constants import DEFAULT_OPENAI_MODEL
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.types.llm import Message, LLMOutput, LLMUsage
+
+load_dotenv()
 
 
 class LiteLLM(BaseCompletionLLM):
@@ -82,6 +90,38 @@ class LiteLLM(BaseCompletionLLM):
             ),
         )
 
+    def _batch_complete(
+        self,
+        messages: list[list[Message]],
+        response_format: Type[BaseModel] | None = None,
+        **kwargs,
+    ) -> list[LLMOutput]:
+        batch_size = kwargs.pop("batch_size", 10)
+        max_workers = kwargs.pop("max_workers", 4)
+
+        def run_batch(batch: list[list[Message]]) -> list[LLMOutput]:
+            return [
+                self._complete(message, response_format=response_format, **kwargs)
+                for message in batch
+            ]
+
+        all_outputs = []
+        total_batches = ceil(len(messages) / batch_size)
+        batches = [
+            messages[i * batch_size : (i + 1) * batch_size]
+            for i in range(total_batches)
+        ]
+
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = [executor.submit(run_batch, batch) for batch in batches]
+
+            for future in tqdm(
+                as_completed(futures), total=len(futures), desc="Running ..."
+            ):
+                all_outputs.extend(future.result())
+
+        return all_outputs
+
     async def _acomplete(
         self,
         messages: list[Message],
@@ -106,3 +146,32 @@ class LiteLLM(BaseCompletionLLM):
                 total_tokens=response.usage.total_tokens,
             ),
         )
+
+    async def _abatch_complete(
+        self,
+        messages: list[list[Message]],
+        response_format: Type[BaseModel] | None = None,
+        **kwargs,
+    ) -> list[LLMOutput]:
+        batch_size = kwargs.pop("batch_size", 10)
+
+        async def run_batch(batch: list[list[Message]]) -> list[LLMOutput]:
+            tasks = [
+                self._acomplete(
+                    message,
+                    response_format=response_format,
+                    **kwargs,
+                )
+                for message in batch
+            ]
+            return await asyncio.gather(*tasks)
+
+        all_outputs = []
+        total_batches = ceil(len(messages) / batch_size)
+
+        for i in tqdm_asyncio(range(total_batches), desc="Running async batches"):
+            batch = messages[i * batch_size : (i + 1) * batch_size]
+            outputs = await run_batch(batch)
+            all_outputs.extend(outputs)
+
+        return all_outputs

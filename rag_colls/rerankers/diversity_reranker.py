@@ -223,6 +223,19 @@ class SentenceTransformersDiversityRanker(BaseReranker):
             backend=self.backend,
         )
 
+    def __str__(self):
+        """
+        String representation of the SentenceTransformersDiversityRanker.
+
+        Returns:
+            String representation of the reranker.
+        """
+        return (
+            f"SentenceTransformersDiversityRanker(model={self.model_name_or_path}, "
+            f"top_k={self.top_k}, device={self.device}, "
+            f"similarity={self.similarity}, strategy={self.strategy})"
+        )
+
     def to_dict(self) -> Dict[str, Any]:
         """
         Serializes the component to a dictionary.

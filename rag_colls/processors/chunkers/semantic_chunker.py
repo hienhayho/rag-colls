@@ -26,6 +26,8 @@ class SemanticChunker(BaseChunker):
         buffer_size: int = 1,
         breakpoint_percentile_threshold: int = 95,
         mocking: bool = False,
+        cache_folder: str = "./model_cache",
+        device: str = "cuda:0",
     ):
         if not embed_model_name:
             embed_model_name = DEFAULT_OPENAI_EMBEDDING_MODEL
@@ -37,6 +39,7 @@ class SemanticChunker(BaseChunker):
         self.embed_model_name = embed_model_name
         self.buffer_size = buffer_size
         self.breakpoint_percentile_threshold = breakpoint_percentile_threshold
+        self.mocking = mocking
 
         if mocking:
             # NOTE: Use in ci/cd testing
@@ -48,7 +51,11 @@ class SemanticChunker(BaseChunker):
             else:
                 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 
-                self.embed_model = HuggingFaceEmbedding(model_name=embed_model_name)
+                self.embed_model = HuggingFaceEmbedding(
+                    model_name=embed_model_name,
+                    cache_folder=cache_folder,
+                    device=device,
+                )
 
         self.node_parser = SemanticSplitterNodeParser(
             buffer_size=self.buffer_size,
@@ -61,7 +68,7 @@ class SemanticChunker(BaseChunker):
         )
 
     def __str__(self):
-        return f"SemanticChunker(embed_model_name={self.embed_model_name}, buffer_size={self.buffer_size}, breakpoint_percentile_threshold={self.breakpoint_percentile_threshold}), mocking={self.mocking})"
+        return f"SemanticChunker(embed_model_name={self.embed_model_name}, buffer_size={self.buffer_size}, breakpoint_percentile_threshold={self.breakpoint_percentile_threshold}, mocking={self.mocking})"
 
     def _chunk(self, documents: list[Document], show_progress: bool = True, **kwargs):
         """
