@@ -1,5 +1,8 @@
+import logging
 from typing import Type
+from loguru import logger
 from pydantic import BaseModel
+from tenacity import retry, stop_after_attempt, wait_fixed, after_log, before_sleep_log
 from abc import ABC, abstractmethod
 from rag_colls.types.llm import Message
 from rag_colls.types.llm import LLMOutput
@@ -86,6 +89,13 @@ class BaseCompletionLLM(ABC):
         """
         raise NotImplementedError("This method should be overridden by subclasses.")
 
+    @retry(
+        reraise=True,
+        stop=stop_after_attempt(5),
+        wait=wait_fixed(5),
+        after=after_log(logger, logging.DEBUG),
+        before_sleep=before_sleep_log(logger, logging.DEBUG),
+    )
     def complete(
         self,
         messages: list[Message],
@@ -118,6 +128,13 @@ class BaseCompletionLLM(ABC):
 
         return result
 
+    @retry(
+        reraise=True,
+        stop=stop_after_attempt(5),
+        wait=wait_fixed(5),
+        after=after_log(logger, logging.DEBUG),
+        before_sleep=before_sleep_log(logger, logging.DEBUG),
+    )
     def batch_complete(
         self,
         messages: list[list[Message]],

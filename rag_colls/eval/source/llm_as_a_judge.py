@@ -19,6 +19,8 @@ def llm_as_a_judge_inference(
     contexts: list[str],
     referenced_answers: list[str],
     answers: list[str],
+    batch_size: int = 1,
+    max_workers: int = 1,
 ) -> list[LLMAsAJudgeResponse]:
     messages = [
         [
@@ -62,7 +64,10 @@ Answer: {answer}
     ]
 
     responses = llm.batch_complete(
-        messages=messages, response_format=LLMAsAJudgeResponse
+        messages=messages,
+        response_format=LLMAsAJudgeResponse,
+        batch_size=batch_size,
+        max_workers=max_workers,
     )
 
     return [

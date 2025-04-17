@@ -1,4 +1,5 @@
 import json
+import litellm
 from tqdm import tqdm
 from loguru import logger
 from rich.console import Console
@@ -7,6 +8,8 @@ from rich.table import Table
 from rag_colls.rags.base import BaseRAG
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.eval.source.llm_as_a_judge import llm_as_a_judge_inference
+
+litellm._turn_on_debug()
 
 
 def display_results(
@@ -61,6 +64,8 @@ def eval_search_and_generation(
     eval_file_path: str,
     output_file: str = None,
     eval_llm: BaseCompletionLLM | None = None,
+    eval_batch_size: int = 2,
+    eval_max_workers: int = 2,
 ):
     """
     Evaluate the search and generation capabilities of the RAG system.
@@ -87,7 +92,13 @@ def eval_search_and_generation(
             data = json.load(f)
 
         eval_data = data["data"]
-        logger.info(f"Total: {len(eval_data)}")
+        context_id_to_context = {
+            context["context_id"]: context["context"] for context in data["contexts"]
+        }
+
+        logger.info(f"Total contexts: {len(data['contexts'])}")
+        logger.info(f"Total questions: {len(eval_data)}")
+
         answers = []
         referenced_answers = []
         contexts = []
@@ -117,7 +128,7 @@ def eval_search_and_generation(
             sum_rr += rr
 
             answers.append(response.content)
-            contexts.append(item["context"])
+            contexts.append(context_id_to_context[true_idx])
             queries.append(question)
             referenced_answers.append(item["answer"])
 
@@ -141,6 +152,8 @@ def eval_search_and_generation(
             contexts=contexts,
             referenced_answers=referenced_answers,
             answers=answers,
+            batch_size=eval_batch_size,
+            max_workers=eval_max_workers,
         )
 
         accuracy = sum(

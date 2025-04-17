@@ -17,13 +17,13 @@ class EvalJsonReader(BaseReader):
             data = json.load(f)
 
         documents: list[Document] = []
-        for item in data["data"]:
+
+        for item in data["contexts"]:
             doc = Document(
                 document=item["context"],
                 metadata={
                     "should_split": False,
                     "context_id": item["context_id"],
-                    "answer": item["answer"],
                 },
             )
             documents.append(doc)

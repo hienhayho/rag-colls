@@ -8,11 +8,17 @@ Test file should be a `.json` file, the structure should be:
 {
     "dataset_name" : "...",
     "metadata": {...},
+    "context": [
+        {
+            "context_id": uuid4(),
+            "context": "...",
+        },
+        ...
+    ],
     "data": [
         {
             "question_id": uuid4(),
             "context_id": uuid4(),
-            "context": "...",
             "question": "...",
             "answer": "...", (Optional)
         },
