@@ -1,5 +1,7 @@
+import os
 import json
 import litellm
+import argparse
 from tqdm import tqdm
 from loguru import logger
 from rich.console import Console
@@ -9,7 +11,48 @@ from rag_colls.rags.base import BaseRAG
 from rag_colls.core.base.llms.base import BaseCompletionLLM
 from rag_colls.eval.source.llm_as_a_judge import llm_as_a_judge_inference
 
-litellm._turn_on_debug()
+if os.environ.get("DEBUG_LITELLM"):
+    litellm._turn_on_debug()
+
+
+def get_eval_args():
+    parser = argparse.ArgumentParser(description="Basic RAG Evaluation")
+    parser.add_argument(
+        "--f",
+        type=str,
+        required=True,
+        help="Path to the evaluation file",
+    )
+    parser.add_argument(
+        "--num-gpus",
+        type=int,
+        default=1,
+        help="Number of GPUs to use for evaluation",
+    )
+    parser.add_argument(
+        "--gpu-memory-utilization",
+        type=float,
+        default=0.7,
+        help="GPU memory utilization for VLLM",
+    )
+    parser.add_argument(
+        "--o",
+        type=str,
+        help="Path to save the evaluation results",
+    )
+    parser.add_argument(
+        "--eval-batch-size",
+        type=int,
+        default=2,
+        help="Batch size for evaluation",
+    )
+    parser.add_argument(
+        "--eval-max-workers",
+        type=int,
+        default=2,
+        help="Number of workers for evaluation",
+    )
+    return parser.parse_args()
 
 
 def display_results(
@@ -82,9 +125,7 @@ def eval_search_and_generation(
 
     logger.info("Ingesting evaluation data...")
 
-    rag.ingest_db(
-        file_or_folder_paths=[eval_file_path],
-    )
+    rag.ingest_db(file_or_folder_paths=[eval_file_path], num_workers=1)
 
     try:
         logger.info(f"Loading: {eval_file_path}")
@@ -116,7 +157,7 @@ def eval_search_and_generation(
             question = item["question"]
             true_idx = item["context_id"]
 
-            response = rag.search(query=question, return_retrieved_result=True)
+            response = rag.search(query=question, return_retrieved_result=True, top_k=5)
 
             retrieved_time += response.retrieved_time
             generation_time += response.generation_time

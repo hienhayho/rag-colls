@@ -1,20 +1,25 @@
 from rag_colls.llms.vllm_llm import VLLM
 from rag_colls.llms.litellm_llm import LiteLLM
-from rag_colls.rags.basic_rag import BasicRAG
+from rag_colls.databases.bm25.bm25s import BM25s
 from rag_colls.embeddings.hf_embedding import HuggingFaceEmbedding
+from rag_colls.rerankers.weighted_reranker import WeightedReranker
 from rag_colls.processors.chunkers.semantic_chunker import SemanticChunker
 from rag_colls.databases.vector_databases.chromadb import ChromaVectorDatabase
+
+from rag_colls.rags.contextual_rag import ContextualRAG, CONTEXTUAL_PROMPT
 
 from rag_colls.eval.source.eval_reader import eval_file_processor
 from rag_colls.eval.source.eval import eval_search_and_generation, get_eval_args
 
-
 if __name__ == "__main__":
     args = get_eval_args()
-    rag = BasicRAG(
+
+    rag = ContextualRAG(
         vector_database=ChromaVectorDatabase(
-            persistent_directory="./chroma_db", collection_name="benchmark"
+            persistent_directory="./chroma_db", collection_name="test"
         ),
+        bm25=BM25s(save_dir="./bm25s"),
+        reranker=WeightedReranker(weights=[0.8, 0.2]),  # [semantic_weight, bm25_weight]
         processor=eval_file_processor,
         chunker=SemanticChunker(embed_model_name="text-embedding-ada-002"),
         llm=VLLM(
@@ -29,6 +34,7 @@ if __name__ == "__main__":
             cache_folder="./model_cache",
             device="cuda:4",
         ),
+        gen_contextual_prompt_template=CONTEXTUAL_PROMPT,
     )
 
     eval_search_and_generation(

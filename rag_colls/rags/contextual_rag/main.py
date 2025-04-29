@@ -11,6 +11,8 @@ from rag_colls.core.base.database.vector_database import BaseVectorDatabase
 from rag_colls.core.utils import run_fuction_return_time
 
 from rag_colls.types.llm import Message
+from rag_colls.types.reranker import RerankerResult
+
 from rag_colls.prompts.q_a import Q_A_PROMPT
 from rag_colls.types.search import SearchOutput
 from rag_colls.types.core.document import Document
@@ -188,13 +190,13 @@ class ContextualRAG(BaseRAG):
             documents=embeded_chunks,
         )
 
-    def _retrieve_db(
+    def _retrieve(
         self,
         *,
         query: RetrieverQueryType,
         top_k: int = 5,
         **kwargs,
-    ) -> list[Document]:
+    ) -> list[RerankerResult]:
         """
         Retrieve documents from the database.
 
@@ -204,11 +206,16 @@ class ContextualRAG(BaseRAG):
             **kwargs: Additional keyword arguments for the retrieval process.
 
         Returns:
-            list[Document]: A list of retrieved documents.
+            list[RerankerResult]: A list of retrieved documents.
         """
-        semantic_result = self.semantic_retriever.retrieve(query=query, top_k=top_k)
-        bm25_result = self.bm25_retriever.retrieve(query=query, top_k=top_k)
-        return semantic_result, bm25_result
+        semantic_results = self.semantic_retriever.retrieve(query=query, top_k=top_k)
+        bm25_results = self.bm25_retriever.retrieve(query=query, top_k=top_k)
+        reranked_results = self.reranker.rerank(
+            query=query,
+            results=[semantic_results, bm25_results],
+            top_k=top_k,
+        )
+        return reranked_results
 
     def _search(
         self,
@@ -230,16 +237,9 @@ class ContextualRAG(BaseRAG):
             SearchOutput: The response from the LLM or a tuple of the response and retrieved results.
         """
 
-        retrieved_time, (semantic_results, bm25_results) = run_fuction_return_time(
-            self._retrieve_db,
+        retrieved_time, reranked_results = run_fuction_return_time(
+            self._retrieve,
             query=query,
-            top_k=top_k,
-            **kwargs,
-        )
-
-        reranked_results = self.reranker.rerank(
-            query=query,
-            results=[semantic_results, bm25_results],
             top_k=top_k,
         )
 

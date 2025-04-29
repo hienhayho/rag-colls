@@ -41,6 +41,9 @@ class ElasticSearch(BaseBM25RetrieverProvider):
                 },
             )
 
+    def __str__(self):
+        return f"ElasticSearch(index_name={self.index_name})"
+
     def _test_connection(self):
         """
         Test the connection to the Elasticsearch database.

@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 
 from rag_colls.types.llm import LLMUsage
+from rag_colls.types.reranker import RerankerResult
 from rag_colls.types.retriever import RetrieverResult
 
 
@@ -13,15 +14,15 @@ class SearchOutput(BaseModel):
         ...,
         description="The usage information of the LLM.",
     )
-    retrieved_results: list[RetrieverResult] = Field(
+    retrieved_results: list[RetrieverResult | RerankerResult] = Field(
         [],
         description="The retrieved results from the search.",
     )
     retrieved_time: float = Field(
-        0,
+        0.0,
         description="The time taken to retrieve the results.",
     )
     generation_time: float = Field(
-        0,
+        0.0,
         description="The time taken to generate the response.",
     )

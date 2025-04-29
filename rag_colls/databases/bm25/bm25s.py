@@ -25,6 +25,12 @@ class BM25s(BaseBM25RetrieverProvider):
                 save_dir=save_dir, load_corpus=True
             )
 
+        self._test_connection()
+        logger.success(f"BM25s database loaded from {self.save_dir}")
+
+    def __str__(self):
+        return f"BM25s(save_dir={self.save_dir})"
+
     def _test_connection(self):
         """
         Test the connection to the BM25s database.

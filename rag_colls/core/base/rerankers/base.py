@@ -66,4 +66,14 @@ class BaseReranker(ABC):
         Returns:
             list[RetrieverResult]: The reranked results.
         """
-        return self._rerank(query=query, results=results, top_k=top_k, **kwargs)
+        rerank_results = self._rerank(query=query, results=results, **kwargs)
+
+        # Remove duplicates
+        seen_ids = set()
+        unique_results = []
+        for result in rerank_results:
+            if result.id not in seen_ids:
+                seen_ids.add(result.id)
+                unique_results.append(result)
+
+        return unique_results[:top_k]

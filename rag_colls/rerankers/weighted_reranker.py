@@ -34,10 +34,7 @@ class WeightedReranker(BaseReranker):
         return True
 
     def _rerank(
-        self,
-        query: RetrieverQueryType,
-        results: list[list[RetrieverResult]],
-        top_k: int = 10,
+        self, query: RetrieverQueryType, results: list[list[RetrieverResult]]
     ) -> list[RerankerResult]:
         """
         Rerank the results based on the query and weights.
@@ -45,7 +42,6 @@ class WeightedReranker(BaseReranker):
         Args:
             query (RetrieverQueryType): The query to rerank the results for.
             results (list[list[RetrieverResult]]): The results to rerank.
-            top_k (int): The number of top results to return.
 
         Returns:
             list[RerankerResult]: The reranked results.
@@ -65,6 +61,7 @@ class WeightedReranker(BaseReranker):
             self.weights = [w / total_weight for w in self.weights]
 
         for i, result_set in enumerate(results):
+            # Filter out duplicate documents
             weighted_results = [
                 RerankerResult(
                     id=result.id,
@@ -79,4 +76,4 @@ class WeightedReranker(BaseReranker):
 
         reranked_results.sort(key=lambda x: x.score, reverse=True)
 
-        return reranked_results[:top_k]
+        return reranked_results
