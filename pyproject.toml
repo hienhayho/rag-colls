@@ -48,6 +48,7 @@ huggingface-embedding = [
 ]
 vllm-llm = ["vllm>=0.8.2"]
 finetune = [
+    "deepspeed>=0.16.8",
     "ms-swift>=3.4.1",
     "wandb>=0.19.11",
 ]
