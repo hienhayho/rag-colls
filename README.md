@@ -68,6 +68,7 @@ We have provided some notebooks for example usage.
 | :-----------: | :--------------------------------------------: | :--------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------: |
 |   BasicRAG    |     [BasicRAG](./rag_colls/rags/basic_rag)     | [Colab](https://colab.research.google.com/drive/19hzGSQqx-LIsSbnNkV71ipRAIiFingvP) |                             Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py)                              |
 | ContextualRAG | [ContextualRAG](rag_colls/rags/contextual_rag) | [Colab](https://colab.research.google.com/drive/1vT2Wl8FzYt25_4CMMg-2vcF4y17iTSjO) | Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py) and [`BM25s`](rag_colls/databases/bm25/bm25s.py) version |
+| RAFT | [RAFT](./rag_colls/rags/raft) | [Colab](https://drive.google.com/file/d/1U-jHS0DVBiih0sn0c-eL4uVoFtFG1uzl) | Boost RAG with SFT |
 
 ## 🚀 Upcoming
 
@@ -76,7 +77,6 @@ We are currently working on these projects and will be updated soon.
 | RAG Tech |                                                                                Link                                                                                 |
 | :------: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | Graph-RAG | [Blog](https://microsoft.github.io/graphrag/), [Paper](https://arxiv.org/pdf/2404.16130) |
-|   RAFT   | [Blog](https://techcommunity.microsoft.com/blog/aiplatformblog/raft-a-new-way-to-teach-llms-to-be-better-at-rag/4084674), [Paper](https://arxiv.org/pdf/2403.10131) |
 |  RAG-RL  |                                                              [Paper](https://arxiv.org/pdf/2503.12759)                                                              |
 
 ## 🎉 Quickstart
