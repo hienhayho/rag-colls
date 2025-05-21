@@ -1021,6 +1021,25 @@ wheels = [
 ]
 
 [[package]]
+name = "deepspeed"
+version = "0.16.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "einops" },
+    { name = "hjson" },
+    { name = "msgpack" },
+    { name = "ninja" },
+    { name = "numpy" },
+    { name = "packaging" },
+    { name = "psutil" },
+    { name = "py-cpuinfo" },
+    { name = "pydantic" },
+    { name = "torch" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e1/27/f857569546dc97f64169df1cc35d1ec5161766c4a0ec32f2af5d39614a51/deepspeed-0.16.8.tar.gz", hash = "sha256:aeed224d2f6cf77e2d6d3fbae4180adcfb28591e27536d72523d055e28402fa7", size = 1511530, upload-time = "2025-05-19T16:17:15.645Z" }
+
+[[package]]
 name = "deprecated"
 version = "1.2.18"
 source = { registry = "https://pypi.org/simple" }
@@ -1722,6 +1741,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/f5/38/3af3d3633a34a3316095b39c8e8fb4853a28a536e55d347bd8d8e9a14b03/h11-0.14.0.tar.gz", hash = "sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d", size = 100418, upload-time = "2022-09-25T15:40:01.519Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/95/04/ff642e65ad6b90db43e668d70ffb6736436c7ce41fcc549f4e9472234127/h11-0.14.0-py3-none-any.whl", hash = "sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761", size = 58259, upload-time = "2022-09-25T15:39:59.68Z" },
+]
+
+[[package]]
+name = "hjson"
+version = "3.1.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/82/e5/0b56d723a76ca67abadbf7fb71609fb0ea7e6926e94fcca6c65a85b36a0e/hjson-3.1.0.tar.gz", hash = "sha256:55af475a27cf83a7969c808399d7bccdec8fb836a07ddbd574587593b9cdcf75", size = 40541, upload-time = "2022-08-13T02:53:01.919Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1f/7f/13cd798d180af4bf4c0ceddeefba2b864a63c71645abc0308b768d67bb81/hjson-3.1.0-py3-none-any.whl", hash = "sha256:65713cdcf13214fb554eb8b4ef803419733f4f5e551047c9b711098ab7186b89", size = 54018, upload-time = "2022-08-13T02:52:59.899Z" },
 ]
 
 [[package]]
@@ -4592,6 +4620,7 @@ docs = [
     { name = "myst-parser" },
 ]
 finetune = [
+    { name = "deepspeed" },
     { name = "ms-swift" },
     { name = "wandb" },
 ]
@@ -4609,6 +4638,7 @@ requires-dist = [
     { name = "bm25s", specifier = ">=0.2.10" },
     { name = "chromadb", specifier = ">=0.6.3,<2.0.0" },
     { name = "datasets", specifier = ">=3.0,<3.4" },
+    { name = "deepspeed", marker = "extra == 'finetune'", specifier = ">=0.16.8" },
     { name = "elasticsearch", extras = ["async"], specifier = ">=8.17.2" },
     { name = "esbonio", marker = "extra == 'docs'", specifier = ">=0.12.0" },
     { name = "gdown", specifier = ">=5.2.0" },
