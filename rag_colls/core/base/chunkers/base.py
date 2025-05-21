@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
-from rag_colls.types.core.document import Document
+from rag_colls.types.core.document import Document, ChunksType
 
 
 class BaseChunker(ABC):
     @abstractmethod
-    def _chunk(self, documents: list[Document], **kwargs) -> list[Document]:
+    def _chunk(self, documents: list[Document], **kwargs) -> ChunksType:
         """
         Chunk the documents.
 
@@ -13,12 +13,12 @@ class BaseChunker(ABC):
             **kwargs: Additional keyword arguments for the chunking function.
 
         Returns:
-            list[Document]: List of chunked documents.
+            ChunksType: List of chunked documents.
         """
         raise NotImplementedError("This method should be overridden by subclasses.")
 
     @abstractmethod
-    async def _achunk(self, documents: list[Document], **kwargs) -> list[Document]:
+    async def _achunk(self, documents: list[Document], **kwargs) -> ChunksType:
         """
         Asynchronously chunk the documents.
 
@@ -27,11 +27,11 @@ class BaseChunker(ABC):
             **kwargs: Additional keyword arguments for the chunking function.
 
         Returns:
-            list[Document]: List of chunked documents.
+            ChunksType: List of chunked documents.
         """
         raise NotImplementedError("This method should be overridden by subclasses.")
 
-    def chunk(self, documents: list[Document], **kwargs) -> list[Document]:
+    def chunk(self, documents: list[Document], **kwargs) -> ChunksType:
         """
         Chunk the documents.
 
@@ -40,13 +40,13 @@ class BaseChunker(ABC):
             **kwargs: Additional keyword arguments for the chunking function.
 
         Returns:
-            list[Document]: List of chunked documents.
+            ChunksType: List of chunked documents.
         """
-        chunked_documents = []
+        chunked_documents: ChunksType = []
         preprocessed_documents = []
         for doc in documents:
             if not doc.metadata.get("should_split", True):
-                chunked_documents.append(doc)
+                chunked_documents.append([doc])
                 continue
 
             preprocessed_documents.append(doc)
@@ -55,7 +55,7 @@ class BaseChunker(ABC):
 
         return chunked_documents
 
-    async def achunk(self, documents: list[Document], **kwargs) -> list[Document]:
+    async def achunk(self, documents: list[Document], **kwargs) -> ChunksType:
         """
         Asynchronously chunk the documents.
 
@@ -64,13 +64,13 @@ class BaseChunker(ABC):
             **kwargs: Additional keyword arguments for the chunking function.
 
         Returns:
-            list[Document]: List of chunked documents.
+            ChunksType: List of chunked documents.
         """
-        chunked_documents = []
+        chunked_documents: ChunksType = []
         preprocessed_documents = []
         for doc in documents:
             if not doc.metadata.get("should_split", True):
-                chunked_documents.append(doc)
+                chunked_documents.append([doc])
                 continue
 
             preprocessed_documents.append(doc)

@@ -114,7 +114,7 @@ class VLLM(BaseCompletionLLM):
 
         if response_format:
             kwargs["guided_decoding"] = GuidedDecodingParams(
-                json=response_format.model_json_schema(),
+                json=response_format.model_json_schema()
             )
 
         sampling_params = SamplingParams(

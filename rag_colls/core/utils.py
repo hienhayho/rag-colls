@@ -1,7 +1,14 @@
 import re
 import time
-from typing import Any, Callable, Tuple
+import polars as pl
+from tqdm import tqdm
+from pathlib import Path
 from loguru import logger
+from typing import Any, Callable, Tuple, TypeVar
+
+from rag_colls.types.core.document import Document
+
+T = TypeVar("T")
 
 
 def check_placeholders(template: str, placeholders: list[str]) -> bool:
@@ -59,8 +66,8 @@ def check_torch_device(device: str) -> str:
 
 
 def run_fuction_return_time(
-    f: Callable, *args: Any, **kwargs: Any
-) -> Tuple[float, Any]:
+    f: Callable[..., T], *args: Any, **kwargs: Any
+) -> Tuple[float, T]:
     """
     Run a function and return the execution time and result.
 
@@ -70,9 +77,37 @@ def run_fuction_return_time(
         **kwargs (Any): Keyword arguments for the function.
 
     Returns:
-        Tuple[float, Any]: A tuple containing the execution time in seconds and the result of the function.
+        tuple[float, Any]: A tuple containing the execution time in seconds and the result of the function.
     """
     start_time = time.time()
     result = f(*args, **kwargs)
     end_time = time.time()
     return end_time - start_time, result
+
+
+def load_chunks(file_paths: list[str | Path]) -> list[Document]:
+    """
+    Load chunks from a JSONL file.
+
+    Args:
+        file_paths (list[str | Path]): List of file paths to load.
+
+    Returns:
+        list[Document]: A list of Document representing the chunks.
+    """
+    chunks = []
+
+    for file_path in file_paths:
+        data = pl.read_ndjson(file_path)
+
+        for row in tqdm(
+            data.iter_rows(named=True), desc=f"Loading: {file_path}", total=len(data)
+        ):
+            document = Document(
+                id=row["id"],
+                document=row["document"],
+                metadata=row["metadata"],
+            )
+            chunks.append(document)
+
+    return chunks

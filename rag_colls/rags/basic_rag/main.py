@@ -10,6 +10,7 @@ from rag_colls.types.llm import Message
 from rag_colls.prompts.q_a import Q_A_PROMPT
 from rag_colls.types.search import SearchOutput
 from rag_colls.core.settings import GlobalSettings
+from rag_colls.types.core.document import Document
 from rag_colls.types.retriever import RetrieverIngestInput
 from rag_colls.processors.file_processor import FileProcessor
 from rag_colls.retrievers.vector_database_retriever import VectorDatabaseRetriever
@@ -51,20 +52,37 @@ class BasicRAG(BaseRAG):
             vector_db=vector_database, embed_model=self.embed_model
         )
 
-    def _ingest_db(self, file_or_folder_paths: list[str], batch_embedding: int = 5):
+    def _get_chunks(self, file_or_folder_paths: list[str], **kwargs):
         """
-        Ingest documents into the vector database.
+        Get chunks from the specified file or folder paths.
 
         Args:
-            file_paths (list[str]): List of file paths to be ingested.
-            batch_embedding (int): Batch size for embedding documents.
+            file_or_folder_paths (list[str]): List of file paths or folders to be ingested.
+            **kwargs: Additional keyword arguments for the document retrieval process.
+
+        Returns:
+            tuple[ChunksType, list[Document]]: A tuple containing the chunks and the original documents.
         """
         documents = self.processor.load_data(file_or_folder_paths=file_or_folder_paths)
+        chunks = self.chunker.chunk(documents=documents, **kwargs)
 
-        chunks = self.chunker.chunk(documents=documents)
+        new_chunks = []
+        for chunk in chunks:
+            new_chunks.extend(chunk)
+
+        return new_chunks
+
+    def _ingest_db_from_chunks(self, chunks: list[Document], **kwargs):
+        """
+        Ingest documents into the vector database from chunks.
+
+        Args:
+            chunks (ChunksType): The chunks to be ingested.
+            **kwargs: Additional keyword arguments for the ingestion process.
+        """
 
         embeddings = self.embed_model.get_batch_document_embedding(
-            documents=chunks, batch_size=batch_embedding
+            documents=chunks, batch_size=kwargs.get("batch_embedding", 5)
         )
 
         embeded_chunks = [
@@ -102,6 +120,25 @@ class BasicRAG(BaseRAG):
             "llm": str(self.llm),
         }
 
+    def _retrieve_db(self, *, query: str, top_k: int = 5, **kwargs) -> list[Document]:
+        """
+        Retrieve documents from the vector database.
+
+        Args:
+            query (str): The query to search for.
+            top_k (int): The number of top results to retrieve.
+            **kwargs: Additional keyword arguments for the retrieval process.
+
+        Returns:
+            list[Document]: A list of retrieved documents.
+        """
+        results = self.retriever.retrieve(
+            query=query,
+            top_k=top_k,
+            **kwargs,
+        )
+        return results
+
     def _search(
         self,
         *,
@@ -122,7 +159,7 @@ class BasicRAG(BaseRAG):
         """
 
         retrieved_time, search_results = run_fuction_return_time(
-            self.retriever.retrieve,
+            self.retrieve_db,
             query=query,
             top_k=top_k,
             **kwargs,

@@ -22,7 +22,7 @@ rag = ContextualRAG(
     gen_contextual_prompt_template=CONTEXTUAL_PROMPT,
 )
 
-response = rag.search(query="What is Chain Buddy ?", top_k=5)
+response = rag.search(query="What is text embedding ?", top_k=5)
 
 print(response.content)
 print("===========")

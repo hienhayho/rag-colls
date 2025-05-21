@@ -5,16 +5,17 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 exclude = ["assets", "examples", "docker", "notebooks", "tests", "docs_env"]
 
+
 [project]
 name = "rag-colls"
-version = "0.2.0.8"
+version = "0.2.0.10"
 description = "rag-colls - Implement recent advanced RAG techniques"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "bm25s>=0.2.10",
     "chromadb>=0.6.3,<2.0.0",
-    "datasets>=3.5.0",
+    "datasets>=3.0,<3.4",
     "elasticsearch[async]>=8.17.2",
     "gdown>=5.2.0",
     "html2text>=2024.2.26",
@@ -46,3 +47,7 @@ huggingface-embedding = [
     "accelerate>=1.6.0",
 ]
 vllm-llm = ["vllm>=0.8.2"]
+finetune = [
+    "ms-swift>=3.4.1",
+    "wandb>=0.19.11",
+]
