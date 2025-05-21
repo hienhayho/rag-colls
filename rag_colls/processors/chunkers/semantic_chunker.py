@@ -1,4 +1,5 @@
 import asyncio
+from tqdm import tqdm
 from loguru import logger
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core.embeddings.mock_embed_model import MockEmbedding
@@ -6,7 +7,7 @@ from llama_index.core.embeddings.mock_embed_model import MockEmbedding
 from llama_index.core import Document as LlamaIndexDocument
 from llama_index.core.node_parser import SemanticSplitterNodeParser
 
-from rag_colls.types.core.document import Document
+from rag_colls.types.core.document import Document, ChunksType
 from rag_colls.core.base.chunkers.base import BaseChunker
 from rag_colls.core.constants import (
     HF_EMBEDDING_MODELS,
@@ -90,11 +91,22 @@ class SemanticChunker(BaseChunker):
             for doc in documents
         ]
 
-        nodes = self.node_parser.get_nodes_from_documents(
-            documents=preprocessed_documents, show_progress=show_progress
-        )
+        chunks: ChunksType = []
 
-        return [Document(document=node.text, metadata=node.metadata) for node in nodes]
+        for document in tqdm(
+            preprocessed_documents,
+            desc="Chunking documents ...",
+            unit="doc",
+            disable=not show_progress,
+        ):
+            nodes = self.node_parser.get_nodes_from_documents(
+                documents=[document], show_progress=False, **kwargs
+            )
+            chunks.append(
+                [Document(document=node.text, metadata=node.metadata) for node in nodes]
+            )
+
+        return chunks
 
     async def _achunk(
         self, documents: list[Document], show_progress: bool = False, **kwargs

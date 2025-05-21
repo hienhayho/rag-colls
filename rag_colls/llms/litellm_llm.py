@@ -105,21 +105,28 @@ class LiteLLM(BaseCompletionLLM):
                 for message in batch
             ]
 
-        all_outputs = []
         total_batches = ceil(len(messages) / batch_size)
         batches = [
             messages[i * batch_size : (i + 1) * batch_size]
             for i in range(total_batches)
         ]
 
+        results = [None] * total_batches
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            futures = [executor.submit(run_batch, batch) for batch in batches]
+            futures = {
+                executor.submit(run_batch, batch): idx
+                for idx, batch in enumerate(batches)
+            }
 
             for future in tqdm(
-                as_completed(futures), total=len(futures), desc="Running ..."
+                as_completed(futures),
+                total=len(futures),
+                desc="Running batch completes ...",
             ):
-                all_outputs.extend(future.result())
+                idx = futures[future]
+                results[idx] = future.result()
 
+        all_outputs = [output for batch_result in results for output in batch_result]
         return all_outputs
 
     async def _acomplete(

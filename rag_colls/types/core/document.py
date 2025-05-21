@@ -26,3 +26,6 @@ class Document(BaseModel):
 
     def __repr__(self):
         return self.__str__()
+
+
+ChunksType = list[list[Document]]

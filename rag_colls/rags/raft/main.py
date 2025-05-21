@@ -11,21 +11,29 @@ from rag_colls.core.base.database.vector_database import BaseVectorDatabase
 from rag_colls.core.utils import run_fuction_return_time
 
 from rag_colls.types.llm import Message
-from rag_colls.prompts.q_a import Q_A_PROMPT
 from rag_colls.types.search import SearchOutput
 from rag_colls.types.core.document import Document
 from rag_colls.core.settings import GlobalSettings
-from rag_colls.core.utils import check_placeholders
 from rag_colls.processors.file_processor import FileProcessor
 from rag_colls.retrievers.bm25_retriever import BM25Retriever
-from rag_colls.types.retriever import RetrieverIngestInput, RetrieverQueryType
+from rag_colls.retrievers.hybrid_retriever import HybridRetriever
+from rag_colls.types.retriever import (
+    RetrieverIngestInput,
+    RetrieverQueryType,
+    RetrieverResult,
+)
 from rag_colls.retrievers.vector_database_retriever import VectorDatabaseRetriever
 
-from .utils import gen_contextual_chunk
-from .prompt import CONTEXTUAL_PROMPT
+from .utils import get_contextual_boost_document
+from .prompt import (
+    CONTEXTUAL_BOOST_SYSTEM_PROMPT,
+    get_prompt,
+    gen_data_prompt,
+    PromptModeEnum,
+)
 
 
-class ContextualRAG(BaseRAG):
+class RAFT(BaseRAG):
     """"""
 
     def __init__(
@@ -38,7 +46,7 @@ class ContextualRAG(BaseRAG):
         llm: BaseCompletionLLM | None = None,
         embed_model: BaseEmbedding | None = None,
         processor: FileProcessor | None = None,
-        gen_contextual_prompt_template: str | None = None,
+        gen_contextual_system_prompt: str = CONTEXTUAL_BOOST_SYSTEM_PROMPT,
     ):
         self.vector_database = vector_database
         self.bm25 = bm25
@@ -54,18 +62,11 @@ class ContextualRAG(BaseRAG):
         )
         self.bm25_retriever = BM25Retriever.from_bm25(bm25=self.bm25)
 
-        if gen_contextual_prompt_template:
-            assert check_placeholders(
-                template=gen_contextual_prompt_template,
-                placeholders=["CHUNK_CONTENT", "WHOLE_DOCUMENT"],
-            ), (
-                f"Prompt template must contain the placeholders: {['CHUNK_CONTENT', 'WHOLE_DOCUMENT']}. Example: =======\n{CONTEXTUAL_PROMPT}"
-            )
-
-            self.gen_contextual_prompt_template = gen_contextual_prompt_template
-
-        else:
-            self.gen_contextual_prompt_template = CONTEXTUAL_PROMPT
+        self.retriever = HybridRetriever(
+            retrievers=[self.semantic_retriever, self.bm25_retriever],
+            reranker=self.reranker,
+        )
+        self.gen_contextual_system_prompt = gen_contextual_system_prompt
 
     def _get_metadata(self):
         """
@@ -82,30 +83,13 @@ class ContextualRAG(BaseRAG):
             "embed_model": str(self.embed_model),
             "processor": str(self.processor),
             "reranker": str(self.reranker),
-            "gen_contextual_prompt_template": str(self.gen_contextual_prompt_template),
         }
 
     def _clean_resource(self):
         """
         Clean the retriever resource.
         """
-        self.vector_database.clean_resource()
-        self.bm25.clean_resource()
-
-    def _build_gen_context_input(
-        self, chunks: list[Document], whole_document: Document
-    ) -> list[tuple[Document, Document]]:
-        """
-        Build the input for generating contextual chunks.
-
-        Args:
-            chunks (list[Document]): The list of chunks.
-            whole_document (Document): The whole document.
-
-        Returns:
-            list[tuple[Document, Document]]: A list of tuples containing the chunk and the whole document.
-        """
-        return [(chunk, whole_document) for chunk in chunks]
+        self.retriever.clean_resource()
 
     def _get_chunks(self, file_or_folder_paths: list[str], **kwargs):
         """
@@ -122,37 +106,35 @@ class ContextualRAG(BaseRAG):
 
         chunks = self.chunker.chunk(
             documents=documents,
-            show_progress=True,
             **kwargs,
         )
 
         num_workers = kwargs.get("num_workers", 4)
 
-        gen_contextual_inputs: list[tuple[Document, Document]] = []
-        for document, chunk in zip(documents, chunks):
-            gen_contextual_inputs.extend(self._build_gen_context_input(chunk, document))
+        new_chunks: list[Document] = []
+        for chunk in chunks:
+            new_chunks.extend(chunk)
 
         with ThreadPoolExecutor(max_workers=num_workers) as executor:
-            futures = [
+            futures = {
                 executor.submit(
-                    gen_contextual_chunk,
-                    chunk,
-                    whole_document,
+                    get_contextual_boost_document,
+                    document,
                     self.llm,
-                    self.gen_contextual_prompt_template,
+                    self.gen_contextual_system_prompt,
                 )
-                for chunk, whole_document in gen_contextual_inputs
-            ]
+                for document in new_chunks
+            }
 
-            contextual_chunks = []
+            contextual_boost_chunks: list[Document] = []
             for future in tqdm(
                 as_completed(futures),
                 total=len(futures),
-                desc=f"Generating contextual chunks (num_workers={num_workers})",
+                desc="Generating contextual chunks ...",
             ):
-                contextual_chunks.append(future.result())
+                contextual_boost_chunks.append(future.result())
 
-        return contextual_chunks
+        return contextual_boost_chunks
 
     def _ingest_db_from_chunks(
         self,
@@ -165,7 +147,6 @@ class ContextualRAG(BaseRAG):
 
         Args:
             chunks (ChunksType): List of chunks to be ingested.
-            documents (list[Document]): List of Document objects representing the whole documents.
             batch_embedding (int): Batch size for embedding documents.
             num_workers (int): Number of workers for parallel processing.
             **kwargs: Additional keyword arguments for the ingestion process.
@@ -188,7 +169,6 @@ class ContextualRAG(BaseRAG):
         self.vector_database.add_documents(
             documents=embeded_chunks,
         )
-
         self.bm25.add_documents(
             documents=embeded_chunks,
         )
@@ -199,7 +179,7 @@ class ContextualRAG(BaseRAG):
         query: RetrieverQueryType,
         top_k: int = 5,
         **kwargs,
-    ) -> list[Document]:
+    ) -> list[RetrieverResult]:
         """
         Retrieve documents from the database.
 
@@ -211,17 +191,19 @@ class ContextualRAG(BaseRAG):
         Returns:
             list[Document]: A list of retrieved documents.
         """
-        semantic_result = self.semantic_retriever.retrieve(
-            query=query, top_k=top_k, **kwargs
+        results = self.retriever.retrieve(
+            query=query,
+            top_k=top_k,
+            **kwargs,
         )
-        bm25_result = self.bm25_retriever.retrieve(query=query, top_k=top_k, **kwargs)
-        return semantic_result, bm25_result
+        return results
 
     def _search(
         self,
         *,
         query: RetrieverQueryType,
         top_k: int = 5,
+        prompt_mode: PromptModeEnum = PromptModeEnum.JSON,
         **kwargs,
     ) -> SearchOutput:
         """
@@ -237,27 +219,27 @@ class ContextualRAG(BaseRAG):
             SearchOutput: The response from the LLM or a tuple of the response and retrieved results.
         """
 
-        retrieved_time, (semantic_results, bm25_results) = run_fuction_return_time(
-            self._retrieve_db,
+        retrieved_time, search_results = run_fuction_return_time(
+            self.retrieve_db,
             query=query,
             top_k=top_k,
             **kwargs,
         )
 
-        reranked_results = self.reranker.rerank(
-            query=query,
-            results=[semantic_results, bm25_results],
-            top_k=top_k,
+        system_prompt, user_prompt = get_prompt(
+            prompt=gen_data_prompt,
+            mode=prompt_mode,
         )
 
-        contexts = "\n ============ \n".join(
-            result.document for result in reranked_results
+        contexts = "\n\n".join(
+            f"<DOCUMENT>{result.document}</DOCUMENT>" for result in search_results
         )
 
         messages = [
+            Message(role="system", content=system_prompt),
             Message(
-                role="user", content=Q_A_PROMPT.format(context=contexts, question=query)
-            )
+                role="user", content=user_prompt.format(context=contexts, query=query)
+            ),
         ]
 
         generation_time, response = run_fuction_return_time(
@@ -268,7 +250,7 @@ class ContextualRAG(BaseRAG):
         return SearchOutput(
             content=response.content,
             usage=response.usage,
-            retrieved_results=reranked_results,
+            retrieved_results=search_results,
             retrieved_time=retrieved_time,
             generation_time=generation_time,
         )
