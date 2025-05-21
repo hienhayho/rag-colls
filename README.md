@@ -68,7 +68,7 @@ We have provided some notebooks for example usage.
 | :-----------: | :--------------------------------------------: | :--------------------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------: |
 |   BasicRAG    |     [BasicRAG](./rag_colls/rags/basic_rag)     | [Colab](https://colab.research.google.com/drive/19hzGSQqx-LIsSbnNkV71ipRAIiFingvP) |                             Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py)                              |
 | ContextualRAG | [ContextualRAG](rag_colls/rags/contextual_rag) | [Colab](https://colab.research.google.com/drive/1vT2Wl8FzYt25_4CMMg-2vcF4y17iTSjO) | Integrate with [`Chromadb`](rag_colls/databases/vector_databases/chromadb.py) and [`BM25s`](rag_colls/databases/bm25/bm25s.py) version |
-| RAFT | [RAFT](./rag_colls/rags/raft) | [Colab](https://drive.google.com/file/d/1U-jHS0DVBiih0sn0c-eL4uVoFtFG1uzl) | Boost RAG with SFT |
+| RAFT | [RAFT](./rag_colls/rags/raft) | [Colab](https://colab.research.google.com/drive/1U-jHS0DVBiih0sn0c-eL4uVoFtFG1uzl) | Boost RAG with SFT |
 
 ## 🚀 Upcoming
 
