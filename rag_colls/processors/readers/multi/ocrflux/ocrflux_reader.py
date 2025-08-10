@@ -7,7 +7,7 @@ try:
 except ImportError as e:
     raise ImportError(
         "OCRFluxReader cannot be initialized since not all dependencies are available. "
-        "Please install it with 'pip install rag-colls[ocrflux_py]'."
+        "Please follow the installation instructions in https://github.com/hienhayho/rag-colls/tree/main/rag_colls/processors/readers/multi/ocrflux"
     ) from e
 
 from rag_colls.types.core.document import Document
