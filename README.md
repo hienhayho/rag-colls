@@ -46,7 +46,7 @@ git clone https://github.com/hienhayho/rag-colls.git
 cd rag-colls/
 
 # Choose python version and setup OPENAI_API_KEY
-export PYTHON_VERSION="3.10"
+export PYTHON_VERSION="3.11"
 export OPENAI_API_KEY="your-openai-api-key-here"
 
 # Docker build
