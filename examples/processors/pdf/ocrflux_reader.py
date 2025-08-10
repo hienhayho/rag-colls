@@ -1,9 +1,16 @@
-from loguru import logger
 from pathlib import Path
 
-from rag_colls.processors.readers.multi.dolphin import DolphinReader
+from loguru import logger
 
-reader = DolphinReader(gpu_memory_utilization=0.5)
+from rag_colls.processors.readers.multi.ocrflux import OCRFluxReader
+
+reader = OCRFluxReader(
+    dtype="half",
+    tensor_parallel_size=1,
+    gpu_memory_utilization=0.6,
+    max_model_len=6000,
+    download_dir="./model_cache",
+)
 
 file_path = Path("samples/data/2503.20376v1.pdf")
 

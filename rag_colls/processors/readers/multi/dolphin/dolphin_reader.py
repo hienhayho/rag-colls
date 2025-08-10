@@ -247,7 +247,6 @@ class DolphinReader(BaseReader):
         file_path: str | Path,
         should_split: bool = True,
         extra_info: dict | None = None,
-        encoding: str = "utf-8",
     ) -> list[Document]:
         file_path = Path(file_path)
         if not file_path.exists():
@@ -303,7 +302,7 @@ class DolphinReader(BaseReader):
                 # Currently only return the text
                 text_str = get_output_str(recognition_results)
                 document = Document(
-                    document=text_str.encode(encoding),
+                    document=text_str,
                     metadata={
                         "source": f"{file_name}: Page {i + 1}",
                         **extra_info,
