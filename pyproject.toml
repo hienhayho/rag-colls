@@ -39,7 +39,7 @@ Homepage = "https://github.com/hienhayho/rag-colls"
 Issues = "https://github.com/hienhayho/rag-colls/issues"
 
 [tool.uv.sources]
-ocrflux = { path = "./third_parties/OCRFlux", editable = true }
+ocrflux = { path = "./third_parties/OCRFlux" }
 
 [project.optional-dependencies]
 dev = ["pre-commit>=4.2.0", "pytest>=8.3.5"]
