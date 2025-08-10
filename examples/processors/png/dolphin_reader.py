@@ -5,7 +5,7 @@ from rag_colls.processors.readers.multi.dolphin import DolphinReader
 
 reader = DolphinReader(gpu_memory_utilization=0.5)
 
-file_path = Path("samples/data/2503.20376v1.pdf")
+file_path = Path("samples/data/image.png")
 
 documents = reader.load_data(file_path=file_path, should_split=True, extra_info={})
 
