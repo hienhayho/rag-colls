@@ -185,3 +185,5 @@ eval_results/**/*.json
 model_cache/
 data_cache/
 .history/
+
+output_figures

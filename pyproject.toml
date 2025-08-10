@@ -8,7 +8,7 @@ exclude = ["assets", "examples", "docker", "notebooks", "tests", "docs_env"]
 
 [project]
 name = "rag-colls"
-version = "0.2.0.11"
+version = "0.2.0.14"
 description = "rag-colls - Implement recent advanced RAG techniques"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -46,5 +46,19 @@ huggingface-embedding = [
     "llama-index-embeddings-huggingface>=0.5.2",
     "accelerate>=1.6.0",
 ]
-vllm-llm = ["vllm>=0.8.2"]
+vllm-llm = ["vllm==0.9.0"]
 finetune = ["deepspeed>=0.16.8", "ms-swift>=3.4.1", "wandb>=0.19.11"]
+dolphin = [
+    "accelerate==1.6.0",
+    "numpy",
+    "omegaconf==2.3.0",
+    "opencv-python==4.11.0.86",
+    "opencv-python-headless",
+    "pymupdf==1.26",
+    "timm==0.5.4",
+    "torch>=2.6.0",
+    "torchvision>=0.21.0",
+    "transformers<4.54.0",
+    "vllm==0.9.0",
+    "vllm-dolphin==0.1",
+]
