@@ -24,7 +24,6 @@ Simple and easy to use, production-ready advanced RAG techniques.
 - [🚀 Upcoming](#-upcoming)
 - [🎉 Quickstart](#-quickstart)
 - [💻 Develop Guidance](#-develop-guidance)
-- [✨ Contributors](#-contributors)
 - [©️ License](#️-license)
 
 ## 📖 Documentation
