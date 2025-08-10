@@ -14,5 +14,7 @@ repos:
           # Run the linter.
           - id: ruff
             args: [--fix]
+            exclude: ^third_parties/
           # Run the formatter.
           - id: ruff-format
+            exclude: ^third_parties/
