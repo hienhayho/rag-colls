@@ -16,6 +16,12 @@ resolution-markers = [
     "python_full_version < '3.12' and sys_platform != 'darwin' and sys_platform != 'linux'",
 ]
 
+[manifest]
+members = [
+    "ocrflux",
+    "rag-colls",
+]
+
 [[package]]
 name = "absl-py"
 version = "2.2.2"
@@ -4629,7 +4635,7 @@ wheels = [
 
 [[package]]
 name = "rag-colls"
-version = "0.2.0.14"
+version = "0.2.0.16"
 source = { editable = "." }
 dependencies = [
     { name = "bm25s" },
