@@ -26,11 +26,11 @@ def test_semantic_chunker():
         "Chunked with should_splits False should be equal to original documents."
     )
 
-    first_chunk = chunked_documents[0]
+    first_chunk = chunked_documents[0][0]
     assert hasattr(first_chunk, "document"), "Chunk does not have document attribute."
     assert hasattr(first_chunk, "metadata"), "Chunk does not have metadata attribute."
 
-    first_not_be_chunked_document = not_be_chunked_documents_chunked[0]
+    first_not_be_chunked_document = not_be_chunked_documents_chunked[0][0]
     assert hasattr(first_not_be_chunked_document, "document"), (
         "Chunk does not have document attribute."
     )
