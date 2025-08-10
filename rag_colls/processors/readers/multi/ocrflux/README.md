@@ -1,6 +1,6 @@
 # OCRFlux
 
-This is the simple wrapper of [`OCRFlux`](https://github.com/chatdoc-com/OCRFlux).
+This is the simple wrapper of [`OCRFlux`](https://github.com/chatdoc-com/OCRFlux). Example usage can be found in [Colab](https://colab.research.google.com/drive/1HlK-SHQWdtFHyXt6_bFlGDDMN26E93z8).
 
 ## Usage
 
@@ -10,7 +10,8 @@ This is the simple wrapper of [`OCRFlux`](https://github.com/chatdoc-com/OCRFlux
 sudo apt-get update
 sudo apt-get install poppler-utils poppler-data ttf-mscorefonts-installer msttcorefonts fonts-crosextra-caladea fonts-crosextra-carlito gsfonts lcdf-typetools
 
-pip install -U rag-colls rag-colls[ocrflux_py]
+git clone https://github.com/hienhayho/rag-colls.git
+pip install rag-colls/. rag-colls/third_parties/OCRFlux/.
 ```
 
 **2**. Quickstart:

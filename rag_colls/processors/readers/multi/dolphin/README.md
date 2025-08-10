@@ -1,6 +1,6 @@
 # Dolphin: Document Image Parsing via Heterogeneous Anchor Prompting
 
-Integrated from [Dolphin](https://github.com/bytedance/Dolphin). Example usage can be found here: [Colab](https://colab.research.google.com/drive/1f4aGzFvUKFLwXOo2X6WZ3oiNeANZISJK)
+Integrated from [Dolphin](https://github.com/bytedance/Dolphin). Example usage can be found in [Colab](https://colab.research.google.com/drive/1f4aGzFvUKFLwXOo2X6WZ3oiNeANZISJK).
 
 ## Usage
 
