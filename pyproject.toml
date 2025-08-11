@@ -60,7 +60,7 @@ dolphin = [
     "opencv-python==4.11.0.86",
     "opencv-python-headless",
     "pymupdf==1.26",
-    "timm==0.5.4",
+    "timm==1.0.19",
     "torch>=2.6.0",
     "torchvision>=0.21.0",
     "transformers<4.54.0",
