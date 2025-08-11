@@ -16,6 +16,10 @@ Simple and easy to use, production-ready advanced RAG techniques.
 
 </div>
 
+**Latest News**
+
+- [2025/08/10] Integrated [Dolphin](https://github.com/bytedance/Dolphin) and [OCRFlux](https://github.com/chatdoc-com/OCRFlux). More detail in [DolphinReader](./rag_colls/processors/readers/multi/dolphin) and [OCRFluxReader](./rag_colls/processors/readers/multi/ocrflux).
+
 ## 📑 Table of Contents
 
 - [📖 Documentation](#-documentation)

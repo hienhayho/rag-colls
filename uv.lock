@@ -4635,7 +4635,7 @@ wheels = [
 
 [[package]]
 name = "rag-colls"
-version = "0.2.0.16"
+version = "0.2.0.18"
 source = { editable = "." }
 dependencies = [
     { name = "bm25s" },

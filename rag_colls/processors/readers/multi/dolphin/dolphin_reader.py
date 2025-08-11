@@ -100,7 +100,7 @@ class DolphinReader(BaseReader):
 
         logger.info("DolphinReader initialized !")
 
-    def process_element_batch(self, elements: list[dict], prompt: str):
+    def _process_element_batch(self, elements: list[dict], prompt: str):
         """Process elements of the same type in batches"""
         results = []
 
@@ -148,7 +148,7 @@ class DolphinReader(BaseReader):
 
         return results
 
-    def process_elements(
+    def _process_elements(
         self,
         layout_results: str,
         padded_image: np.ndarray,
@@ -225,14 +225,14 @@ class DolphinReader(BaseReader):
 
         # Process text elements (in batches)
         if text_elements:
-            text_results = self.process_element_batch(
+            text_results = self._process_element_batch(
                 elements=text_elements, prompt=self.read_text_prompt
             )
             recognition_results.extend(text_results)
 
         # Process table elements (in batches)
         if table_elements:
-            table_results = self.process_element_batch(
+            table_results = self._process_element_batch(
                 elements=table_elements, prompt=self.parse_table_prompt
             )
             recognition_results.extend(table_results)
@@ -291,7 +291,7 @@ class DolphinReader(BaseReader):
                 layout_output = output.outputs[0].text.strip()
 
                 padded_image, dims = prepare_image(image)
-                recognition_results = self.process_elements(
+                recognition_results = self._process_elements(
                     layout_output,
                     padded_image,
                     dims,
