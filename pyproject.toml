@@ -51,7 +51,7 @@ huggingface-embedding = [
     "llama-index-embeddings-huggingface>=0.5.2",
     "accelerate>=1.6.0",
 ]
-vllm-llm = ["vllm==0.9.0"]
+vllm-llm = ["vllm==0.10.0"]
 finetune = ["deepspeed>=0.16.8", "ms-swift>=3.4.1", "wandb>=0.19.11"]
 dolphin = [
     "accelerate==1.6.0",
@@ -64,7 +64,7 @@ dolphin = [
     "torch>=2.6.0",
     "torchvision>=0.21.0",
     "transformers<4.54.0",
-    "vllm==0.9.0",
+    "vllm==0.10.0",
     "vllm-dolphin==0.1",
 ]
 ocrflux-py = ["ocrflux"]
