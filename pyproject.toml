@@ -57,7 +57,7 @@ dolphin = [
     "accelerate==1.6.0",
     "numpy",
     "omegaconf==2.3.0",
-    "opencv-python==4.11.0.86",
+    "opencv-python==4.12.0.88",
     "opencv-python-headless",
     "pymupdf==1.26",
     "timm==0.5.4",
