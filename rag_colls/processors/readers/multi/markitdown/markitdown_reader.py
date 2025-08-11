@@ -1,5 +1,4 @@
 try:
-    from openai import OpenAI
     from markitdown import MarkItDown
 except ImportError as e:
     raise ImportError(
@@ -24,34 +23,24 @@ class MarkItDownReader(BaseReader):
 
     def __init__(
         self,
-        enable_plugins: bool = False,
-        docintel_endpoint: str | None = None,
-        gpt_model: str | None = None,
+        markitdown_converter: MarkItDown | None = None,
     ):
         """
         Initializes the MarkItDownReader.
 
         Args:
-            enable_plugins (bool): Whether to enable plugins for the MarkItDown conversion.
-            docintel_endpoint (str | None): The endpoint for document intelligence services.
-            gpt_model (str | None): The GPT model to use for conversion. If None, no use LLM.
+            markitdown_converter (MarkItDown | None): An existing MarkItDown converter instance.
         """
-        self.converter = None
-        if gpt_model:
-            client = OpenAI()
-            self.converter = MarkItDown(
-                llm_client=client,
-                llm_model=gpt_model,
-                enable_plugins=enable_plugins,
-                docintel_endpoint=docintel_endpoint,
+        if markitdown_converter is None:
+            logger.info(
+                "No markitdown_converter provided, using default MarkItDown converter."
             )
-        else:
-            self.converter = MarkItDown(
-                enable_plugins=enable_plugins,
-                docintel_endpoint=docintel_endpoint,
-            )
+            markitdown_converter = MarkItDown()
 
-        assert self.converter is not None, "MarkItDown converter initialization failed."
+        if not isinstance(markitdown_converter, MarkItDown):
+            raise TypeError("markitdown_converter must be an instance of MarkItDown.")
+
+        self.converter = markitdown_converter
 
         logger.info("MarkItDownReader initialized !")
 

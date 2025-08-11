@@ -12,7 +12,9 @@ pip install rag-colls markitdown[all]
 
 **2**. Quickstart:
 
-`MarkItDownReader` can be used to read multiple file types, please check [docs](https://github.com/microsoft/markitdown?tab=readme-ov-file#markitdown) here.
+`MarkItDownReader` supports reading multiple file formats — see the [documentation](https://github.com/microsoft/markitdown?tab=readme-ov-file#markitdown) for details.
+
+You can optionally provide the `markitdown_converter` parameter, which you can configure as described in the [documentation](https://github.com/microsoft/markitdown?tab=readme-ov-file#python-api).
 
 ```python
 from loguru import logger

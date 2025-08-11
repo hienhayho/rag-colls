@@ -1,7 +1,7 @@
 # rag-colls
 
 <p align="center">
-  <img src="assets/rag_colls_v3.png" alt="Logo" width="350"/>
+  <img src="assets/rag_colls_v3.png" alt="rag-colls" width="350"/>
 </p>
 
 **rag-colls** a.k.a **RAG Coll**ection**s**.
@@ -18,7 +18,8 @@ Simple and easy to use, production-ready advanced RAG techniques.
 
 **Latest News**
 
-- [2025/08/10] Integrated [Dolphin](https://github.com/bytedance/Dolphin) and [OCRFlux](https://github.com/chatdoc-com/OCRFlux). More detail in [DolphinReader](./rag_colls/processors/readers/multi/dolphin) and [OCRFluxReader](./rag_colls/processors/readers/multi/ocrflux).
+- **[2025/08/11]** Support [markitdown](https://github.com/microsoft/markitdown) and [docling](https://github.com/docling-project/docling). More details in [MarkItDownReader](./rag_colls/processors/readers/multi/markitdown) and [DoclingReader](./rag_colls/processors/readers/multi/docling).
+- **[2025/08/10]** Integrated [Dolphin](https://github.com/bytedance/Dolphin) and [OCRFlux](https://github.com/chatdoc-com/OCRFlux). More details in [DolphinReader](./rag_colls/processors/readers/multi/dolphin) and [OCRFluxReader](./rag_colls/processors/readers/multi/ocrflux).
 
 ## 📑 Table of Contents
 

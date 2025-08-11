@@ -1,9 +1,14 @@
 from loguru import logger
 from pathlib import Path
 
+from openai import OpenAI
+from markitdown import MarkItDown
+
 from rag_colls.processors.readers.multi.markitdown import MarkItDownReader
 
-reader = MarkItDownReader(gpt_model="gpt-4o-mini")
+reader = MarkItDownReader(
+    markitdown_converter=MarkItDown(llm_client=OpenAI(), llm_model="gpt-4o-mini")
+)
 
 file_path = Path("samples/data/image.png")
 
