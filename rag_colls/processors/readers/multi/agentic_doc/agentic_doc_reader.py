@@ -2,7 +2,7 @@ try:
     from agentic_doc.parse import parse
 except ImportError:
     raise ImportError(
-        "The 'docling' package is required for this module. "
+        "The 'agentic-doc' package is required for this module. "
         "Please install it using 'pip install agentic-doc'."
     )
 

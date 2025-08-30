@@ -29,5 +29,4 @@ documents = reader.load_data(file_path=file_path, should_split=False, extra_info
 logger.info(f"Loaded {len(documents)} documents from {file_path}")
 
 print(f"First document content: {documents[0].document}")
-
 ```
