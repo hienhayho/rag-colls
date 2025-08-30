@@ -59,7 +59,7 @@ dolphin = [
     "omegaconf==2.3.0",
     "opencv-python==4.11.0.86",
     "opencv-python-headless",
-    "pymupdf==1.26",
+    "pymupdf==1.26.4",
     "timm==0.5.4",
     "torch>=2.6.0",
     "torchvision>=0.21.0",
