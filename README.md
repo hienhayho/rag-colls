@@ -18,6 +18,8 @@ Simple and easy to use, production-ready advanced RAG techniques.
 
 **Latest News**
 
+- **[2025/08/30]** Support [agentic-doc](https://github.com/landing-ai/agentic-doc) and [megaparse](https://github.com/QuivrHQ/MegaParse). More details in [AgenticDocReader](./rag_colls/processors/readers/multi/agentic_doc) and [MegaParseReader](./rag_colls/processors/readers/multi/megaparse).
+
 - **[2025/08/11]** Support [markitdown](https://github.com/microsoft/markitdown) and [docling](https://github.com/docling-project/docling). More details in [MarkItDownReader](./rag_colls/processors/readers/multi/markitdown) and [DoclingReader](./rag_colls/processors/readers/multi/docling).
 - **[2025/08/10]** Integrated [Dolphin](https://github.com/bytedance/Dolphin) and [OCRFlux](https://github.com/chatdoc-com/OCRFlux). More details in [DolphinReader](./rag_colls/processors/readers/multi/dolphin) and [OCRFluxReader](./rag_colls/processors/readers/multi/ocrflux).
 
