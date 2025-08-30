@@ -1,6 +1,6 @@
 # Agentic-doc
 
-This is a simple wrapper of [agentic-doc](https://github.com/landing-ai/agentic-doc) library.
+This is a simple wrapper of [agentic-doc](https://github.com/landing-ai/agentic-doc) library. Please check [documentation](https://github.com/landing-ai/agentic-doc?tab=readme-ov-file#quick-start) for API key.
 
 ## Usage
 
